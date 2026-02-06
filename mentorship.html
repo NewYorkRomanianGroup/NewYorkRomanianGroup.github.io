@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NYRG Mentorship</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div>
+          <div>New York Romanian Group</div>
+          <div class="small">Mentorship Program</div>
+        </div>
+      </div>
+
+      <nav class="navlinks">
+        <a href="index.html">Home</a>
+        <a class="active" href="mentorship.html">Mentorship</a>
+        <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Mentorship Program</h1>
+      <p>
+        Interested in mentoring or being mentored? Fill out the form below and we will follow up with next steps.
+      </p>
+    </section>
+
+    <section class="grid" style="grid-template-columns: 1fr;">
+      <div class="card">
+        <h2>Interest Form</h2>
+        <p class="small">
+          Editing tip: Replace GOOGLE_FORM_EMBED_URL below with your form’s embed link.
+        </p>
+
+        <div class="embed-wrap">
+          <!--
+            HOW TO EMBED A GOOGLE FORM:
+            1) Open your Google Form.
+            2) Click "Send" (top right).
+            3) Choose the <> embed tab.
+            4) Copy the iframe src URL and paste it below.
+          -->
+          <iframe
+            src="GOOGLE_FORM_EMBED_URL"
+            height="900"
+            loading="lazy"
+            title="NYRG Mentorship Interest Form">
+          </iframe>
+        </div>
+
+        <div class="small" style="margin-top: 10px;">
+          If the embed looks too tall or too short, adjust the iframe height value above.
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>What to expect</h2>
+        <p>
+          We match mentors and mentees based on goals, interests, and availability. Expect a short intro email, then an optional kickoff call.
+        </p>
+        <p class="small">
+          Collaborator note: Update this section any time the program changes.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div>© <span id="year"></span> New York Romanian Group</div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

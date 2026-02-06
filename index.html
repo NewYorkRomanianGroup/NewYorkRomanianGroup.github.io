@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>New York Romanian Group</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div>
+          <div>New York Romanian Group</div>
+          <div class="small">Community • Events • Mentorship</div>
+        </div>
+      </div>
+
+      <nav class="navlinks">
+        <a class="active" href="index.html">Home</a>
+        <a href="mentorship.html">Mentorship</a>
+        <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Welcome!</h1>
+      <p>
+        NYRG is a community for Romanians in New York. We host meetups, share resources, and connect people through mentorship.
+      </p>
+    </section>
+
+    <section class="grid">
+      <!-- LEFT: Instagram -->
+      <div class="card">
+        <h2>Latest from Instagram</h2>
+        <p>
+          A few recent posts from <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">@newyorkromaniangroup</a>.
+        </p>
+
+        <p class="small">
+          Editing tip for collaborators: Replace the links below with new Instagram post URLs.
+          You can embed 2 to 4 posts. If embeds do not load, see the README_EDITING.md notes.
+        </p>
+
+        <div class="embed-wrap" style="padding: 12px;">
+          <!--
+            HOW TO UPDATE INSTAGRAM EMBEDS:
+            1) Open the Instagram post in a browser.
+            2) Copy its URL, it looks like: https://www.instagram.com/p/POST_ID/
+            3) Replace the href values below.
+            4) Commit and push.
+          -->
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/REPLACE_1/" data-instgrm-version="14"
+            style="margin: 0 auto 12px auto; max-width: 540px; min-width: 280px;">
+          </blockquote>
+
+          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/REPLACE_2/" data-instgrm-version="14"
+            style="margin: 0 auto; max-width: 540px; min-width: 280px;">
+          </blockquote>
+
+          <!-- Instagram embed script (required for the embeds to render) -->
+          <script async src="https://www.instagram.com/embed.js"></script>
+
+          <div class="small" style="margin-top: 10px;">
+            Prefer a simpler option? Link to Instagram posts instead of embedding.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Photos via Google Drive -->
+      <div class="card">
+        <h2>Photo Highlights</h2>
+        <p>
+          A sampling of recent photos. You can upload new photos to the shared Drive folder and they will appear here (depending on Drive sharing settings).
+        </p>
+
+        <p class="small">
+          Editing tip: Replace the DRIVE_FOLDER_ID below once you create the Drive folder.
+        </p>
+
+        <div class="embed-wrap">
+          <!--
+            GOOGLE DRIVE FOLDER EMBED:
+            1) Create a Google Drive folder (ex: "NYRG Photos").
+            2) Share settings: "Anyone with the link can view" (or appropriate public setting).
+            3) Copy the folder ID from the URL:
+               https://drive.google.com/drive/folders/THIS_PART_IS_THE_ID
+            4) Replace DRIVE_FOLDER_ID in the iframe src below.
+          -->
+          <iframe
+            src="https://drive.google.com/embeddedfolderview?id=DRIVE_FOLDER_ID#grid"
+            height="520"
+            loading="lazy"
+            title="NYRG Photo Highlights">
+          </iframe>
+        </div>
+
+        <div style="margin-top: 12px;">
+          <a class="btn" href="https://drive.google.com/" target="_blank" rel="noopener">Open Google Drive</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div>© <span id="year"></span> New York Romanian Group</div>
+      <div class="small">Built with GitHub Pages. Keep edits simple and well-commented for collaborators.</div>
+    </div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+  <script>
+    // Auto year in footer
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
