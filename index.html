@@ -35,7 +35,8 @@
     </section>
 
     <section class="grid">
-      <!-- LEFT: Instagram -->
+      <!--       
+      !-- LEFT: Instagram --
       <div class="card">
         <h2>Latest from Instagram</h2>
         <p>
@@ -48,13 +49,13 @@
         </p>
 
         <div class="embed-wrap" style="padding: 12px;">
-          <!--
+          !--
             HOW TO UPDATE INSTAGRAM EMBEDS:
             1) Open the Instagram post in a browser.
             2) Copy its URL, it looks like: https://www.instagram.com/p/POST_ID/
             3) Replace the href values below.
             4) Commit and push.
-          -->
+          --
           <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/REPLACE_1/" data-instgrm-version="14"
             style="margin: 0 auto 12px auto; max-width: 540px; min-width: 280px;">
           </blockquote>
@@ -63,7 +64,7 @@
             style="margin: 0 auto; max-width: 540px; min-width: 280px;">
           </blockquote>
 
-          <!-- Instagram embed script (required for the embeds to render) -->
+          !-- Instagram embed script (required for the embeds to render) --
           <script async src="https://www.instagram.com/embed.js"></script>
 
           <div class="small" style="margin-top: 10px;">
@@ -71,6 +72,49 @@
           </div>
         </div>
       </div>
+      -->
+      <div class="card">
+        <h2>Latest from Instagram</h2>
+        <p>
+          Follow <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">@newyorkromaniangroup</a>
+          for event announcements and updates.
+        </p>
+
+        <!-- Big Follow button -->
+        <div style="margin: 10px 0 14px 0;">
+          <a class="btn-ig" href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">
+            Follow on Instagram
+          </a>
+          <div class="small" id="insta-updated-at" style="margin-top: 8px;"></div>
+        </div>
+
+        <!-- Profile embed (best-effort) -->
+        <div class="embed-wrap" style="padding: 12px; margin-bottom: 12px;">
+          <!--
+            NOTE: Instagram profile embeds can be inconsistent.
+            If it does not render, the link and button above still work.
+          -->
+          <blockquote class="instagram-media"
+            data-instgrm-permalink="https://www.instagram.com/newyorkromaniangroup/"
+            data-instgrm-version="14"
+            style="margin: 0 auto; max-width: 540px; min-width: 280px;">
+          </blockquote>
+        </div>
+
+        <!-- Latest 3 posts (auto-scraped by GitHub Action) -->
+        <div class="embed-wrap" style="padding: 12px;">
+          <div class="small" style="margin-bottom: 10px;">
+            Latest 3 posts (auto-updated). If embeds are blocked, use the links below.
+          </div>
+
+          <div id="insta-latest" class="insta-grid"></div>
+
+          <div class="small" style="margin-top: 12px;">
+            <div id="insta-fallback-links"></div>
+          </div>
+        </div>
+      </div>
+
 
       <!-- RIGHT: Photos via Google Drive -->
       <div class="card">

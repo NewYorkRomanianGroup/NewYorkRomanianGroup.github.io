@@ -151,3 +151,33 @@ iframe {
   background: rgba(110,168,255,0.22);
   text-decoration: none;
 }
+
+
+/* addn */
+/* Big CTA button for Instagram */
+.btn-ig {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: rgba(110,168,255,0.18);
+  border: 1px solid rgba(110,168,255,0.35);
+}
+
+.btn-ig:hover {
+  background: rgba(110,168,255,0.26);
+  text-decoration: none;
+}
+
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 900px) {
+  .insta-grid { grid-template-columns: 1fr; }
+}
