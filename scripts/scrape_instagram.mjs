@@ -31,9 +31,12 @@ async function main() {
   const res = await fetch(url, { headers });
 
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`IG profile request failed: ${res.status} ${res.statusText}\n${text.slice(0, 300)}`);
+    console.warn(
+      `Instagram request blocked (${res.status}). Keeping existing instagram.json.`
+    );
+    return;
   }
+
 
   const data = await res.json();
 
