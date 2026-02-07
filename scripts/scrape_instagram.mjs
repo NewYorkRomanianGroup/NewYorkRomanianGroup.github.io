@@ -1,74 +1,76 @@
-/**
- * Scrape latest Instagram post URLs from a public profile using the web_profile_info endpoint.
- * This avoids brittle HTML parsing and is more reliable in GitHub Actions.
- *
- * Notes:
- * - Still best-effort. Instagram can rate-limit or change behavior.
- * - If it fails, check Actions logs and the site still shows the Follow button + profile link.
- */
-
 import fs from "fs";
 import path from "path";
+import { chromium } from "playwright";
 
 const USERNAME = "newyorkromaniangroup";
+const PROFILE = `https://www.instagram.com/${USERNAME}/`;
+const OUTFILE = path.join(process.cwd(), "assets", "instagram.json");
 const LIMIT = 3;
 
-const OUTFILE = path.join(process.cwd(), "assets", "instagram.json");
+function uniq(arr) {
+  const seen = new Set();
+  const out = [];
+  for (const x of arr) if (!seen.has(x)) (seen.add(x), out.push(x));
+  return out;
+}
+
+function normalizeToCanonical(urlStr) {
+  try {
+    const u = new URL(urlStr);
+    const parts = u.pathname.split("/").filter(Boolean); // ["username","p","CODE"] or ["p","CODE"]
+
+    if (parts.length >= 2) {
+      const kind = parts[parts.length - 2];
+      const code = parts[parts.length - 1];
+      if (kind === "p" || kind === "reel") return `https://www.instagram.com/${kind}/${code}/`;
+    }
+  } catch {}
+  return null;
+}
 
 async function main() {
-  const url = `https://i.instagram.com/api/v1/users/web_profile_info/?username=${USERNAME}`;
+  const browser = await chromium.launch({ headless: true });
+  const page = await browser.newPage({
+    userAgent:
+      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36"
+  });
 
-  // Commonly used web app id values seen in the wild and docs.
-  // 936619743392459 is widely referenced for this endpoint. :contentReference[oaicite:1]{index=1}
-  const headers = {
-    "user-agent":
-      "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36",
-    "accept": "*/*",
-    "accept-language": "en-US,en;q=0.9",
-    "x-ig-app-id": "936619743392459"
-  };
+  await page.goto(PROFILE, { waitUntil: "domcontentloaded", timeout: 60000 });
 
-  const res = await fetch(url, { headers });
+  // Give it time to populate the grid
+  await page.waitForTimeout(4000);
 
-  if (!res.ok) {
-    console.warn(
-      `Instagram request blocked (${res.status}). Keeping existing instagram.json.`
-    );
+  // Grab all anchors
+  const hrefs = await page.$$eval("a[href]", (as) => as.map((a) => a.href).filter(Boolean));
+
+  const postUrls = uniq(
+    hrefs
+      .map(normalizeToCanonical)
+      .filter(Boolean)
+  ).slice(0, LIMIT);
+
+  // If blocked, do NOT overwrite existing file with empty posts
+  if (postUrls.length < LIMIT) {
+    console.log(`Found only ${postUrls.length} post URLs. Likely blocked on this runner. Leaving existing instagram.json unchanged.`);
+    await browser.close();
     return;
   }
 
-
-  const data = await res.json();
-
-  // Depending on IG response shape, "data.user" should exist
-  const user = data?.data?.user;
-  const edges = user?.edge_owner_to_timeline_media?.edges || [];
-
-  const posts = edges
-    .map((e) => e?.node)
-    .filter(Boolean)
-    .slice(0, LIMIT)
-    .map((node) => {
-      // Build URLs from shortcode.
-      // Reels sometimes show in the same feed, but shortcode URLs still work as /p/ most of the time.
-      const shortcode = node.shortcode;
-      return shortcode ? `https://www.instagram.com/p/${shortcode}/` : null;
-    })
-    .filter(Boolean)
-    .map((url) => ({ url }));
-
   const payload = {
     updated_at: new Date().toISOString(),
-    posts
+    posts: postUrls.map((url) => ({ url }))
   };
 
   fs.mkdirSync(path.dirname(OUTFILE), { recursive: true });
   fs.writeFileSync(OUTFILE, JSON.stringify(payload, null, 2) + "\n", "utf8");
 
-  console.log(`Saved ${posts.length} posts to ${OUTFILE}`);
+  console.log(`Saved ${payload.posts.length} posts to ${OUTFILE}`);
+  await browser.close();
 }
 
 main().catch((err) => {
   console.error(err);
+  // Do not hard-fail the workflow if you want it to be non-disruptive:
+  // process.exit(0)
   process.exit(1);
 });
