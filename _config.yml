@@ -26,6 +26,9 @@ permalink: none
 # Build exclusions
 # -------------------------
 # These files and folders will NOT be published
+# IMPORTANT:
+# Do NOT exclude folders that are fetched by client-side JS.
+# For example, data/instagram.json must remain published.
 exclude:
   - README.md
   - EDITING_GUIDE.md
