@@ -107,8 +107,9 @@ def main():
     opts.add_argument("--profile-directory=Default")
 
 
+
     # Headed mode (default). Keep it visible.
-    # opts.add_argument("--headless=new")  # later if you want headless
+    opts.add_argument("--headless=new")
 
     # Reduce noise
     opts.add_argument("--disable-notifications")
@@ -124,6 +125,7 @@ def main():
     opts.add_argument("--disable-dev-shm-usage")
     opts.add_argument("--remote-debugging-port=9222")
     opts.add_argument("--disable-gpu")
+    opts.add_argument("--window-size=1200,900")
 
 
     driver = webdriver.Chrome(options=opts)
