@@ -28,6 +28,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+
+from urllib.parse import urlparse
 
 
 PROFILE_URL = "https://www.instagram.com/newyorkromaniangroup/"
@@ -36,7 +39,8 @@ LIMIT = 3
 REPO_ROOT = Path(__file__).resolve().parents[1]
 JSON_PATH = REPO_ROOT / "assets" / "instagram.json"
 
-POST_RE = re.compile(r"^/(p|reel)/[^/]+/?$")
+# POST_RE = re.compile(r"^/(p|reel)/[^/]+/?$")
+POST_RE = re.compile(r"^/(?:[^/]+/)?(p|reel)/[^/]+/?$")
 
 
 def run(cmd, cwd=None):
@@ -60,27 +64,27 @@ def try_click(driver, by, value, timeout=2):
 
 
 def collect_post_urls(driver) -> list[str]:
-    """
-    Collect post URLs from anchors on the profile page.
-    We look for hrefs like /p/... or /reel/...
-    """
     anchors = driver.find_elements(By.CSS_SELECTOR, "a[href]")
     hrefs = []
     for a in anchors:
         href = a.get_attribute("href")
         if not href:
             continue
-        # Normalize to path if it is full URL
-        # Example: https://www.instagram.com/p/XXXX/
-        if href.startswith("https://www.instagram.com/"):
-            path = href.replace("https://www.instagram.com", "")
-        else:
-            path = href
+
+        # Parse URL and take only the path (ignore query and fragment)
+        parsed = urlparse(href)
+        path = parsed.path  # e.g. /newyorkromaniangroup/p/DUbolbPgTVO/
 
         if POST_RE.match(path):
-            # Build absolute URL
-            abs_url = "https://www.instagram.com" + path
-            hrefs.append(abs_url)
+            # Normalize to the canonical public URL shape:
+            # If it's /<username>/p/<id>/ -> convert to /p/<id>/
+            parts = [p for p in path.split("/") if p]  # remove empty
+            # parts could be ["newyorkromaniangroup","p","DU..."] or ["p","DU..."]
+            if len(parts) >= 2 and parts[-2] in ("p", "reel"):
+                kind = parts[-2]
+                code = parts[-1]
+                abs_url = f"https://www.instagram.com/{kind}/{code}/"
+                hrefs.append(abs_url)
 
     # De-dupe in order
     seen = set()
@@ -99,6 +103,10 @@ def main():
 
     opts = Options()
 
+    opts.add_argument(f"--user-data-dir={os.path.expanduser('~/.config/google-chrome-selenium')}")
+    opts.add_argument("--profile-directory=Default")
+
+
     # Headed mode (default). Keep it visible.
     # opts.add_argument("--headless=new")  # later if you want headless
 
@@ -111,12 +119,36 @@ def main():
         "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/122 Safari/537.36"
     )
+    # These help prevent "DevToolsActivePort file doesn't exist" on Linux
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    opts.add_argument("--remote-debugging-port=9222")
+    opts.add_argument("--disable-gpu")
+
 
     driver = webdriver.Chrome(options=opts)
     driver.set_window_size(1200, 900)
 
     try:
         driver.get(PROFILE_URL)
+        # If IG shows a login wall, give you time to log in manually.
+        if "accounts/login" in driver.current_url:
+            print("[NYRG] Login page detected. Please log in, then close the window.")
+            time.sleep(60)
+
+        print("[NYRG] Current URL:", driver.current_url)
+        print("[NYRG] Title:", driver.title)
+
+        # Wait a bit so you can see what Selenium is actually showing
+        time.sleep(5)
+
+        # Save a screenshot so we can inspect what the browser saw
+        snap_path = REPO_ROOT / "scripts" / "debug_instagram.png"
+        driver.save_screenshot(str(snap_path))
+        print("[NYRG] Saved screenshot:", snap_path)
+
+
+
 
         wait = WebDriverWait(driver, 15)
 
@@ -134,13 +166,39 @@ def main():
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href]")))
 
         # Give the page a moment to populate the grid
-        time.sleep(3)
+        urls = []
 
-        urls = collect_post_urls(driver)
+        anchors = driver.find_elements(By.CSS_SELECTOR, "a[href]")
+        hrefs = []
+        for a in anchors:
+            h = a.get_attribute("href")
+            if h:
+                hrefs.append(h)
+
+        print(f"[NYRG] Total anchors with href: {len(hrefs)}")
+        print("[NYRG] Sample hrefs:")
+        for h in hrefs[:40]:
+            print("  ", h)
+
+
+        # Try a few scrolls to force the grid to render
+        for i in range(5):
+            time.sleep(2)
+            urls = collect_post_urls(driver)
+            print(f"[NYRG] Pass {i+1}: found {len(urls)} post-like URLs")
+            if len(urls) >= LIMIT:
+                break
+            driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
+
+        # Another screenshot after scrolling
+        snap2_path = REPO_ROOT / "scripts" / "debug_instagram_after_scroll.png"
+        driver.save_screenshot(str(snap2_path))
+        print("[NYRG] Saved screenshot:", snap2_path)
 
         if len(urls) < LIMIT:
             print(f"[NYRG] Found only {len(urls)} post URLs. Likely blocked or page did not load posts.")
             print("[NYRG] Not updating instagram.json.")
+            time.sleep(10)
             return 0
 
         payload = {
