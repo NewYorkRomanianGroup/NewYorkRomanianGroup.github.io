@@ -31,7 +31,6 @@ exclude:
   - EDITING_GUIDE.md
   - node_modules
   - scripts
-  - data
   - .git
   - .github
   - package.json
