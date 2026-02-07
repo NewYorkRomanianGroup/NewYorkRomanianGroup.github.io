@@ -2,36 +2,42 @@
 # NYRG GitHub Pages Config
 # =========================
 
+# -------------------------
 # Site identity
+# -------------------------
 title: New York Romanian Group
 description: Community, events, and mentorship for Romanians in New York
 url: https://newyorkromaniangroup.github.io
+baseurl: ""   # Important for GitHub Pages routing
 
-# Disable Jekyll theme defaults
-# We are serving plain HTML/CSS, not a Jekyll blog
+# -------------------------
+# Jekyll behavior
+# -------------------------
+# We are serving plain static HTML and CSS.
+# This site is NOT a blog and does not use posts or themes.
 theme: null
-
-# Markdown settings (used only if we add .md pages later)
 markdown: kramdown
 
-# Plugins (GitHub Pages–safe)
-plugins:
-  - jekyll-feed
+# Disable blog-style features explicitly
+collections: {}
+permalink: none
 
-# Exclude files and folders from build
-# These will not be published to the live site
+# -------------------------
+# Build exclusions
+# -------------------------
+# These files and folders will NOT be published
 exclude:
   - README.md
-  - README_EDITING.md
+  - EDITING_GUIDE.md
   - node_modules
+  - scripts
+  - data
   - .git
   - .github
   - package.json
   - package-lock.json
 
-# Keep future-friendly options visible
-# (We are not using collections yet)
-collections: {}
-
-# Force UTF-8 encoding
+# -------------------------
+# Encoding
+# -------------------------
 encoding: "utf-8"

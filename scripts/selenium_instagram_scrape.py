@@ -1,60 +1,180 @@
 #!/usr/bin/env python3
 """
-NYRG Instagram scraper (headed Selenium).
+NYRG Instagram scraper (Selenium).
 
 Goal:
-- Open the public profile page in a real Chrome window (headed)
-- Extract the latest 3 post URLs
-- Write them to assets/instagram.json in the repo
-- Optionally commit + push via git (SSH) if changed
+- Open the public profile page
+- Extract the latest N post URLs (default 3)
+- Write them to assets/instagram.json
+- If extraction fails (blocked, changed markup, rate limit), do NOT modify the JSON.
 
-Notes:
-- Instagram may block unauthenticated visitors, show login interstitials, or rate limit.
-- If it fails, it exits without modifying your JSON.
-- Headed mode first, headless later.
+This file is heavily commented because collaborators may be new to coding.
+
+How to run:
+- From repo root:
+    python3 scripts/selenium_instagram_scrape.py
+
+Optional environment variables:
+- NYRG_IG_PROFILE_URL   (default: NYRG profile)
+- NYRG_IG_LIMIT         (default: 3)
+- NYRG_IG_JSON_PATH     (default: assets/instagram.json)
+- NYRG_IG_HEADLESS      ("1" default, set to "0" to see the browser)
+- NYRG_IG_DEBUG         ("0" default, set to "1" for extra logs + screenshots)
 """
 
 import json
 import os
-import re
-import subprocess
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
-from urllib.parse import urlparse
 
-
-PROFILE_URL = "https://www.instagram.com/newyorkromaniangroup/"
-LIMIT = 3
+DEFAULT_PROFILE_URL = "https://www.instagram.com/newyorkromaniangroup/"
+DEFAULT_LIMIT = 3
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-JSON_PATH = REPO_ROOT / "assets" / "instagram.json"
 
-# POST_RE = re.compile(r"^/(p|reel)/[^/]+/?$")
-POST_RE = re.compile(r"^/(?:[^/]+/)?(p|reel)/[^/]+/?$")
-
-
-def run(cmd, cwd=None):
-    return subprocess.run(cmd, cwd=cwd, check=False, text=True, capture_output=True)
+# URL patterns for posts. Instagram post links often look like:
+# - /p/<code>/
+# - /reel/<code>/
+# Sometimes links also appear as /<username>/p/<code>/, so we normalize.
+POST_RE = r"^/(?:[^/]+/)?(p|reel)/[^/]+/?$"
 
 
-def safe_write_json(path: Path, payload: dict):
+def env_str(name: str, default: str) -> str:
+    v = os.environ.get(name)
+    return default if v is None or v.strip() == "" else v.strip()
+
+
+def env_int(name: str, default: int) -> int:
+    v = os.environ.get(name)
+    if v is None or v.strip() == "":
+        return default
+    try:
+        return int(v)
+    except ValueError:
+        return default
+
+
+def env_bool(name: str, default: bool) -> bool:
+    v = os.environ.get(name)
+    if v is None:
+        return default
+    return v.strip() in ("1", "true", "True", "yes", "YES")
+
+
+def safe_write_json(path: Path, payload: dict) -> None:
+    """
+    Write JSON atomically:
+    - write to a .tmp file
+    - replace the destination
+    This avoids partially-written files if the script crashes.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")
     tmp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     tmp.replace(path)
 
 
-def try_click(driver, by, value, timeout=2):
+def debug_screenshot(driver, path: Path, debug: bool, label: str) -> None:
+    if not debug:
+        return
+    try:
+        driver.save_screenshot(str(path))
+        print(f"[NYRG][DEBUG] Saved screenshot ({label}): {path}")
+    except Exception as e:
+        print(f"[NYRG][DEBUG] Screenshot failed ({label}): {e}")
+
+
+def collect_post_urls(driver, limit: int, debug: bool) -> list:
+    """
+    Collect candidate post URLs by scanning all anchors on the page.
+    Then normalize to canonical URLs: https://www.instagram.com/p/<code>/
+    """
+    anchors = driver.find_elements(By.CSS_SELECTOR, "a[href]")
+    found = []
+
+    for a in anchors:
+        href = a.get_attribute("href")
+        if not href:
+            continue
+
+        parsed = urlparse(href)
+        path = parsed.path  # ignore query and fragment
+
+        if not __import__("re").match(POST_RE, path):
+            continue
+
+        # Normalize:
+        # - If path is /<username>/p/<code>/ convert to /p/<code>/
+        parts = [p for p in path.split("/") if p]  # remove empty
+        if len(parts) >= 2 and parts[-2] in ("p", "reel"):
+            kind = parts[-2]
+            code = parts[-1]
+            found.append(f"https://www.instagram.com/{kind}/{code}/")
+
+    # De-dupe in order
+    out = []
+    seen = set()
+    for u in found:
+        if u not in seen:
+            seen.add(u)
+            out.append(u)
+
+    if debug:
+        print(f"[NYRG][DEBUG] Found {len(out)} unique post-like URLs (pre-limit).")
+
+    return out[:limit]
+
+
+def build_driver(headless: bool) -> webdriver.Chrome:
+    opts = Options()
+
+    # If you ever need to log in manually, a persistent user data dir can help.
+    # This can also create surprises if the stored profile gets stale.
+    # Keep it, but make sure the folder is not inside the repo.
+    opts.add_argument(f"--user-data-dir={os.path.expanduser('~/.config/google-chrome-selenium')}")
+    opts.add_argument("--profile-directory=Default")
+
+    # Headless is default for automation. Set NYRG_IG_HEADLESS=0 to see the browser.
+    if headless:
+        opts.add_argument("--headless=new")
+
+    # Reduce noise and popups
+    opts.add_argument("--disable-notifications")
+    opts.add_argument("--lang=en-US")
+
+    # Slightly more "real browser" feel (may help in some cases)
+    opts.add_argument(
+        "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/122 Safari/537.36"
+    )
+
+    # Linux stability flags
+    opts.add_argument("--no-sandbox")
+    opts.add_argument("--disable-dev-shm-usage")
+    opts.add_argument("--disable-gpu")
+    opts.add_argument("--window-size=1200,900")
+
+    driver = webdriver.Chrome(options=opts)
+    driver.set_window_size(1200, 900)
+    return driver
+
+
+def try_click(driver, by, value, timeout: int = 2) -> bool:
+    """
+    Best-effort click helper for cookie banners / overlays.
+    It is fine if this does nothing.
+    """
     try:
         el = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((by, value)))
         el.click()
@@ -63,159 +183,87 @@ def try_click(driver, by, value, timeout=2):
         return False
 
 
-def collect_post_urls(driver) -> list[str]:
-    anchors = driver.find_elements(By.CSS_SELECTOR, "a[href]")
-    hrefs = []
-    for a in anchors:
-        href = a.get_attribute("href")
-        if not href:
-            continue
+def main() -> int:
+    profile_url = env_str("NYRG_IG_PROFILE_URL", DEFAULT_PROFILE_URL)
+    limit = max(1, env_int("NYRG_IG_LIMIT", DEFAULT_LIMIT))
+    json_path = Path(env_str("NYRG_IG_JSON_PATH", str(REPO_ROOT / "assets" / "instagram.json")))
+    headless = env_bool("NYRG_IG_HEADLESS", True)
+    debug = env_bool("NYRG_IG_DEBUG", False)
 
-        # Parse URL and take only the path (ignore query and fragment)
-        parsed = urlparse(href)
-        path = parsed.path  # e.g. /newyorkromaniangroup/p/DUbolbPgTVO/
+    # Do not create or overwrite JSON on startup. Only write after success.
+    if debug:
+        print("[NYRG][DEBUG] profile_url:", profile_url)
+        print("[NYRG][DEBUG] limit:", limit)
+        print("[NYRG][DEBUG] json_path:", json_path)
+        print("[NYRG][DEBUG] headless:", headless)
 
-        if POST_RE.match(path):
-            # Normalize to the canonical public URL shape:
-            # If it's /<username>/p/<id>/ -> convert to /p/<id>/
-            parts = [p for p in path.split("/") if p]  # remove empty
-            # parts could be ["newyorkromaniangroup","p","DU..."] or ["p","DU..."]
-            if len(parts) >= 2 and parts[-2] in ("p", "reel"):
-                kind = parts[-2]
-                code = parts[-1]
-                abs_url = f"https://www.instagram.com/{kind}/{code}/"
-                hrefs.append(abs_url)
-
-    # De-dupe in order
-    seen = set()
-    out = []
-    for u in hrefs:
-        if u not in seen:
-            seen.add(u)
-            out.append(u)
-
-    return out[:LIMIT]
-
-
-def main():
-    if not JSON_PATH.exists():
-        safe_write_json(JSON_PATH, {"updated_at": None, "posts": []})
-
-    opts = Options()
-
-    opts.add_argument(f"--user-data-dir={os.path.expanduser('~/.config/google-chrome-selenium')}")
-    opts.add_argument("--profile-directory=Default")
-
-
-
-    # Headed mode (default). Keep it visible.
-    opts.add_argument("--headless=new")
-
-    # Reduce noise
-    opts.add_argument("--disable-notifications")
-    opts.add_argument("--lang=en-US")
-
-    # Slightly more "real browser" feel
-    opts.add_argument(
-        "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/122 Safari/537.36"
-    )
-    # These help prevent "DevToolsActivePort file doesn't exist" on Linux
-    opts.add_argument("--no-sandbox")
-    opts.add_argument("--disable-dev-shm-usage")
-    opts.add_argument("--remote-debugging-port=9222")
-    opts.add_argument("--disable-gpu")
-    opts.add_argument("--window-size=1200,900")
-
-
-    driver = webdriver.Chrome(options=opts)
-    driver.set_window_size(1200, 900)
+    driver = build_driver(headless=headless)
 
     try:
-        driver.get(PROFILE_URL)
-        # If IG shows a login wall, give you time to log in manually.
+        driver.get(profile_url)
+
+        # If IG shows a login page, we cannot scrape reliably without auth.
+        # In headed mode, you might log in manually. In headless mode, treat as blocked.
         if "accounts/login" in driver.current_url:
-            print("[NYRG] Login page detected. Please log in, then close the window.")
+            if headless:
+                print("[NYRG] Login wall detected in headless mode. Not updating JSON.")
+                return 0
+            print("[NYRG] Login page detected. Log in manually in the browser window.")
+            print("[NYRG] After logging in, leave the window open for ~60 seconds.")
             time.sleep(60)
 
-        print("[NYRG] Current URL:", driver.current_url)
-        print("[NYRG] Title:", driver.title)
+        if debug:
+            print("[NYRG][DEBUG] Current URL:", driver.current_url)
+            print("[NYRG][DEBUG] Title:", driver.title)
 
-        # Wait a bit so you can see what Selenium is actually showing
-        time.sleep(5)
-
-        # Save a screenshot so we can inspect what the browser saw
-        snap_path = REPO_ROOT / "scripts" / "debug_instagram.png"
-        driver.save_screenshot(str(snap_path))
-        print("[NYRG] Saved screenshot:", snap_path)
-
-
-
+        debug_screenshot(driver, REPO_ROOT / "scripts" / "debug_instagram.png", debug, "initial")
 
         wait = WebDriverWait(driver, 15)
 
-        # Cookie / consent popups vary a lot. Try a few common patterns.
-        # These may do nothing, which is fine.
+        # Cookie / consent popups vary. Best-effort.
         try_click(driver, By.XPATH, "//button[contains(., 'Allow all')]", timeout=3)
         try_click(driver, By.XPATH, "//button[contains(., 'Accept all')]", timeout=3)
         try_click(driver, By.XPATH, "//button[contains(., 'Accept')]", timeout=2)
 
-        # If Instagram shows a login modal overlay, sometimes there is an "X" button.
-        # This is best-effort and may not exist.
-        try_click(driver, By.CSS_SELECTOR, "svg[aria-label='Close']")
+        # Sometimes there is a close button on overlays
+        try_click(driver, By.CSS_SELECTOR, "svg[aria-label='Close']", timeout=2)
 
-        # Wait until the page has anchors. If blocked, we will still have anchors, just not posts.
+        # Wait until anchors exist. Even blocked pages have anchors, but this prevents early scraping.
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[href]")))
 
-        # Give the page a moment to populate the grid
         urls = []
 
-        anchors = driver.find_elements(By.CSS_SELECTOR, "a[href]")
-        hrefs = []
-        for a in anchors:
-            h = a.get_attribute("href")
-            if h:
-                hrefs.append(h)
-
-        print(f"[NYRG] Total anchors with href: {len(hrefs)}")
-        print("[NYRG] Sample hrefs:")
-        for h in hrefs[:40]:
-            print("  ", h)
-
-
-        # Try a few scrolls to force the grid to render
+        # Scroll a few times to encourage the grid to load.
         for i in range(5):
             time.sleep(2)
-            urls = collect_post_urls(driver)
-            print(f"[NYRG] Pass {i+1}: found {len(urls)} post-like URLs")
-            if len(urls) >= LIMIT:
+            urls = collect_post_urls(driver, limit=limit, debug=debug)
+            print(f"[NYRG] Pass {i + 1}: found {len(urls)} post URLs")
+            if len(urls) >= limit:
                 break
             driver.find_element(By.TAG_NAME, "body").send_keys(Keys.END)
 
-        # Another screenshot after scrolling
-        snap2_path = REPO_ROOT / "scripts" / "debug_instagram_after_scroll.png"
-        driver.save_screenshot(str(snap2_path))
-        print("[NYRG] Saved screenshot:", snap2_path)
+        debug_screenshot(driver, REPO_ROOT / "scripts" / "debug_instagram_after_scroll.png", debug, "after_scroll")
 
-        if len(urls) < LIMIT:
+        # If we did not find enough URLs, do not update JSON.
+        if len(urls) < limit:
             print(f"[NYRG] Found only {len(urls)} post URLs. Likely blocked or page did not load posts.")
             print("[NYRG] Not updating instagram.json.")
-            time.sleep(10)
             return 0
 
         payload = {
+            "source": profile_url,
             "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "count": len(urls),
             "posts": [{"url": u} for u in urls],
         }
 
-        safe_write_json(JSON_PATH, payload)
-        print(f"[NYRG] Wrote {len(urls)} URLs to {JSON_PATH}")
-
+        safe_write_json(json_path, payload)
+        print(f"[NYRG] Wrote {len(urls)} URLs to {json_path}")
         return 0
 
     finally:
-        # Leave the browser open for a couple seconds so you can see what happened.
-        time.sleep(2)
+        # Keep this short. If you want to watch the browser, set NYRG_IG_HEADLESS=0.
+        time.sleep(1)
         driver.quit()
 
 
