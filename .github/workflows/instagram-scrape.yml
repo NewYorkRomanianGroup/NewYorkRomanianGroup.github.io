@@ -22,7 +22,7 @@ jobs:
 
       - name: Scrape
         run: |
-          node scripts/scrape_instagram.mjs
+          node scripts/scrape_instagram.mjs || true
 
       - name: Commit changes (if any)
         run: |
