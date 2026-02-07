@@ -15,7 +15,7 @@ If something here feels unclear, stop and ask before editing.
 
 ## What you should NOT edit
 - `assets/site.js`
-- `assets/instagram.json`
+- `data/instagram.json`
 - Anything inside `scripts/`
 - `_config.yml`
 
@@ -30,7 +30,7 @@ Those files are automated or configuration-related.
 Instagram content is updated automatically using a script that:
 - Visits the NYRG Instagram profile
 - Extracts the latest posts
-- Updates `assets/instagram.json`
+- Updates `data/instagram.json`
 
 ### If Instagram looks broken on the site
 This can happen due to:
