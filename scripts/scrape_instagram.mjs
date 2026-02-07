@@ -17,7 +17,12 @@ function uniq(arr) {
 function normalizeToCanonical(urlStr) {
   try {
     const u = new URL(urlStr);
-    const parts = u.pathname.split("/").filter(Boolean); // ["username","p","CODE"] or ["p","CODE"]
+    const parts = u.pathname.split("/").filter(Boolean);
+    // Possible shapes:
+    // ["p","CODE"]
+    // ["reel","CODE"]
+    // ["newyorkromaniangroup","p","CODE"]
+    // ["newyorkromaniangroup","reel","CODE"]
 
     if (parts.length >= 2) {
       const kind = parts[parts.length - 2];
@@ -40,14 +45,39 @@ async function main() {
   // Give it time to populate the grid
   await page.waitForTimeout(4000);
 
+  import { writeFileSync, mkdirSync } from "fs";
+
+  mkdirSync("scripts/_debug", { recursive: true });
+  await page.screenshot({ path: "scripts/_debug/ig_profile.png", fullPage: true });
+  const html = await page.content();
+  writeFileSync("scripts/_debug/ig_profile.html", html, "utf8");
+  console.log("[DEBUG] Saved scripts/_debug/ig_profile.png and ig_profile.html");
+
+
   // Grab all anchors
   const hrefs = await page.$$eval("a[href]", (as) => as.map((a) => a.href).filter(Boolean));
+  console.log(`[DEBUG] Total anchors: ${hrefs.length}`);
+  console.log("[DEBUG] First 60 hrefs:");
+  hrefs.slice(0, 60).forEach((h) => console.log("  " + h));
+
+  // Show any hrefs that look post-like even before normalization
+  const rawCandidates = hrefs.filter((h) => /\/(p|reel)\//.test(h));
+  console.log(`[DEBUG] Raw candidates containing /p/ or /reel/: ${rawCandidates.length}`);
+  console.log("[DEBUG] First 30 raw candidates:");
+  rawCandidates.slice(0, 30).forEach((h) => console.log("  " + h));
 
   const postUrls = uniq(
     hrefs
       .map(normalizeToCanonical)
       .filter(Boolean)
   ).slice(0, LIMIT);
+
+  const normalized = hrefs.map(normalizeToCanonical).filter(Boolean);
+  console.log(`[DEBUG] Normalized candidates: ${normalized.length}`);
+  console.log("[DEBUG] First 30 normalized:");
+  normalized.slice(0, 30).forEach((h) => console.log("  " + h));
+
+
 
   // If blocked, do NOT overwrite existing file with empty posts
   if (postUrls.length < LIMIT) {
