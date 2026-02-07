@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { chromium } from "playwright";
+import { writeFileSync, mkdirSync } from "fs";
 
 const USERNAME = "newyorkromaniangroup";
 const PROFILE = `https://www.instagram.com/${USERNAME}/`;
@@ -44,8 +45,6 @@ async function main() {
 
   // Give it time to populate the grid
   await page.waitForTimeout(4000);
-
-  import { writeFileSync, mkdirSync } from "fs";
 
   mkdirSync("scripts/_debug", { recursive: true });
   await page.screenshot({ path: "scripts/_debug/ig_profile.png", fullPage: true });
