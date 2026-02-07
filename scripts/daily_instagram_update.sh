@@ -5,7 +5,7 @@ set -euo pipefail
 # NYRG: Daily Instagram JSON updater
 #
 # What this script does:
-# 1) Runs the Selenium scraper to refresh assets/instagram.json
+# 1) Runs the Selenium scraper to refresh data/instagram.json
 # 2) Commits the change if (and only if) the JSON changed
 # 3) Pushes to origin/main
 #
@@ -18,7 +18,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
-JSON_PATH="assets/instagram.json"
+JSON_PATH="data/instagram.json"
 SCRAPER_PATH="scripts/selenium_instagram_scrape.py"
 
 # Prefer repo venv, but allow python3 fallback for convenience.

@@ -2,7 +2,7 @@
  * NYRG site.js
  *
  * Purpose:
- * - Load the latest Instagram post URLs from: assets/instagram.json
+ * - Load the latest Instagram post URLs from: data/instagram.json
  * - Render up to 3 "best-effort" Instagram embeds on the homepage.
  * - Always provide clickable fallback links if embeds are blocked.
  *
@@ -14,7 +14,7 @@
  * - <div id="insta-fallback-links"></div>   // Where fallback links appear
  * - <div id="insta-updated-at"></div>       // Optional "last updated" label
  *
- * Data format expected (assets/instagram.json):
+ * Data format expected (data/instagram.json):
  * {
  *   "updated_at": "2026-02-07T12:34:56Z",
  *   "posts": [
@@ -40,7 +40,7 @@ async function loadInstagramLatest() {
 
   try {
     // cache: "no-store" makes sure we always fetch the newest JSON.
-    const res = await fetch("assets/instagram.json", { cache: "no-store" });
+    const res = await fetch("data/instagram.json", { cache: "no-store" });
 
     // If the file is missing or returns an error, show a friendly message.
     if (!res.ok) {

@@ -5,7 +5,7 @@ NYRG Instagram scraper (Selenium).
 Goal:
 - Open the public profile page
 - Extract the latest N post URLs (default 3)
-- Write them to assets/instagram.json
+- Write them to data/instagram.json
 - If extraction fails (blocked, changed markup, rate limit), do NOT modify the JSON.
 
 This file is heavily commented because collaborators may be new to coding.
@@ -17,7 +17,7 @@ How to run:
 Optional environment variables:
 - NYRG_IG_PROFILE_URL   (default: NYRG profile)
 - NYRG_IG_LIMIT         (default: 3)
-- NYRG_IG_JSON_PATH     (default: assets/instagram.json)
+- NYRG_IG_JSON_PATH     (default: data/instagram.json)
 - NYRG_IG_HEADLESS      ("1" default, set to "0" to see the browser)
 - NYRG_IG_DEBUG         ("0" default, set to "1" for extra logs + screenshots)
 """
@@ -186,7 +186,7 @@ def try_click(driver, by, value, timeout: int = 2) -> bool:
 def main() -> int:
     profile_url = env_str("NYRG_IG_PROFILE_URL", DEFAULT_PROFILE_URL)
     limit = max(1, env_int("NYRG_IG_LIMIT", DEFAULT_LIMIT))
-    json_path = Path(env_str("NYRG_IG_JSON_PATH", str(REPO_ROOT / "assets" / "instagram.json")))
+    json_path = Path(env_str("NYRG_IG_JSON_PATH", str(REPO_ROOT / "data" / "instagram.json")))
     headless = env_bool("NYRG_IG_HEADLESS", True)
     debug = env_bool("NYRG_IG_DEBUG", False)
 

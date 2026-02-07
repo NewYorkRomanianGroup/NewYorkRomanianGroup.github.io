@@ -5,7 +5,7 @@ set -euo pipefail
 # NYRG: Test Instagram JSON update (manual, SAFE)
 #
 # What this script does:
-# - Runs the scraper to refresh assets/instagram.json
+# - Runs the scraper to refresh data/instagram.json
 # - Shows whether the JSON changed
 #
 # What it does NOT do:
@@ -21,7 +21,7 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
-JSON_PATH="assets/instagram.json"
+JSON_PATH="data/instagram.json"
 SCRAPER_PATH="scripts/selenium_instagram_scrape.py"
 
 PY="$REPO_DIR/.venv/bin/python"
