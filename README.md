@@ -41,8 +41,9 @@ The site is published at:
 ├── assets/
 │ ├── style.css # Site styling
 │ ├── site.js # Small JS for Instagram embeds
-│ ├── instagram.json # Auto-generated Instagram data
 │ └── EDITING_GUIDE.md # How to update content (read this!)
+├── data/
+│ └── instagram.json # Auto-generated Instagram data
 ├── scripts/
 │ ├── selenium_instagram_scrape.py
 │ ├── daily_instagram_update.sh
@@ -69,7 +70,7 @@ It explains exactly what is safe to change and how.
 
 ## Technical notes
 - Instagram content is **auto-updated** via a script
-- Do not manually edit `assets/instagram.json` unless you know what you are doing
+- Do not manually edit `data/instagram.json` unless you know what you are doing
 - Scripts are documented and safe to run locally
 
 ---
