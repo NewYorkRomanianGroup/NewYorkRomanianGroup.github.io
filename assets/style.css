@@ -94,8 +94,11 @@ header {
 .brand-badge {
   width: 34px;
   height: 34px;
-  border-radius: var(--radius-sm);
-  background: linear-gradient(135deg, rgba(110,168,255,0.9), rgba(255,255,255,0.15));
+  border-radius: 50%;
+  background-image: url('assets/icon.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border: 1px solid var(--border);
 }
 
