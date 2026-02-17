@@ -9,7 +9,7 @@
  * This file is intentionally small and heavily commented because
  * collaborators may be new to coding.
  *
- * Dependencies (must exist on the homepage):
+ * Dependencies (must exist in index.md):
  * - <div id="insta-latest"></div>            // Where embeds get injected
  * - <div id="insta-fallback-links"></div>   // Where fallback links appear
  * - <div id="insta-updated-at"></div>       // Optional "last updated" label
