@@ -15,12 +15,10 @@
   --card: #111a2e;
   --text: #e8eefc;
   --muted: #b6c2e2;
-  /* --accent: #6ea8ff; */
-  --accent: #b3c1ed;
-  --accent-strong: #8ea3e6;
-  /* --border: rgba(255,255,255,0.12); */
+  --accent: #c3d3ff;
+  --accent-strong: #9fb9ff;
+  --accent-rgb: 195,211,255;
   --border: rgba(179,193,237,0.22);
-  --accent-rgb: 179,193,237;
 
 
   /* “Safe knobs” collaborators can tweak */
@@ -205,6 +203,8 @@ header {
   margin-bottom: 16px;
   display: block;
 }
+
+#hero-rotator-caption { display: none; }
 
 /* =========================================================
    Rotating photo strip

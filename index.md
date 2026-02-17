@@ -75,14 +75,14 @@ description: New York Romanian Group is a community for Romanians in New York. W
         Follow on Instagram
       </a>
 
-      <div class="small" id="insta-updated-at" style="margin-top: 8px;"></div>
+      <!-- <div class="small" id="insta-updated-at" style="margin-top: 8px;"></div> -->
     </div>
 
     <div class="embed-wrap" style="padding: 12px;">
-      <div class="small" style="margin-bottom: 10px;">
+      <!-- <div class="small" style="margin-bottom: 10px;">
         Latest 3 posts (auto-updated). If embeds are blocked,
         use the links below.
-      </div>
+      </div> -->
 
       <div id="insta-latest" class="insta-grid"></div>
 
@@ -121,9 +121,9 @@ description: New York Romanian Group is a community for Romanians in New York. W
       ></iframe>
 
 
-      <div class="small" style="margin-top: 10px;">
+      <!-- <div class="small" style="margin-top: 10px;">
         To update this gallery, keep the URL format and replace only the folder ID.
-      </div>
+      </div> -->
     </div>
 
     <div style="margin-top: 12px;">

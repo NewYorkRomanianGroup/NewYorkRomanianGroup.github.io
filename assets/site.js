@@ -66,12 +66,13 @@ async function loadInstagramLatest() {
       .slice(0, 3);
 
     // Show "updated at" label if present and valid.
-    if (updatedEl && typeof data?.updated_at === "string") {
-      const d = new Date(data.updated_at);
-      updatedEl.textContent = isNaN(d.getTime()) ? "" : `Updated: ${d.toLocaleString()}`;
-    } else if (updatedEl) {
-      updatedEl.textContent = "";
-    }
+    // if (updatedEl && typeof data?.updated_at === "string") {
+    //   const d = new Date(data.updated_at);
+    //   updatedEl.textContent = isNaN(d.getTime()) ? "" : `Updated: ${d.toLocaleString()}`;
+    // } else if (updatedEl) {
+    //   updatedEl.textContent = "";
+    // }
+    if (updatedEl) updatedEl.textContent = "";
 
     // If no URLs, show a message and exit.
     if (urls.length === 0) {
@@ -101,8 +102,9 @@ async function loadInstagramLatest() {
     if (fallback) {
       fallback.innerHTML = urls
         .map((u, i) => {
-          const label = `Instagram post ${i + 1}`;
-          return `<div><a href="${u}" target="_blank" rel="noopener">${label}</a></div>`;
+          // const label = `Instagram post ${i + 1}`;
+          // return `<div><a href="${u}" target="_blank" rel="noopener">${label}</a></div>`;
+          return `<div><a href="${u}" target="_blank" rel="noopener">${u}</a></div>`;
         })
         .join("");
     }
@@ -169,7 +171,8 @@ async function loadGalleryRotatorSlides() {
     const urls = images
       .map((x) => ({
         url: (x && typeof x.url === "string") ? x.url.trim() : "",
-        caption: (x && typeof x.name === "string") ? x.name.trim() : "",
+        // caption: (x && typeof x.name === "string") ? x.name.trim() : "",
+        caption: "", // No caption needed
         webViewLink: (x && typeof x.webViewLink === "string") ? x.webViewLink.trim() : ""
       }))
       .filter((x) => x.url);
