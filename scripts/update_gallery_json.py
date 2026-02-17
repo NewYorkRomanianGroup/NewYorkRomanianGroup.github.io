@@ -85,7 +85,9 @@ def walk_drive_folder(api_key: str, root_folder_id: str) -> List[dict]:
                     web = f.get("webViewLink", "")
 
                     # Direct-view URL that works well in <img> tags for public files
-                    view_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+                    # view_url = f"https://drive.google.com/uc?export=view&id={file_id}"
+                    view_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w2000"
+
 
                     images.append({
                         "id": file_id,

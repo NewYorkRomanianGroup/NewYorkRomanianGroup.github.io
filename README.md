@@ -90,3 +90,7 @@ It explains exactly what is safe to change and how.
 
 If you are unsure about any change, ask before editing.
 The goal is to keep this site stable, simple, and easy to maintain.
+
+
+## Update photos: run
+./scripts/update_gallery_json.sh 1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u
