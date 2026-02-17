@@ -9,7 +9,7 @@
  * This file is intentionally small and heavily commented because
  * collaborators may be new to coding.
  *
- * Dependencies (must exist in index.html):
+ * Dependencies (must exist in index.md):
  * - <div id="insta-latest"></div>            // Where embeds get injected
  * - <div id="insta-fallback-links"></div>   // Where fallback links appear
  * - <div id="insta-updated-at"></div>       // Optional "last updated" label
@@ -127,5 +127,58 @@ async function loadInstagramLatest() {
 }
 
 // Run immediately on page load.
-// This file is included at the end of index.html, so the DOM is already present.
+// This file is included from the shared layout near the end of the page, so the DOM is already present.
 loadInstagramLatest();
+
+/**
+ * Rotate featured photos on the homepage.
+ *
+ * This reads slide entries from #hero-rotator-slides where each child has:
+ * - data-image-url: image URL to show
+ * - data-caption: text shown below the image
+ */
+function loadHeroRotator() {
+  const imgEl = document.getElementById("hero-rotator-image");
+  const slidesRoot = document.getElementById("hero-rotator-slides");
+  const captionEl = document.getElementById("hero-rotator-caption");
+  const prevBtn = document.getElementById("hero-rotator-prev");
+  const nextBtn = document.getElementById("hero-rotator-next");
+
+  // If this page does not have the rotator section, stop early.
+  if (!imgEl || !slidesRoot) return;
+
+  const slides = Array.from(slidesRoot.children)
+    .map((el) => ({
+      url: (el.getAttribute("data-image-url") || "").trim(),
+      caption: (el.getAttribute("data-caption") || "").trim()
+    }))
+    .filter((s) => s.url);
+
+  if (slides.length === 0) return;
+
+  let idx = 0;
+
+  const render = () => {
+    const active = slides[idx];
+    imgEl.src = active.url;
+    if (active.caption) imgEl.alt = active.caption;
+    if (captionEl) captionEl.textContent = active.caption || "Featured photo";
+  };
+
+  const move = (step) => {
+    idx = (idx + step + slides.length) % slides.length;
+    render();
+  };
+
+  if (prevBtn) prevBtn.addEventListener("click", () => move(-1));
+  if (nextBtn) nextBtn.addEventListener("click", () => move(1));
+
+  // Auto-rotate every 4 seconds.
+  if (slides.length > 1) {
+    setInterval(() => move(1), 4000);
+  }
+
+  render();
+}
+
+loadHeroRotator();
