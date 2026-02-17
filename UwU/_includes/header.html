@@ -1,0 +1,21 @@
+<!-- =========================
+     SITE HEADER / NAVIGATION
+     Shared across all pages
+     ========================= -->
+<header>
+  <div class="container nav">
+    <div class="brand">
+      <img src="assets/image.png" class="brand-logo" alt="NYRG logo">
+      <div>
+        <div>New York Romanian Group</div>
+        <div class="small">Community • Events • Mentorship</div>
+      </div>
+    </div>
+
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="index.html" class="{% if page.url == '/' or page.url contains 'index' %}active{% endif %}">Home</a>
+      <a href="mentorship.html" class="{% if page.url contains 'mentorship' %}active{% endif %}">Mentorship</a>
+      <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,45 @@
+# =========================
+# NYRG GitHub Pages Config
+# =========================
+
+# -------------------------
+# Site identity
+# -------------------------
+title: New York Romanian Group
+description: Community, events, and mentorship for Romanians in New York
+url: https://newyorkromaniangroup.github.io
+baseurl: ""   # Keep empty; use relative links so branch previews work without hardcoding
+
+# -------------------------
+# Jekyll behavior
+# -------------------------
+# We are serving plain static HTML and CSS.
+# This site is NOT a blog and does not use posts or themes.
+theme: null
+markdown: kramdown
+
+# Disable blog-style features explicitly
+collections: {}
+permalink: none
+
+# -------------------------
+# Build exclusions
+# -------------------------
+# These files and folders will NOT be published
+# IMPORTANT:
+# Do NOT exclude folders that are fetched by client-side JS.
+# For example, data/instagram.json must remain published.
+exclude:
+  - README.md
+  - EDITING_GUIDE.md
+  - node_modules
+  - scripts
+  - .git
+  - .github
+  - package.json
+  - package-lock.json
+
+# -------------------------
+# Encoding
+# -------------------------
+encoding: "utf-8"
