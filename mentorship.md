@@ -2,7 +2,7 @@
 layout: default
 title: NYRG Mentorship
 description: NYRG Mentorship Program. Sign up to mentor or be mentored, and we will follow up with next steps.
-permalink: /mentorship.html
+# permalink: /mentorship.html
 ---
 
 <section class="hero">

@@ -2,12 +2,12 @@
 layout: default
 title: New York Romanian Group
 description: New York Romanian Group is a community for Romanians in New York. We host meetups, share resources, and connect people through mentorship.
-permalink: /
+# permalink: /
 ---
 
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
-  <img src="{{ '/assets/image.png' | relative_url }}" alt="New York Romanian Group banner" class="hero-banner-image">
+  <img src="assets/image.png" alt="New York Romanian Group banner" class="hero-banner-image">
 
   <div class="hero-banner-copy">
     <h1>Welcome!</h1>
