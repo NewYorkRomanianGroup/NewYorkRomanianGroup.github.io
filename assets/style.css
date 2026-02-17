@@ -32,6 +32,7 @@
 
   --pad-card: 16px;
   --pad-nav-y: 14px;
+  --banner-h: clamp(220px, 30vw, 420px);
 }
 
 /* =========================================================
@@ -194,7 +195,7 @@ header {
 
 .hero-banner-image {
   width: 100%;
-  height: clamp(240px, 38vw, 520px);
+  height: var(--banner-h);
   object-fit: contain;
   object-position: center;
   display: block;
@@ -417,9 +418,15 @@ iframe {
   Instagram embeds do not behave like small thumbnail cards.
   This grid is best-effort and will often become 1 column on smaller screens.
 */
+/* .insta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr)); /* default: 2 per row *
+  gap: 12px;
+  align-items: start;
+} */
 .insta-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(260px, 1fr)); /* default: 2 per row */
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 12px;
   align-items: start;
 }
@@ -438,5 +445,14 @@ iframe {
   .photo-highlights {
     position: static; /* disable sticky on mobile */
     top: auto;
+  }
+}
+
+
+#insta-fallback-links { display: none; }
+
+@media (max-width: 980px) {
+  .insta-grid {
+    grid-template-columns: 1fr;
   }
 }
