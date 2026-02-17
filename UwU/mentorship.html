@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Ensures relative paths work both on / and on /branch-name/ -->
+  <base href="./" />
+
+  <!-- Responsive layout -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO / link preview -->
+  <title>NYRG Mentorship</title>
+  <meta
+    name="description"
+    content="NYRG Mentorship Program. Sign up to mentor or be mentored, and we will follow up with next steps."
+  />
+
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <!-- =========================
+       SITE HEADER / NAVIGATION
+       ========================= -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true"></div>
+        <div>
+          <div>New York Romanian Group</div>
+          <div class="small">Mentorship Program</div>
+        </div>
+      </div>
+
+      <nav class="navlinks" aria-label="Main navigation">
+        <a href="./index.html">Home</a>
+        <a class="active" href="./mentorship.html">Mentorship</a>
+        <a
+          href="https://www.instagram.com/newyorkromaniangroup/"
+          target="_blank"
+          rel="noopener"
+        >
+          Instagram
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =========================
+       MAIN CONTENT
+       ========================= -->
+  <main class="container">
+    <!--
+      EDIT HERE:
+      This intro text is safe to change any time.
+      Keep it short and clear.
+    -->
+    <section class="hero">
+      <h1>Mentorship Program</h1>
+      <p>
+        Interested in mentoring or being mentored? Fill out the form below
+        and we will follow up with next steps.
+      </p>
+    </section>
+
+    <section class="grid" style="grid-template-columns: 1fr;">
+      <!-- =========================
+           FORM CARD
+           ========================= -->
+      <div class="card">
+        <h2>Interest Form</h2>
+
+        <p class="small">
+          Editing tip: If you ever replace the form, update the iframe URL below.
+        </p>
+
+        <div class="embed-wrap">
+          <!--
+            EDIT HERE (IMPORTANT):
+
+            HOW TO EMBED A GOOGLE FORM
+            1) Open your Google Form.
+            2) Click "Send" (top right).
+            3) Choose the <> embed tab.
+            4) Copy the iframe src URL and paste it below.
+
+            Notes:
+            - If the form looks cut off, increase the iframe height.
+            - If the form leaves too much blank space, decrease the height.
+          -->
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLSf_G5Rx39j4DimzkabnUSa0NNnMSM4ClupndkoJeZBDtFiE7Q/viewform?embedded=true"
+            width="100%"
+            height="900"
+            style="border:0; display:block;"
+            loading="lazy"
+            title="NYRG Mentorship Interest Form"
+          ></iframe>
+
+        </div>
+
+        <div class="small" style="margin-top: 10px;">
+          If the embed looks too tall or too short, adjust the iframe height above.
+        </div>
+      </div>
+
+      <!-- =========================
+           EXPECTATIONS CARD
+           ========================= -->
+      <div class="card">
+        <h2>What to expect</h2>
+
+        <!--
+          EDIT HERE:
+          This section should reflect how the program actually runs.
+          Keep it specific and simple.
+        -->
+        <p>
+          We match mentors and mentees based on goals, interests, and availability.
+          You can expect a short intro email, and optionally a kickoff call to set goals.
+        </p>
+
+        <p class="small">
+          Collaborator note: Update this section any time the program changes.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================
+       FOOTER
+       ========================= -->
+  <footer class="footer">
+    <div class="container">
+      <div>© <span id="year"></span> New York Romanian Group</div>
+    </div>
+  </footer>
+
+  <script>
+    // Auto-update footer year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
