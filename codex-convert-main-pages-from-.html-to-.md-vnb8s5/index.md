@@ -7,7 +7,7 @@ permalink: /
 
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
-  <img src="assets/image.png" alt="New York Romanian Group banner" class="hero-banner-image">
+  <img src="{{ '/assets/image.png' | relative_url }}" alt="New York Romanian Group banner" class="hero-banner-image">
 
   <div class="hero-banner-copy">
     <h1>Welcome!</h1>
@@ -29,7 +29,7 @@ permalink: /
   <div class="rotator-frame">
     <img
       id="hero-rotator-image"
-      src="assets/image.png"
+      src="{{ '/assets/image.png' | relative_url }}"
       alt="NYRG featured community photo"
       class="rotator-image"
       loading="lazy"
@@ -41,9 +41,9 @@ permalink: /
     Edit only data-image-url and data-caption.
   -->
   <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true">
-    <div data-image-url="assets/image.png" data-caption="Skyline meetup moments"></div>
-    <div data-image-url="assets/icon.png" data-caption="Romanian community in New York"></div>
-    <div data-image-url="assets/image.png" data-caption="Events and connections across the city"></div>
+    <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Skyline meetup moments"></div>
+    <div data-image-url="{{ '/assets/icon.png' | relative_url }}" data-caption="Romanian community in New York"></div>
+    <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Events and connections across the city"></div>
   </div>
 
   <div class="rotator-controls">

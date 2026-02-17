@@ -13,8 +13,8 @@
     </div>
 
     <nav class="navlinks" aria-label="Main navigation">
-      <a href="{{ '/' | relative_url }}" class="{% if page.url == '/' %}active{% endif %}">Home</a>
-      <a href="{{ '/mentorship.html' | relative_url }}" class="{% if page.url contains 'mentorship' %}active{% endif %}">Mentorship</a>
+      <a href="index.html" class="{% if page.url == '/' or page.url contains 'index' %}active{% endif %}">Home</a>
+      <a href="mentorship.html" class="{% if page.url contains 'mentorship' %}active{% endif %}">Mentorship</a>
       <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </div>
