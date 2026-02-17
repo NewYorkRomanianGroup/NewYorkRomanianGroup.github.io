@@ -1,0 +1,73 @@
+name: Branch previews (to folders)
+
+on:
+  push:
+    branches-ignore:
+      - main
+  delete:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: branch-preview-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pushed branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout main into ./_main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _main
+          fetch-depth: 0
+          
+      - name: Copy branch site into main/<branch>/
+        run: |
+          BRANCH="${GITHUB_REF_NAME//\//-}"
+          DEST="_main/${BRANCH}"
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+
+          # Copy everything except internal/dev folders
+          shopt -s dotglob
+          for item in *; do
+            case "$item" in
+              .git|_main|.github|.venv|scripts)
+                continue
+                ;;
+            esac
+            cp -R "$item" "$DEST/"
+          done
+
+      # - name: Copy branch site into main/<branch>/
+      #   run: |
+      #     BRANCH="${GITHUB_REF_NAME}"
+      #     DEST="_main/${BRANCH}"
+      #     rm -rf "$DEST"
+      #     mkdir -p "$DEST"
+
+      #     # Copy everything except .git and the _main folder
+      #     shopt -s dotglob
+      #     for item in *; do
+      #       if [[ "$item" != ".git" && "$item" != "_main" ]]; then
+      #         cp -R "$item" "$DEST/"
+      #       fi
+      #     done
+
+      - name: Commit and push to main
+        run: |
+          cd _main
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Preview: ${GITHUB_REF_NAME}" || exit 0
+          git push origin main
