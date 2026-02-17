@@ -5,49 +5,44 @@
    ========================================================= */
 
 :root {
-  /* Romanian flag colors (keep if you still use them anywhere) */
+  /* Romanian flag colors */
   --ro-blue: #002B7F;
   --ro-yellow: #FCD116;
   --ro-red: #CE1126;
 
-  /* Dark theme palette (from your reference) */
-  --bg: #0b1220;
-  --card: #111a2e;
-  --text: #e8eefc;
-  --muted: #b6c2e2;
-  --accent: #c3d3ff;
-  --accent-strong: #9fb9ff;
-  --accent-rgb: 195,211,255;
-  --border: rgba(179,193,237,0.22);
+  /* Light sky theme */
+  --bg: #cfe0ff;              /* page background */
+  --card: #dbe8ff;            /* cards, header surface */
+  --card-2: #e7f0ff;          /* inset surfaces (frames/embeds) */
 
+  --text: #0b1220;            /* main text becomes dark */
+  --muted: rgba(11,18,32,0.70);
 
-  /* “Safe knobs” collaborators can tweak */
+  /* Accent (slightly stronger sky) */
+  --accent: #5a7de6;
+  --accent-strong: #3f66da;
+  --accent-rgb: 90,125,230;
+
+  --border: rgba(11,18,32,0.18);
+  --focus: rgba(90,125,230,0.45);
+
   --radius-lg: 16px;
   --radius-md: 14px;
   --radius-sm: 10px;
 
   --pad-card: 16px;
   --pad-nav-y: 14px;
-
-  /* Focus ring */
-  --focus: rgba(110,168,255,0.55);
 }
 
 /* =========================================================
    Base page styling
    ========================================================= */
 
-/* body {
+body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-} */
-
-body {
-  background: radial-gradient(circle at top,
-    rgba(179,193,237,0.12),
-    #0b1220 60%);
 }
 
 
@@ -94,7 +89,7 @@ a:focus-visible,
    Header / nav
    ========================================================= */
 
-header {
+/* header {
   position: sticky;
   top: 0;
   background: rgba(11, 18, 32, 0.9);
@@ -102,7 +97,18 @@ header {
   border-bottom: 1px solid var(--border);
   z-index: 10;
   color: var(--text);
+} */
+header {
+  position: sticky;
+  top: 0;
+  background: rgba(219,232,255,0.92); /* matches --card but with slight transparency */
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  color: var(--text);
 }
+
+
 /* Romanian flag strip (blue, yellow, red) */
 .flag-strip{
   height: 6px;
@@ -158,14 +164,18 @@ header {
 .navlinks a {
   padding: 8px 10px;
   border-radius: var(--radius-sm);
+  color: var(--text);
 }
 
-.navlinks a { color: var(--text); }
-
-.navlinks a.active,
 .navlinks a:hover {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.55);
   text-decoration: none;
+}
+
+.navlinks a.active {
+  background: rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  color: var(--text);
 }
 
 /* =========================================================
@@ -192,16 +202,21 @@ header {
   padding-top: 28px;
 }
 
-.hero-banner-image {
+/* .hero-banner-image {
   width: 100%;
   height: clamp(240px, 38vw, 520px);
-  object-fit: contain;              /* show full image */
+  object-fit: contain;              /* show full image
   object-position: center;
-  background: rgba(255,255,255,0.03); /* letterbox background */
+  background: rgba(255,255,255,0.03); /* letterbox background
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   margin-bottom: 16px;
   display: block;
+} */
+
+.hero-banner-image {
+  background: var(--card-2);
+  border: 1px solid var(--border);
 }
 
 #hero-rotator-caption { display: none; }
@@ -215,11 +230,10 @@ header {
 }
 
 .rotator-frame {
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  background: var(--card-2);
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.03);
 }
+
 /* 
 .rotator-image {
   width: 100%;
@@ -232,12 +246,7 @@ header {
 */
 
 .rotator-image {
-  width: 100%;
-  height: clamp(260px, 32vw, 520px);
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  background: rgba(255,255,255,0.03);
+  background: var(--card-2);
 }
 
 .rotator-controls {
@@ -251,6 +260,7 @@ header {
 .rotator-controls .small {
   text-align: center;
   flex: 1;
+  color: var(--muted);
 }
 
 .hidden-slides {
@@ -283,15 +293,15 @@ header {
 /* Cards */
 .card {
   background: var(--card);
-  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: var(--pad-card);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.25);
+  border-color: rgba(var(--accent-rgb), 0.45);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.18);
 }
 
 .card h2 {
@@ -315,10 +325,8 @@ header {
    ========================================================= */
 
 .embed-wrap {
-  border-radius: var(--radius-md);
-  overflow: hidden;
+  background: var(--card-2);
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.03);
 }
 
 /* All iframes should fill the card width and have no border */
@@ -351,7 +359,7 @@ iframe {
    Buttons
    ========================================================= */
 
-.btn {
+/* .btn {
   display: inline-block;
   padding: 10px 12px;
   border-radius: 12px;
@@ -367,7 +375,7 @@ iframe {
   transform: translateY(-1px);
 }
 
-/* Big CTA button for Instagram */
+/* Big CTA button for Instagram
 .btn-ig {
   display: inline-flex;
   align-items: center;
@@ -396,8 +404,27 @@ iframe {
 .btn:hover,
 .btn-ig:hover {
   box-shadow: 0 4px 14px rgba(var(--accent-rgb), 0.25);
+} */
+
+.btn {
+  background: rgba(var(--accent-rgb), 0.12);
+  border: 1px solid rgba(var(--accent-rgb), 0.28);
+  color: var(--text);
 }
 
+.btn:hover {
+  background: rgba(var(--accent-rgb), 0.18);
+}
+
+.btn-ig {
+  background: rgba(var(--accent-rgb), 0.14);
+  border: 1px solid rgba(var(--accent-rgb), 0.32);
+  color: var(--text);
+}
+
+.btn-ig:hover {
+  background: rgba(var(--accent-rgb), 0.20);
+}
 
 /* Links */
 a {
