@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
 
+  <!-- Ensures relative paths work both on / and on /branch-name/ -->
+  <base href="./" />
+
   <!-- Responsive layout -->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -31,8 +34,8 @@
       </div>
 
       <nav class="navlinks" aria-label="Main navigation">
-        <a href="index.html">Home</a>
-        <a class="active" href="mentorship.html">Mentorship</a>
+        <a href="./index.html">Home</a>
+        <a class="active" href="./mentorship.html">Mentorship</a>
         <a
           href="https://www.instagram.com/newyorkromaniangroup/"
           target="_blank"
