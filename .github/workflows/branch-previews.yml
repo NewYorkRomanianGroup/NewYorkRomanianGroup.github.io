@@ -48,21 +48,6 @@ jobs:
             cp -R "$item" "$DEST/"
           done
 
-      # - name: Copy branch site into main/<branch>/
-      #   run: |
-      #     BRANCH="${GITHUB_REF_NAME}"
-      #     DEST="_main/${BRANCH}"
-      #     rm -rf "$DEST"
-      #     mkdir -p "$DEST"
-
-      #     # Copy everything except .git and the _main folder
-      #     shopt -s dotglob
-      #     for item in *; do
-      #       if [[ "$item" != ".git" && "$item" != "_main" ]]; then
-      #         cp -R "$item" "$DEST/"
-      #       fi
-      #     done
-
       - name: Commit and push to main
         run: |
           cd _main
@@ -70,4 +55,29 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Preview: ${GITHUB_REF_NAME}" || exit 0
+          git push origin main
+
+  cleanup:
+    if: github.event_name == 'delete' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Remove preview folder
+        run: |
+          BRANCH="${{ github.event.ref }}"
+          BRANCH="${BRANCH//\//-}"
+          DEST="${BRANCH}"
+          rm -rf "$DEST"
+
+      - name: Commit and push cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Cleanup preview: ${{ github.event.ref }}" || exit 0
           git push origin main

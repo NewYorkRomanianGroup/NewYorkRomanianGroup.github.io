@@ -7,7 +7,9 @@ description: New York Romanian Group is a community for Romanians in New York. W
 
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
-  <img src="assets/image.png" alt="New York Romanian Group banner" class="hero-banner-image">
+  <img src="{{ '/assets/banner.jpeg' | relative_url }}" 
+     alt="New York skyline banner" 
+     class="hero-banner-image">
 
   <div class="hero-banner-copy">
     <h1>Welcome!</h1>
@@ -75,15 +77,6 @@ description: New York Romanian Group is a community for Romanians in New York. W
       <div class="small" id="insta-updated-at" style="margin-top: 8px;"></div>
     </div>
 
-    <div class="embed-wrap" style="padding: 12px; margin-bottom: 12px;">
-      <blockquote
-        class="instagram-media"
-        data-instgrm-permalink="https://www.instagram.com/newyorkromaniangroup/"
-        data-instgrm-version="14"
-        style="margin: 0 auto; max-width: 540px; min-width: 280px;"
-      ></blockquote>
-    </div>
-
     <div class="embed-wrap" style="padding: 12px;">
       <div class="small" style="margin-bottom: 10px;">
         Latest 3 posts (auto-updated). If embeds are blocked,
@@ -95,6 +88,15 @@ description: New York Romanian Group is a community for Romanians in New York. W
       <div class="small" style="margin-top: 12px;">
         <div id="insta-fallback-links"></div>
       </div>
+    </div>
+
+    <div class="embed-wrap" style="padding: 12px; margin-bottom: 12px;">
+      <blockquote
+        class="instagram-media"
+        data-instgrm-permalink="https://www.instagram.com/newyorkromaniangroup/"
+        data-instgrm-version="14"
+        style="margin: 0 auto; max-width: 540px; min-width: 280px;"
+      ></blockquote>
     </div>
   </div>
 
@@ -111,11 +113,12 @@ description: New York Romanian Group is a community for Romanians in New York. W
         Replace only the folder ID after /folders/ to switch folders.
       -->
       <iframe
-        src="https://drive.google.com/drive/u/2/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u"
+        src="https://drive.google.com/embeddedfolderview?id=1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u#grid"
         height="520"
         loading="lazy"
         title="NYRG Photo Highlights"
       ></iframe>
+
 
       <div class="small" style="margin-top: 10px;">
         To update this gallery, keep the URL format and replace only the folder ID.
