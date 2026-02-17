@@ -54,6 +54,9 @@ permalink: /
 </section>
 
 <section class="grid">
+  <!-- =========================
+       LEFT CARD: INSTAGRAM
+       ========================= -->
   <div class="card">
     <h2>Latest from Instagram</h2>
     <p>
@@ -95,6 +98,9 @@ permalink: /
     </div>
   </div>
 
+  <!-- =========================
+       RIGHT CARD: PHOTO GALLERY
+       ========================= -->
   <div class="card">
     <h2>Photo Highlights</h2>
     <p>Browse the full shared folder and open individual files below.</p>
