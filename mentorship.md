@@ -17,6 +17,13 @@ permalink: /mentorship.html
     <h2>Interest Form</h2>
 
     <div class="embed-wrap">
+      <!--
+        HOW TO EMBED A GOOGLE FORM
+        1) Open your Google Form.
+        2) Click "Send" (top right).
+        3) Choose the <> embed tab.
+        4) Copy the iframe src URL and paste it below.
+      -->
       <iframe
         src="https://docs.google.com/forms/d/e/1FAIpQLSf_G5Rx39j4DimzkabnUSa0NNnMSM4ClupndkoJeZBDtFiE7Q/viewform?embedded=true"
         height="900"
