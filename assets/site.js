@@ -39,15 +39,8 @@ async function loadInstagramLatest() {
   };
 
   try {
-    // IMPORTANT:
-    // Build an absolute URL based on the page base URL.
-    // This makes it work on / and on /branch-name/ and on nested pages.
-    const jsonUrl = new URL("data/instagram.json", document.baseURI);
-
-    // Cache-bust to reduce stale JSON on GitHub Pages/CDN layers.
-    jsonUrl.searchParams.set("_ts", String(Date.now()));
-
-    const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
+    // cache: "no-store" makes sure we always fetch the newest JSON.
+    const res = await fetch("data/instagram.json", { cache: "no-store" });
 
     // If the file is missing or returns an error, show a friendly message.
     if (!res.ok) {
@@ -134,5 +127,5 @@ async function loadInstagramLatest() {
 }
 
 // Run immediately on page load.
-// If you include this script with `defer`, DOM is ready here too.
+// This file is included at the end of index.html, so the DOM is already present.
 loadInstagramLatest();
