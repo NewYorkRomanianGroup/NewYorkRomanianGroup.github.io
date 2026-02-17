@@ -36,8 +36,8 @@ The site is published at:
 ## Repository structure (high level)
 
 /
-├── index.html # Home page
-├── mentorship.html # Mentorship sign-up page
+├── index.md # Home page
+├── mentorship.md # Mentorship sign-up page
 ├── assets/
 │ ├── style.css # Site styling
 │ ├── site.js # Small JS for Instagram embeds
