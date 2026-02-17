@@ -141,6 +141,21 @@ background: linear-gradient(
 }
 
 /* =========================================================
+   Hero image
+   - Controls the large NYRG logo image
+   - Adjust max-width to resize
+   ========================================================= */
+
+.hero img {
+  width: 100%;          /* responsive */
+  max-width: 500px;     /* 🔧 CHANGE THIS to resize */
+  height: auto;         /* preserve aspect ratio */
+  display: block;
+  margin: 20px auto 0 auto;  /* center + spacing above */
+}
+
+
+/* =========================================================
    Cards + grid
    ========================================================= */
 
