@@ -83,12 +83,26 @@ header {
   z-index: 10;
   color: var(--text);
 }
+/* Romanian flag strip (blue, yellow, red) */
+.flag-strip{
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg,
+    #002B7F 0%,
+    #002B7F 33.333%,
+    #FCD116 33.333%,
+    #FCD116 66.666%,
+    #CE1126 66.666%,
+    #CE1126 100%
+  );
+}
+
 
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--pad-nav-y) 0;
+  padding: calc(var(--pad-nav-y) - 2px) 0;
 }
 
 .brand {
@@ -103,7 +117,7 @@ header {
   width: 34px;
   height: 34px;
   border-radius: var(--radius-sm);
-  object-fit: cover;
+  object-fit: contain;
   border: 1px solid var(--border);
 }
 
@@ -161,10 +175,13 @@ header {
 .hero-banner-image {
   width: 100%;
   height: clamp(240px, 38vw, 520px);
-  object-fit: cover;
+  object-fit: contain;              /* show full image */
+  object-position: center;
+  background: rgba(255,255,255,0.03); /* letterbox background */
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   margin-bottom: 16px;
+  display: block;
 }
 
 /* =========================================================
@@ -210,15 +227,23 @@ header {
    Cards + grid
    ========================================================= */
 
-.grid {
+.grid{
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr 1fr; /* was 1.2fr 0.8fr */
   gap: 16px;
   padding: 18px 0 36px 0;
 }
 
 @media (max-width: 900px) {
   .grid { grid-template-columns: 1fr; }
+}
+
+@media (min-width: 901px){
+  .photo-highlights{
+    position: sticky;
+    top: 78px;
+    align-self: start;
+  }
 }
 
 .card {

@@ -103,7 +103,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
   <!-- =========================
        RIGHT CARD: PHOTO GALLERY
        ========================= -->
-  <div class="card">
+  <div class="card photo-highlights">
     <h2>Photo Highlights</h2>
     <p>Browse the full shared folder and open individual files below.</p>
 
