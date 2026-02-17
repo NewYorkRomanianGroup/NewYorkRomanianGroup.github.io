@@ -1,18 +1,3 @@
-## Deployment
-
-Production site:
-https://newyorkromaniangroup.github.io/
-
-Branch previews:
-Any non-main branch is automatically deployed to:
-
-https://newyorkromaniangroup.github.io/<branch-name>/
-
-Example:
-dev branch → /dev/
-feature/instagram → /feature-instagram/
-
-
 # New York Romanian Group Website
 
 This repository contains the official website for the **New York Romanian Group (NYRG)**.
