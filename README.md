@@ -2,8 +2,6 @@
 
 This repository contains the official website for the **New York Romanian Group (NYRG)**.
 
-The site is intentionally simple and static so it is easy to maintain by collaborators who may be new to coding.
-
 ---
 
 ## What this site is
