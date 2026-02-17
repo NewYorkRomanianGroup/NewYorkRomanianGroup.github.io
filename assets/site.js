@@ -137,6 +137,54 @@ async function loadInstagramLatest() {
 // This file is included from the shared layout near the end of the page, so the DOM is already present.
 loadInstagramLatest();
 
+
+
+
+async function loadGalleryRotatorSlides() {
+  const slidesRoot = document.getElementById("hero-rotator-slides");
+  const captionEl = document.getElementById("hero-rotator-caption");
+  const imgEl = document.getElementById("hero-rotator-image");
+
+  if (!slidesRoot || !imgEl) return;
+
+  try {
+    const jsonUrl = new URL("data/gallery.json", document.baseURI);
+    jsonUrl.searchParams.set("_ts", String(Date.now()));
+
+    const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const images = Array.isArray(data?.images) ? data.images : [];
+
+    // Keep only entries with a usable URL
+    const urls = images
+      .map((x) => ({
+        url: (x && typeof x.url === "string") ? x.url.trim() : "",
+        caption: (x && typeof x.name === "string") ? x.name.trim() : ""
+      }))
+      .filter((x) => x.url);
+
+    if (urls.length === 0) return;
+
+    // Fill slides for the existing rotator logic
+    slidesRoot.innerHTML = "";
+    urls.slice(0, 20).forEach((s) => {
+      const d = document.createElement("div");
+      d.setAttribute("data-image-url", s.url);
+      d.setAttribute("data-caption", s.caption || "Featured photo");
+      slidesRoot.appendChild(d);
+    });
+
+    // Set initial caption quickly before rotation starts
+    if (captionEl) captionEl.textContent = urls[0].caption || "Featured photo";
+    imgEl.src = urls[0].url;
+    imgEl.alt = urls[0].caption || "Featured photo";
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 /**
  * Rotate featured photos on the homepage.
  *
@@ -188,4 +236,4 @@ function loadHeroRotator() {
   render();
 }
 
-loadHeroRotator();
+loadGalleryRotatorSlides().then(loadHeroRotator);

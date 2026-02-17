@@ -42,11 +42,12 @@ description: New York Romanian Group is a community for Romanians in New York. W
     Slide definitions for collaborators.
     Edit only data-image-url and data-caption.
   -->
-  <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true">
+  <!-- <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true">
     <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Skyline meetup moments"></div>
     <div data-image-url="{{ '/assets/icon.png' | relative_url }}" data-caption="Romanian community in New York"></div>
     <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Events and connections across the city"></div>
-  </div>
+  </div> -->
+  <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true"></div>
 
   <div class="rotator-controls">
     <button class="btn" id="hero-rotator-prev" type="button" aria-label="Show previous photo">Previous</button>
