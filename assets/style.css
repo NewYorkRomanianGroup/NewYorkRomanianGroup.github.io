@@ -230,24 +230,22 @@ header {
 }
 
 .rotator-frame {
-  background: var(--card-2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
   border: 1px solid var(--border);
+  background: var(--card-2, var(--card));
 }
 
-/* 
+
 .rotator-image {
   width: 100%;
-  height: 420px;        // adjust if you want taller
-  object-fit: contain;  // show full image
+  height: 420px;        /* adjust if you want taller */
+   object-fit: contain;  /*show full image */
   object-position: center;
   display: block;
-  background: rgba(255,255,255,0.03); // letterbox background
-}
-*/
-
-.rotator-image {
+  /* background: rgba(255,255,255,0.03); // letterbox background */
   background: var(--card-2);
-}
+}}
 
 .rotator-controls {
   margin-top: 10px;
@@ -271,11 +269,12 @@ header {
    Cards + grid
    ========================================================= */
 
-.grid{
+.grid {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* was 1.2fr 0.8fr */
+  grid-template-columns: 1.6fr 0.9fr; /* Instagram wider, highlights narrower */
   gap: 16px;
   padding: 18px 0 36px 0;
+  align-items: start;
 }
 
 @media (max-width: 900px) {
@@ -447,11 +446,31 @@ a:hover {
 */
 .insta-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(260px, 1fr)); /* default: 2 per row */
+  gap: 12px;
+  align-items: start;
 }
 
-@media (max-width: 1050px) {
-  /* Degrade earlier so the embeds have room */
-  .insta-grid { grid-template-columns: 1fr; }
+.insta-grid > * {
+  min-width: 0; /* prevents overflow in grid children */
+}
+
+
+/* Stack cards on narrower screens */
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-highlights {
+    position: static; /* disable sticky on mobile */
+    top: auto;
+  }
+}
+
+/* 1 post per row on small screens */
+@media (max-width: 900px) {
+  .insta-grid {
+    grid-template-columns: 1fr;
+  }
 }
