@@ -5,24 +5,29 @@
    ========================================================= */
 
 :root {
+  /* Romanian flag colors (keep if you still use them anywhere) */
   --ro-blue: #002B7F;
   --ro-yellow: #FCD116;
   --ro-red: #CE1126;
 
-  /* keep your existing variables */
-  --text: #333;
-  --border: rgba(0,0,0,0.1);
-  --radius-sm: 6px;
-}
+  /* Dark theme palette (from your reference) */
+  --bg: #0b1220;
+  --card: #111a2e;
+  --text: #e8eefc;
+  --muted: #b6c2e2;
+  --accent: #6ea8ff;
+  --border: rgba(255,255,255,0.12);
 
+  /* “Safe knobs” collaborators can tweak */
+  --radius-lg: 16px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
 
-* { box-sizing: border-box; }
+  --pad-card: 16px;
+  --pad-nav-y: 14px;
 
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  /* Focus ring */
+  --focus: rgba(110,168,255,0.55);
 }
 
 /* =========================================================
@@ -60,17 +65,12 @@ a:focus-visible,
 
 header {
   position: sticky;
-background: linear-gradient( 
-   90deg, 
-   var(--ro-blue) 0%
-   , var(--ro-blue) 33%, 
-   var(--ro-yellow) 33%, 
-   var(--ro-yellow) 66%, 
-   var(--ro-red) 66%, 
-   var(--ro-red) 100% ); 
-   color: white; 
-   padding: 16px 0; 
-   border-bottom: 1px solid var(--border);
+  top: 0;
+  background: rgba(11, 18, 32, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+  color: var(--text);
 }
 
 .nav {
@@ -88,11 +88,11 @@ background: linear-gradient(
   letter-spacing: 0.2px;
 }
 
-.brand-logo {
+.brand-badge {
   width: 34px;
   height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(110,168,255,0.9), rgba(255,255,255,0.15));
   border: 1px solid var(--border);
 }
 
@@ -105,20 +105,15 @@ background: linear-gradient(
 .navlinks a {
   padding: 8px 10px;
   border-radius: var(--radius-sm);
-   color: white;
 }
 
-.navlinks a:hover {
-   opacity: 0.8; 
-}
+.navlinks a { color: var(--text); }
 
 .navlinks a.active,
 .navlinks a:hover {
   background: rgba(255,255,255,0.06);
   text-decoration: none;
 }
-
-
 
 /* =========================================================
    Hero section
@@ -139,21 +134,6 @@ background: linear-gradient(
   line-height: 1.5;
   font-size: 16px;
 }
-
-/* =========================================================
-   Hero image
-   - Controls the large NYRG logo image
-   - Adjust max-width to resize
-   ========================================================= */
-
-.hero img {
-  width: 100%;          /* responsive */
-  max-width: 500px;     /* 🔧 CHANGE THIS to resize */
-  height: auto;         /* preserve aspect ratio */
-  display: block;
-  margin: 20px auto 0 auto;  /* center + spacing above */
-}
-
 
 /* =========================================================
    Cards + grid
