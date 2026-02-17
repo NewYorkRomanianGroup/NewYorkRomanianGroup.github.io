@@ -8,7 +8,7 @@
 title: New York Romanian Group
 description: Community, events, and mentorship for Romanians in New York
 url: https://newyorkromaniangroup.github.io
-baseurl: ""   # Important for GitHub Pages routing
+baseurl: ""   # Keep empty; use relative links so branch previews work without hardcoding
 
 # -------------------------
 # Jekyll behavior
