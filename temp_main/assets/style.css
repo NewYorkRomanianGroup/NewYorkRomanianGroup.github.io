@@ -1,0 +1,267 @@
+/* =========================================================
+   NYRG styles (collaborator-friendly)
+   - Change colors, fonts, spacing, and rounded corners here.
+   - Keep selectors simple (no frameworks).
+   ========================================================= */
+
+:root {
+  /* ---------- Color palette ---------- */
+  --bg: #0b1220;
+  --card: #111a2e;
+  --text: #e8eefc;
+  --muted: #b6c2e2;
+  --accent: #6ea8ff;
+  --border: rgba(255,255,255,0.12);
+
+  /* ---------- "Safe knobs" collaborators can tweak ---------- */
+  --radius-lg: 16px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+
+  --pad-card: 16px;
+  --pad-nav-y: 14px;
+
+  /* Focus ring (keyboard navigation) */
+  --focus: rgba(110,168,255,0.55);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =========================================================
+   Links + focus states
+   ========================================================= */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover { text-decoration: underline; }
+
+/* Keyboard focus should be visible (important for accessibility) */
+a:focus-visible,
+.btn:focus-visible,
+.btn-ig:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================================
+   Layout helpers
+   ========================================================= */
+
+.container {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+/* =========================================================
+   Header / nav
+   ========================================================= */
+
+header {
+  position: sticky;
+  top: 0;
+  background: rgba(11, 18, 32, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--pad-nav-y) 0;
+}
+
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.brand-badge {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(110,168,255,0.9), rgba(255,255,255,0.15));
+  border: 1px solid var(--border);
+}
+
+.navlinks {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.navlinks a {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.navlinks a.active,
+.navlinks a:hover {
+  background: rgba(255,255,255,0.06);
+  text-decoration: none;
+}
+
+/* =========================================================
+   Hero section
+   ========================================================= */
+
+.hero {
+  padding: 36px 0 10px 0;
+}
+
+.hero h1 {
+  margin: 0 0 10px 0;
+  font-size: 34px;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+/* =========================================================
+   Cards + grid
+   ========================================================= */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 16px;
+  padding: 18px 0 36px 0;
+}
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--pad-card);
+}
+
+.card h2 {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+}
+
+.card p {
+  margin: 0 0 10px 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* =========================================================
+   Embeds (Google Drive, Instagram, Google Forms)
+   ========================================================= */
+
+.embed-wrap {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+}
+
+/* All iframes should fill the card width and have no border */
+iframe {
+  width: 100%;
+  border: 0;
+}
+
+/* Instagram embeds come in as <blockquote class="instagram-media"> */
+.instagram-media {
+  /* Keep embed centered and prevent weird overflow */
+  width: 100%;
+  max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================================================
+   Footer
+   ========================================================= */
+
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 18px 0 30px 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* =========================================================
+   Buttons
+   ========================================================= */
+
+.btn {
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(110,168,255,0.15);
+  border: 1px solid rgba(110,168,255,0.25);
+}
+
+.btn:hover {
+  background: rgba(110,168,255,0.22);
+  text-decoration: none;
+}
+
+/* Big CTA button for Instagram */
+.btn-ig {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  background: rgba(110,168,255,0.18);
+  border: 1px solid rgba(110,168,255,0.35);
+}
+
+.btn-ig:hover {
+  background: rgba(110,168,255,0.26);
+  text-decoration: none;
+}
+
+/* =========================================================
+   Instagram "latest posts" layout
+   ========================================================= */
+
+/*
+  Note:
+  Instagram embeds do not behave like small thumbnail cards.
+  This grid is best-effort and will often become 1 column on smaller screens.
+*/
+.insta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 1050px) {
+  /* Degrade earlier so the embeds have room */
+  .insta-grid { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Responsive layout -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- SEO / link preview -->
+  <title>New York Romanian Group</title>
+  <meta
+    name="description"
+    content="New York Romanian Group is a community for Romanians in New York. We host meetups, share resources, and connect people through mentorship."
+  />
+  <!-- This is to be able to review SEO data - DO NOT REMOVE -->
+  <meta name="google-site-verification" content="mepvYxQ77zzETrGGSjPnQcM0AUbqsCt8QRsycscUBPc" />
+
+  <!-- Main site styles -->
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <!-- =========================
+       SITE HEADER / NAVIGATION
+       ========================= -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+       <img src="assets/image.png" class="brand-logo" alt="NYRG logo">
+        <div>
+          <div>New York Romanian Group</div>
+          <div class="small">Community • Events • Mentorship</div>
+        </div>
+      </div>
+
+      <nav class="navlinks" aria-label="Main navigation">
+        <a class="active" href="index.html">Home</a>
+        <a href="mentorship.html">Mentorship</a>
+        <a
+          href="https://www.instagram.com/newyorkromaniangroup/"
+          target="_blank"
+          rel="noopener"
+        >
+          Instagram
+        </a>
+         <img src="assets/image.png" class="logo" alt="NYRG logo">    
+      </nav>
+    </div>
+  </header>
+
+  <!-- =========================
+       MAIN CONTENT
+       ========================= -->
+  <main class="container">
+    <!--
+      EDIT HERE:
+      This is the main welcome text shown at the top of the homepage.
+      Safe to edit wording only. Do not remove the <section> wrapper.
+    -->
+    <section class="hero">
+      <h1>Welcome!</h1>
+      <p>
+        NYRG is a community for Romanians in New York. We host meetups,
+        share resources, and connect people through mentorship.
+      </p>
+    </section>
+
+    <section class="grid">
+      <!-- =========================
+           LEFT CARD: INSTAGRAM
+           ========================= -->
+      <div class="card">
+        <h2>Latest from Instagram</h2>
+        <p>
+          Follow
+          <a
+            href="https://www.instagram.com/newyorkromaniangroup/"
+            target="_blank"
+            rel="noopener"
+          >
+            @newyorkromaniangroup
+          </a>
+          for event announcements and updates.
+        </p>
+
+        <!-- Big follow button -->
+        <div style="margin: 10px 0 14px 0;">
+          <a
+            class="btn-ig"
+            href="https://www.instagram.com/newyorkromaniangroup/"
+            target="_blank"
+            rel="noopener"
+          >
+            Follow on Instagram
+          </a>
+
+          <!-- Auto-filled by site.js -->
+          <div
+            class="small"
+            id="insta-updated-at"
+            style="margin-top: 8px;"
+          ></div>
+        </div>
+
+        <!--
+          Instagram profile embed (best-effort).
+          NOTE:
+          Instagram embeds can be unreliable depending on browser,
+          privacy settings, or ad blockers.
+          The button and links above are the primary access point.
+        -->
+        <div class="embed-wrap" style="padding: 12px; margin-bottom: 12px;">
+          <blockquote
+            class="instagram-media"
+            data-instgrm-permalink="https://www.instagram.com/newyorkromaniangroup/"
+            data-instgrm-version="14"
+            style="margin: 0 auto; max-width: 540px; min-width: 280px;"
+          ></blockquote>
+        </div>
+
+        <!--
+          Latest 3 posts
+          These are auto-generated from assets/data (via script).
+          DO NOT edit manually unless you know what you are doing.
+        -->
+        <div class="embed-wrap" style="padding: 12px;">
+          <div class="small" style="margin-bottom: 10px;">
+            Latest 3 posts (auto-updated). If embeds are blocked,
+            use the links below.
+          </div>
+
+          <div id="insta-latest" class="insta-grid"></div>
+
+          <div class="small" style="margin-top: 12px;">
+            <div id="insta-fallback-links"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =========================
+           RIGHT CARD: PHOTO GALLERY
+           ========================= -->
+      <div class="card">
+        <h2>Photo Highlights</h2>
+        <p>
+          A sampling of recent photos. Upload new photos to the shared
+          Google Drive folder and they will appear here (depending on
+          Drive sharing settings).
+        </p>
+
+        <p class="small">
+          Editing tip: Replace the DRIVE_FOLDER_ID below once the Drive
+          folder is created.
+        </p>
+
+        <div class="embed-wrap">
+          <!--
+            EDIT HERE (IMPORTANT):
+
+            GOOGLE DRIVE FOLDER EMBED
+            1) Create a Google Drive folder (for example: "NYRG Photos").
+            2) Set sharing to: "Anyone with the link can view"
+               (or another appropriate public setting).
+            3) Copy the folder ID from the URL:
+               https://drive.google.com/drive/folders/THIS_PART_IS_THE_ID
+            4) Replace DRIVE_FOLDER_ID in the iframe src below.
+          -->
+          <iframe
+            src="https://drive.google.com/embeddedfolderview?id=DRIVE_FOLDER_ID#grid"
+            height="520"
+            loading="lazy"
+            title="NYRG Photo Highlights"
+          ></iframe>
+
+          <div class="small" style="margin-top: 10px;">
+            Photo gallery coming soon. We will be sharing highlights from
+            NYRG events here.
+          </div>
+        </div>
+
+        <div style="margin-top: 12px;">
+          <a
+            class="btn"
+            href="https://drive.google.com/"
+            target="_blank"
+            rel="noopener"
+          >
+            Open Google Drive
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================
+       FOOTER
+       ========================= -->
+  <footer class="footer">
+    <div class="container">
+      <div>© <span id="year"></span> New York Romanian Group</div>
+      <div class="small">
+        Built with GitHub Pages. Keep edits simple and well-commented
+        for collaborators.
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================
+       SCRIPTS
+       ========================= -->
+  <script src="assets/site.js"></script>
+  <script>
+    // Auto-update footer year
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>
