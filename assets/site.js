@@ -158,14 +158,22 @@ async function loadGalleryRotatorSlides() {
     const images = Array.isArray(data?.images) ? data.images : [];
 
     // Keep only entries with a usable URL
+    // const urls = images
+    //   .map((x) => ({
+    //     url: (x && typeof x.url === "string") ? x.url.trim() : "",
+    //     caption: (x && typeof x.name === "string") ? x.name.trim() : ""
+    //   }))
+    //   .filter((x) => x.url);
+
+    // if (urls.length === 0) return;
     const urls = images
       .map((x) => ({
         url: (x && typeof x.url === "string") ? x.url.trim() : "",
-        caption: (x && typeof x.name === "string") ? x.name.trim() : ""
+        caption: (x && typeof x.name === "string") ? x.name.trim() : "",
+        webViewLink: (x && typeof x.webViewLink === "string") ? x.webViewLink.trim() : ""
       }))
       .filter((x) => x.url);
 
-    if (urls.length === 0) return;
 
     // Fill slides for the existing rotator logic
     slidesRoot.innerHTML = "";

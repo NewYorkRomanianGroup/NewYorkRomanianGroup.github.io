@@ -198,12 +198,24 @@ header {
   border: 1px solid var(--border);
   background: rgba(255,255,255,0.03);
 }
+/* 
+.rotator-image {
+  width: 100%;
+  height: 420px;        // adjust if you want taller
+  object-fit: contain;  // show full image
+  object-position: center;
+  display: block;
+  background: rgba(255,255,255,0.03); // letterbox background
+}
+*/
 
 .rotator-image {
   width: 100%;
-  height: 300px;
-  object-fit: cover;
+  height: clamp(260px, 32vw, 520px);
+  object-fit: contain;
+  object-position: center;
   display: block;
+  background: rgba(255,255,255,0.03);
 }
 
 .rotator-controls {
