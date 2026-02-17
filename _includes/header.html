@@ -1,3 +1,7 @@
+<!-- =========================
+     SITE HEADER / NAVIGATION
+     Shared across all pages
+     ========================= -->
 <header>
   <div class="container nav">
     <div class="brand">
@@ -9,8 +13,8 @@
     </div>
 
     <nav class="navlinks" aria-label="Main navigation">
-      <a href="index.html">Home</a>
-      <a class="active" href="mentorship.html">Mentorship</a>
+      <a href="index.html" class="{% if page.url == '/' or page.url contains 'index' %}active{% endif %}">Home</a>
+      <a href="mentorship.html" class="{% if page.url contains 'mentorship' %}active{% endif %}">Mentorship</a>
       <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </div>
