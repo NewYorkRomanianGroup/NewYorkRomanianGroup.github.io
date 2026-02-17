@@ -24,6 +24,12 @@
  * }
  */
 
+function instaMaxPostsForWidth() {
+  // "Narrow" breakpoint: match your CSS stack breakpoint
+  return window.matchMedia("(max-width: 980px)").matches ? 2 : 4;
+}
+
+
 async function loadInstagramLatest() {
   const container = document.getElementById("insta-latest");
   const fallback = document.getElementById("insta-fallback-links");
@@ -58,12 +64,14 @@ async function loadInstagramLatest() {
 
     const data = await res.json();
 
-    // Extract up to 3 URLs safely.
+    // Extract up to 2 or 4 URLs (responsive) safely.
     const posts = Array.isArray(data?.posts) ? data.posts : [];
+    const maxPosts = instaMaxPostsForWidth();
     const urls = posts
       .map((p) => (p && typeof p.url === "string" ? p.url.trim() : ""))
       .filter(Boolean)
-      .slice(0, 3);
+      .slice(0, maxPosts);
+
 
     // Show "updated at" label if present and valid.
     // if (updatedEl && typeof data?.updated_at === "string") {
@@ -89,12 +97,6 @@ async function loadInstagramLatest() {
       block.className = "instagram-media";
       block.setAttribute("data-instgrm-permalink", url);
       block.setAttribute("data-instgrm-version", "14");
-
-      // Keep layout consistent even before embeds load
-      block.style.margin = "0 auto";
-      block.style.maxWidth = "540px";
-      block.style.minWidth = "280px";
-
       container.appendChild(block);
     });
 
@@ -104,7 +106,7 @@ async function loadInstagramLatest() {
         .map((u, i) => {
           // const label = `Instagram post ${i + 1}`;
           // return `<div><a href="${u}" target="_blank" rel="noopener">${label}</a></div>`;
-          return `<div><a href="${u}" target="_blank" rel="noopener">${u}</a></div>`;
+          return "";
         })
         .join("");
     }
@@ -139,6 +141,14 @@ async function loadInstagramLatest() {
 // This file is included from the shared layout near the end of the page, so the DOM is already present.
 loadInstagramLatest();
 
+let lastMaxPosts = instaMaxPostsForWidth();
+window.addEventListener("resize", () => {
+  const nextMaxPosts = instaMaxPostsForWidth();
+  if (nextMaxPosts !== lastMaxPosts) {
+    lastMaxPosts = nextMaxPosts;
+    loadInstagramLatest();
+  }
+});
 
 
 

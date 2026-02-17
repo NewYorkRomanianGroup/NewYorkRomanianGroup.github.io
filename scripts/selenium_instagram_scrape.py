@@ -4,7 +4,7 @@ NYRG Instagram scraper (Selenium).
 
 Goal:
 - Open the public profile page
-- Extract the latest N post URLs (default 3)
+- Extract the latest N post URLs (default 4)
 - Write them to data/instagram.json
 - If extraction fails (blocked, changed markup, rate limit), do NOT modify the JSON.
 
@@ -16,7 +16,7 @@ How to run:
 
 Optional environment variables:
 - NYRG_IG_PROFILE_URL   (default: NYRG profile)
-- NYRG_IG_LIMIT         (default: 3)
+- NYRG_IG_LIMIT         (default: 4)
 - NYRG_IG_JSON_PATH     (default: data/instagram.json)
 - NYRG_IG_HEADLESS      ("1" default, set to "0" to see the browser)
 - NYRG_IG_DEBUG         ("0" default, set to "1" for extra logs + screenshots)
@@ -39,7 +39,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 
 DEFAULT_PROFILE_URL = "https://www.instagram.com/newyorkromaniangroup/"
-DEFAULT_LIMIT = 3
+DEFAULT_LIMIT = 4
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 

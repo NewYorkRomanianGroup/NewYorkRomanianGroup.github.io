@@ -263,10 +263,6 @@ header {
   align-items: start;
 }
 
-@media (max-width: 900px) {
-  .grid { grid-template-columns: 1fr; }
-}
-
 @media (min-width: 901px){
   .photo-highlights{
     position: sticky;
