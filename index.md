@@ -56,11 +56,11 @@ description: New York Romanian Group is a community for Romanians in New York. W
   </div>
 </section>
 
-<section class="grid">
+<section class="grid" id="home-social-grid">
   <!-- =========================
        LEFT CARD: INSTAGRAM
        ========================= -->
-  <div class="card">
+  <div class="card" id="instagram-card">
     <h2>Latest from Instagram</h2>
     <p>
       Follow

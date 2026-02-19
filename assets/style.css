@@ -253,6 +253,15 @@ header {
   align-items: start;
 }
 
+/* If Photo Highlights is hidden, let Instagram fill the full row */
+.grid.grid--single {
+  grid-template-columns: 1fr;
+}
+
+.grid.grid--single > #instagram-card {
+  grid-column: 1 / -1;
+}
+
 @media (min-width: 901px){
   .photo-highlights{
     position: sticky;

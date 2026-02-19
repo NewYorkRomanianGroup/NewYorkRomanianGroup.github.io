@@ -24,11 +24,49 @@
  * }
  */
 
+/* =========================================================
+   Small helpers (collaborator-friendly)
+   ========================================================= */
+
+// Hide/show an element without removing it from the DOM.
+function setHidden(el, hidden) {
+  if (!el) return;
+  el.style.display = hidden ? "none" : "";
+}
+
+// On the homepage, Instagram and Photo Highlights sit in a 2-column grid.
+// When photos are unavailable (Drive not accessible), we hide the photo cards
+// and force the grid to become 1 column so Instagram takes the full width.
+//
+// NOTE: This expects index.md to have:
+//   <section class="grid" id="home-social-grid">
+function setHomeGridSingleColumn(on) {
+  const homeGrid = document.getElementById("home-social-grid");
+  if (!homeGrid) return;
+  homeGrid.classList.toggle("grid--single", on);
+}
+
+// Hide or show both photo-related UI blocks together.
+// This keeps layout behavior consistent across all failure modes.
+function setPhotosVisibility({ show }) {
+  const featuredCard = document.getElementById("featured-photos-card");
+  const highlightsCard = document.getElementById("photo-highlights-card");
+
+  if (show) {
+    setHidden(featuredCard, false);
+    setHidden(highlightsCard, false);
+    setHomeGridSingleColumn(false);
+  } else {
+    setHidden(featuredCard, true);
+    setHidden(highlightsCard, true);
+    setHomeGridSingleColumn(true);
+  }
+}
+
 function instaMaxPostsForWidth() {
   // "Narrow" breakpoint: match your CSS stack breakpoint
   return window.matchMedia("(max-width: 980px)").matches ? 2 : 4;
 }
-
 
 async function loadInstagramLatest() {
   const container = document.getElementById("insta-latest");
@@ -71,7 +109,6 @@ async function loadInstagramLatest() {
       .map((p) => (p && typeof p.url === "string" ? p.url.trim() : ""))
       .filter(Boolean)
       .slice(0, maxPosts);
-
 
     // Show "updated at" label if present and valid.
     // if (updatedEl && typeof data?.updated_at === "string") {
@@ -150,23 +187,13 @@ window.addEventListener("resize", () => {
   }
 });
 
-
-
 async function loadGalleryRotatorSlides() {
   const slidesRoot = document.getElementById("hero-rotator-slides");
   const captionEl = document.getElementById("hero-rotator-caption");
   const imgEl = document.getElementById("hero-rotator-image");
 
-  // The 2 UI blocks we want to hide together
-  const featuredCard = document.getElementById("featured-photos-card");
-  const highlightsCard = document.getElementById("photo-highlights-card");
-
-  const setHidden = (el, hidden) => {
-    if (!el) return;
-    el.style.display = hidden ? "none" : "";
-  };
-
-  // If the featured rotator markup is not on this page, do nothing
+  // If the featured rotator markup is not on this page, do nothing.
+  // (This avoids errors on pages that do not include the rotator.)
   if (!slidesRoot || !imgEl) return;
 
   try {
@@ -175,10 +202,10 @@ async function loadGalleryRotatorSlides() {
 
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
 
-    // If gallery.json fails to load, treat it as "no accessible photos"
+    // If gallery.json fails to load, treat it as "no accessible photos".
+    // Hide Featured Photos and Photo Highlights, and let Instagram fill the width.
     if (!res.ok) {
-      setHidden(featuredCard, true);
-      setHidden(highlightsCard, true);
+      setPhotosVisibility({ show: false });
       return;
     }
 
@@ -187,24 +214,22 @@ async function loadGalleryRotatorSlides() {
 
     const urls = images
       .map((x) => ({
-        url: (x && typeof x.url === "string") ? x.url.trim() : "",
+        url: x && typeof x.url === "string" ? x.url.trim() : "",
         caption: "",
-        webViewLink: (x && typeof x.webViewLink === "string") ? x.webViewLink.trim() : ""
+        webViewLink: x && typeof x.webViewLink === "string" ? x.webViewLink.trim() : ""
       }))
       .filter((x) => x.url);
 
-    // If there are no usable images, hide both cards
+    // If there are no usable images, hide both photo cards and let Instagram fill the width.
     if (urls.length === 0) {
-      setHidden(featuredCard, true);
-      setHidden(highlightsCard, true);
+      setPhotosVisibility({ show: false });
       return;
     }
 
-    // Otherwise show both cards
-    setHidden(featuredCard, false);
-    setHidden(highlightsCard, false);
+    // Otherwise, show both photo cards and return the grid to 2 columns.
+    setPhotosVisibility({ show: true });
 
-    // Fill slides for the rotator logic
+    // Fill slides for the rotator logic.
     slidesRoot.innerHTML = "";
     urls.slice(0, 20).forEach((s) => {
       const d = document.createElement("div");
@@ -217,9 +242,8 @@ async function loadGalleryRotatorSlides() {
     imgEl.src = urls[0].url;
     imgEl.alt = urls[0].caption || "Featured photo";
   } catch (e) {
-    // Any unexpected error, hide both cards
-    setHidden(featuredCard, true);
-    setHidden(highlightsCard, true);
+    // Any unexpected error: hide both photo cards and let Instagram fill the width.
+    setPhotosVisibility({ show: false });
     console.error(e);
   }
 }
@@ -277,36 +301,48 @@ function loadHeroRotator() {
 
 loadGalleryRotatorSlides().then(loadHeroRotator);
 
+/**
+ * Photo Highlights uses a Google Drive iframe.
+ *
+ * We cannot read iframe contents (browser security: cross-origin).
+ * So we use a "best effort" approach:
+ * - If the iframe does not load quickly, assume Drive is not accessible.
+ * - If it loads but looks unusually small, assume it is blocked or login-walled.
+ *
+ * When Drive is not accessible, hide BOTH photo cards and let Instagram fill the width.
+ */
 function hideIfDriveRequiresLogin() {
-  const card = document.getElementById("photo-highlights-card");
-  if (!card) return;
+  const highlightsCard = document.getElementById("photo-highlights-card");
+  if (!highlightsCard) return;
 
-  const iframe = card.querySelector("iframe");
+  const iframe = highlightsCard.querySelector("iframe");
   if (!iframe) return;
 
   let loaded = false;
 
-  // If iframe loads successfully
+  // If iframe loads successfully.
   iframe.addEventListener("load", () => {
     loaded = true;
 
-    // Give it a small delay to render
+    // Give it a small delay to render.
     setTimeout(() => {
       try {
-        // If Google blocked access, sometimes height stays very small
+        // Heuristic: a blocked or login view sometimes results in a small iframe.
+        // If this trips in your testing, raise the threshold slightly.
         if (iframe.offsetHeight < 200) {
-          card.style.display = "none";
+          setPhotosVisibility({ show: false });
         }
       } catch (e) {
-        card.style.display = "none";
+        // Any weirdness: hide photos.
+        setPhotosVisibility({ show: false });
       }
     }, 500);
   });
 
-  // If nothing loads within 3 seconds, assume login wall
+  // If nothing loads within 3 seconds, assume login wall or blocked embed.
   setTimeout(() => {
     if (!loaded) {
-      card.style.display = "none";
+      setPhotosVisibility({ show: false });
     }
   }, 3000);
 }
