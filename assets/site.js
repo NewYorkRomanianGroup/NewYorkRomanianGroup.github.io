@@ -159,34 +159,50 @@ async function loadGalleryRotatorSlides() {
 
   if (!slidesRoot || !imgEl) return;
 
+  // Cards/sections we want to hide if there are no images
+  const rotatorSection = slidesRoot.closest("section.photo-rotator");
+  const highlightsCard = document.querySelector(".card.photo-highlights");
+
+  // Tiny helper so collaborators can read it easily
+  const setHidden = (el, hidden) => {
+    if (!el) return;
+    el.style.display = hidden ? "none" : "";
+  };
+
   try {
     const jsonUrl = new URL("data/gallery.json", document.baseURI);
     jsonUrl.searchParams.set("_ts", String(Date.now()));
 
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
-    if (!res.ok) return;
+
+    // If gallery.json is missing or errors, hide both photo sections
+    if (!res.ok) {
+      setHidden(rotatorSection, true);
+      setHidden(highlightsCard, true);
+      return;
+    }
 
     const data = await res.json();
     const images = Array.isArray(data?.images) ? data.images : [];
 
-    // Keep only entries with a usable URL
-    // const urls = images
-    //   .map((x) => ({
-    //     url: (x && typeof x.url === "string") ? x.url.trim() : "",
-    //     caption: (x && typeof x.name === "string") ? x.name.trim() : ""
-    //   }))
-    //   .filter((x) => x.url);
-
-    // if (urls.length === 0) return;
     const urls = images
       .map((x) => ({
         url: (x && typeof x.url === "string") ? x.url.trim() : "",
-        // caption: (x && typeof x.name === "string") ? x.name.trim() : "",
         caption: "", // No caption needed
         webViewLink: (x && typeof x.webViewLink === "string") ? x.webViewLink.trim() : ""
       }))
       .filter((x) => x.url);
 
+    // If there are no usable images, hide both sections
+    if (urls.length === 0) {
+      setHidden(rotatorSection, true);
+      setHidden(highlightsCard, true);
+      return;
+    }
+
+    // Otherwise, ensure both are visible (important if it ever becomes non-empty later)
+    setHidden(rotatorSection, false);
+    setHidden(highlightsCard, false);
 
     // Fill slides for the existing rotator logic
     slidesRoot.innerHTML = "";
@@ -197,11 +213,14 @@ async function loadGalleryRotatorSlides() {
       slidesRoot.appendChild(d);
     });
 
-    // Set initial caption quickly before rotation starts
+    // Set initial image/caption quickly before rotation starts
     if (captionEl) captionEl.textContent = urls[0].caption || "Featured photo";
     imgEl.src = urls[0].url;
     imgEl.alt = urls[0].caption || "Featured photo";
   } catch (e) {
+    // Any unexpected failure: hide both sections
+    setHidden(rotatorSection, true);
+    setHidden(highlightsCard, true);
     console.error(e);
   }
 }
