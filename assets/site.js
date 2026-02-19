@@ -157,17 +157,17 @@ async function loadGalleryRotatorSlides() {
   const captionEl = document.getElementById("hero-rotator-caption");
   const imgEl = document.getElementById("hero-rotator-image");
 
-  if (!slidesRoot || !imgEl) return;
+  // The 2 UI blocks we want to hide together
+  const featuredCard = document.getElementById("featured-photos-card");
+  const highlightsCard = document.getElementById("photo-highlights-card");
 
-  // Cards/sections we want to hide if there are no images
-  const rotatorSection = slidesRoot.closest("section.photo-rotator");
-  const highlightsCard = document.querySelector(".card.photo-highlights");
-
-  // Tiny helper so collaborators can read it easily
   const setHidden = (el, hidden) => {
     if (!el) return;
     el.style.display = hidden ? "none" : "";
   };
+
+  // If the featured rotator markup is not on this page, do nothing
+  if (!slidesRoot || !imgEl) return;
 
   try {
     const jsonUrl = new URL("data/gallery.json", document.baseURI);
@@ -175,9 +175,9 @@ async function loadGalleryRotatorSlides() {
 
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
 
-    // If gallery.json is missing or errors, hide both photo sections
+    // If gallery.json fails to load, treat it as "no accessible photos"
     if (!res.ok) {
-      setHidden(rotatorSection, true);
+      setHidden(featuredCard, true);
       setHidden(highlightsCard, true);
       return;
     }
@@ -188,23 +188,23 @@ async function loadGalleryRotatorSlides() {
     const urls = images
       .map((x) => ({
         url: (x && typeof x.url === "string") ? x.url.trim() : "",
-        caption: "", // No caption needed
+        caption: "",
         webViewLink: (x && typeof x.webViewLink === "string") ? x.webViewLink.trim() : ""
       }))
       .filter((x) => x.url);
 
-    // If there are no usable images, hide both sections
+    // If there are no usable images, hide both cards
     if (urls.length === 0) {
-      setHidden(rotatorSection, true);
+      setHidden(featuredCard, true);
       setHidden(highlightsCard, true);
       return;
     }
 
-    // Otherwise, ensure both are visible (important if it ever becomes non-empty later)
-    setHidden(rotatorSection, false);
+    // Otherwise show both cards
+    setHidden(featuredCard, false);
     setHidden(highlightsCard, false);
 
-    // Fill slides for the existing rotator logic
+    // Fill slides for the rotator logic
     slidesRoot.innerHTML = "";
     urls.slice(0, 20).forEach((s) => {
       const d = document.createElement("div");
@@ -213,13 +213,12 @@ async function loadGalleryRotatorSlides() {
       slidesRoot.appendChild(d);
     });
 
-    // Set initial image/caption quickly before rotation starts
     if (captionEl) captionEl.textContent = urls[0].caption || "Featured photo";
     imgEl.src = urls[0].url;
     imgEl.alt = urls[0].caption || "Featured photo";
   } catch (e) {
-    // Any unexpected failure: hide both sections
-    setHidden(rotatorSection, true);
+    // Any unexpected error, hide both cards
+    setHidden(featuredCard, true);
     setHidden(highlightsCard, true);
     console.error(e);
   }
@@ -277,3 +276,39 @@ function loadHeroRotator() {
 }
 
 loadGalleryRotatorSlides().then(loadHeroRotator);
+
+function hideIfDriveRequiresLogin() {
+  const card = document.getElementById("photo-highlights-card");
+  if (!card) return;
+
+  const iframe = card.querySelector("iframe");
+  if (!iframe) return;
+
+  let loaded = false;
+
+  // If iframe loads successfully
+  iframe.addEventListener("load", () => {
+    loaded = true;
+
+    // Give it a small delay to render
+    setTimeout(() => {
+      try {
+        // If Google blocked access, sometimes height stays very small
+        if (iframe.offsetHeight < 200) {
+          card.style.display = "none";
+        }
+      } catch (e) {
+        card.style.display = "none";
+      }
+    }, 500);
+  });
+
+  // If nothing loads within 3 seconds, assume login wall
+  setTimeout(() => {
+    if (!loaded) {
+      card.style.display = "none";
+    }
+  }, 3000);
+}
+
+document.addEventListener("DOMContentLoaded", hideIfDriveRequiresLogin);

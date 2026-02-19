@@ -25,7 +25,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
   - Replace image URLs in data-image-url with your event photos.
   - Keep at least 2 slides for visible rotation.
 -->
-<section class="photo-rotator card" aria-label="Featured community photos">
+<section class="photo-rotator card" id="featured-photos-card" aria-label="Featured community photos">
   <h2>Featured Photos</h2>
 
   <div class="rotator-frame">
@@ -104,7 +104,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
   <!-- =========================
        RIGHT CARD: PHOTO GALLERY
        ========================= -->
-  <div class="card photo-highlights">
+  <div class="card photo-highlights" id="photo-highlights-card">
     <h2>Photo Highlights</h2>
     <p>Browse the full shared folder and open individual files below.</p>
 
