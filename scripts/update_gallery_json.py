@@ -163,10 +163,14 @@ def walk_drive_folder_collect_images(
 ) -> List[dict]:
     """Recursively walk a Drive folder and collect up to max_images image files."""
     stack = [root_folder_id]
+    seen_folders = set()
     images: List[dict] = []
 
     while stack and len(images) < max_images:
         folder_id = stack.pop()
+        if folder_id in seen_folders:
+            continue
+        seen_folders.add(folder_id)
         token = None
 
         while True:
@@ -192,7 +196,7 @@ def walk_drive_folder_collect_images(
                     if target_mime.startswith("image/") and target_id:
                         images.append({
                             "id": target_id,
-                            "name": f.get("name", ""),
+                             "name": f.get("name", "") or f.get("shortcutDetails", {}).get("targetId", ""),
                             "mimeType": target_mime,
                             "url": drive_thumbnail_url(target_id),
                             "webViewLink": f.get("webViewLink", ""),
@@ -257,7 +261,7 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
                         "id": sd.get("targetId"),      # this is the REAL folder id
                         "name": name,                  # keep the display name (NYRG Dec2025)
                         "mimeType": "application/vnd.google-apps.folder",
-                        "webViewLink": drive_folder_url(sd.get("targetId","")),
+                        # "webViewLink": drive_folder_url(sd.get("targetId","")),
                     })
 
         if not token:
