@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-02T15:03:07Z",
+  "updated_at": "2026-03-02T15:44:16Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
@@ -380,6 +380,16 @@
     }
   ],
   "events": [
+    {
+      "type": "external",
+      "id": "external:feb-2026-happy-hour",
+      "month": "2026-02",
+      "title": "Feb 2026 Happy Hour",
+      "url": "https://www.johnnyneacsu.com/nyrg---happy-hour-feb-2026",
+      "thumb_url": "",
+      "photographer": "Johnny Neacsu",
+      "note": "Password required (Hint: RO)"
+    },
     {
       "type": "drive",
       "id": "1em58tDl3FvUHCCWXApnCpTNSFSJDr2zi",
