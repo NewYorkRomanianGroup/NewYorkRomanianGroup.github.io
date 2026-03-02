@@ -22,3 +22,4 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 python3 "$SCRIPT_DIR/update_gallery_json.py" \
   --folder-id "$FOLDER_ID" \
   --out "$REPO_ROOT/data/gallery.json"
+

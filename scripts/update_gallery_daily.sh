@@ -1,3 +1,20 @@
+# ----------------------------------------------------------
+# Wait for DNS before attempting Google API calls
+# Prevents writing 0 images when network is not ready
+# ----------------------------------------------------------
+for i in {1..24}; do
+  if getent hosts www.googleapis.com >/dev/null 2>&1; then
+    break
+  fi
+  sleep 5
+done
+
+if ! getent hosts www.googleapis.com >/dev/null 2>&1; then
+  echo "[NYRG] DNS unavailable. Aborting update."
+  exit 1
+fi
+
+
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -34,6 +51,12 @@ fi
 
 # Run the existing manual updater (writes data/gallery.json)
 bash "$RUNNER_SH" "$NYRG_GDRIVE_FOLDER_ID"
+
+# Safety: do not commit empty results (usually means network or permissions issue)
+if python3 -c 'import json; d=json.load(open("data/gallery.json")); print(len(d.get("images", [])), len(d.get("events", [])))' | awk '{exit !($1==0 && $2==0)}'; then
+  echo "[NYRG] gallery.json contains 0 images and 0 events. Aborting commit."
+  exit 1
+fi
 
 git add "$JSON_PATH"
 
