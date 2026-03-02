@@ -66,7 +66,7 @@ def drive_list_children(
     params = {
         "key": api_key,
         "q": f"'{parent_id}' in parents and trashed=false",
-        "fields": "nextPageToken, files(id, name, mimeType, webViewLink)",
+        "fields": "nextPageToken, files(id,name,mimeType,webViewLink,shortcutDetails(targetId,targetMimeType))",
         "pageSize": 1000,
     }
     if page_token:
@@ -207,11 +207,30 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
     while True:
         files, token = drive_list_children(api_key, root_folder_id, token)
         for f in files:
-            if f.get("mimeType") == "application/vnd.google-apps.folder":
+            FOLDER_MIME = "application/vnd.google-apps.folder"
+            SHORTCUT_MIME = "application/vnd.google-apps.shortcut"
+
+            mime = f.get("mimeType", "")
+
+            # Real folder
+            if mime == FOLDER_MIME:
+                folder_id = f.get("id", "")
                 name = f.get("name", "")
-                if is_excluded_folder(name):
+                link = f.get("webViewLink") or f"https://drive.google.com/drive/folders/{folder_id}"
+                out.append({"id": folder_id, "name": name, "webViewLink": link})
+                continue
+
+            # Shortcut that points to a folder
+            if mime == SHORTCUT_MIME:
+                sd = f.get("shortcutDetails") or {}
+                if sd.get("targetMimeType") == FOLDER_MIME:
+                    target_id = sd.get("targetId", "")
+                    if not target_id:
+                        continue
+                    name = f.get("name", "")  # keep the shortcut display name (NYRG Dec2025)
+                    link = f"https://drive.google.com/drive/folders/{target_id}"
+                    out.append({"id": target_id, "name": name, "webViewLink": link})
                     continue
-                out.append(f)
 
         if not token:
             break
