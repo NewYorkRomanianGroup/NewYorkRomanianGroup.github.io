@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # ----------------------------------------------------------
 # Wait for DNS before attempting Google API calls
 # Prevents writing 0 images when network is not ready
@@ -15,7 +17,6 @@ if ! getent hosts www.googleapis.com >/dev/null 2>&1; then
 fi
 
 
-#!/usr/bin/env bash
 set -euo pipefail
 
 # ============================================================
