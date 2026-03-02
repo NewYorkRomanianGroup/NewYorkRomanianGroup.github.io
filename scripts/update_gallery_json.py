@@ -54,23 +54,36 @@ def drive_list_children(
     parent_id: str,
     page_token: str | None = None,
 ) -> Tuple[List[dict], str | None]:
-    """List direct children of a Drive folder."""
+    """
+    List direct children of a Drive folder.
+    Returns (files, nextPageToken).
+
+    Important:
+    - We intentionally avoid supportsAllDrives/includeItemsFromAllDrives here because
+      those params can trigger hard 400s in some setups when using API-key access.
+    - If you later need Shared Drive support, we can add an opt-in switch.
+    """
     params = {
         "key": api_key,
         "q": f"'{parent_id}' in parents and trashed=false",
         "fields": "nextPageToken, files(id, name, mimeType, webViewLink)",
         "pageSize": 1000,
-        "supportsAllDrives": "true",
-        "includeItemsFromAllDrives": "true",
     }
     if page_token:
         params["pageToken"] = page_token
 
     r = requests.get(DRIVE_FILES_ENDPOINT, params=params, timeout=30)
+
+    # If Google returns a helpful JSON error, print it.
+    if r.status_code >= 400:
+        try:
+            print(f"[NYRG] Drive API error {r.status_code}: {r.json()}", file=sys.stderr)
+        except Exception:
+            print(f"[NYRG] Drive API error {r.status_code}: {r.text}", file=sys.stderr)
+
     r.raise_for_status()
     data = r.json()
     return data.get("files", []), data.get("nextPageToken")
-
 
 def is_excluded_folder(name: str) -> bool:
     n = (name or "").strip().lower()
