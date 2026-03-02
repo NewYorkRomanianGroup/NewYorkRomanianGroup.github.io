@@ -196,10 +196,10 @@ def walk_drive_folder_collect_images(
                     if target_mime.startswith("image/") and target_id:
                         images.append({
                             "id": target_id,
-                             "name": f.get("name", "") or f.get("shortcutDetails", {}).get("targetId", ""),
+                            "name": f.get("name", "") or target_id,
                             "mimeType": target_mime,
                             "url": drive_thumbnail_url(target_id),
-                            "webViewLink": f.get("webViewLink", ""),
+                            "webViewLink": f"https://drive.google.com/file/d/{target_id}/view",
                         })
                         if len(images) >= max_images:
                             break
@@ -261,7 +261,7 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
                         "id": sd.get("targetId"),      # this is the REAL folder id
                         "name": name,                  # keep the display name (NYRG Dec2025)
                         "mimeType": "application/vnd.google-apps.folder",
-                        # "webViewLink": drive_folder_url(sd.get("targetId","")),
+                        "webViewLink": drive_folder_url(sd.get("targetId","")),
                     })
 
         if not token:
