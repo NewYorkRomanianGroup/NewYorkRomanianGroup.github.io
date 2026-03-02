@@ -235,12 +235,17 @@ def fetch_external_events_from_csv(csv_url: str) -> List[dict]:
     for i, row in enumerate(reader):
         row_lc = {(k or "").strip().lower(): (v or "").strip() for k, v in (row or {}).items()}
 
-        month = row_lc.get("month", "")
+        month = row_lc.get("month", "") or row_lc.get("date", "")
         title = row_lc.get("title", "")
         url = row_lc.get("url", "")
 
         if not month or not title or not url:
             continue
+
+        # allow YYYY-MM-DD and truncate to YYYY-MM
+        if re.match(r"^\d{4}-\d{2}-\d{2}$", month):
+            month = month[:7]
+
         if not re.match(r"^\d{4}-\d{2}$", month):
             continue
 
