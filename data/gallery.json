@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-02T15:00:47Z",
+  "updated_at": "2026-03-02T15:03:07Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
@@ -519,90 +519,9 @@
     },
     {
       "type": "drive",
-      "id": "10uBBZvKn4vWD1LACg9lPGazXeIE9wsT7",
-      "month": "0000-00",
-      "title": "April HH - Stefan",
-      "folder_url": "https://drive.google.com/drive/folders/10uBBZvKn4vWD1LACg9lPGazXeIE9wsT7",
-      "photographer": "",
-      "note": "",
-      "images": [
-        {
-          "id": "1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW",
-          "name": "20250422_183113.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW/view?usp=drivesdk"
-        },
-        {
-          "id": "1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ",
-          "name": "20250422_183159.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ/view?usp=drivesdk"
-        },
-        {
-          "id": "1d_EssLq68-DseO5E1skQB0F7hmNPBl2J",
-          "name": "20250422_183421.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1d_EssLq68-DseO5E1skQB0F7hmNPBl2J&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1d_EssLq68-DseO5E1skQB0F7hmNPBl2J/view?usp=drivesdk"
-        },
-        {
-          "id": "1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6",
-          "name": "20250422_183550.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6/view?usp=drivesdk"
-        },
-        {
-          "id": "16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY",
-          "name": "20250422_185918.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY/view?usp=drivesdk"
-        },
-        {
-          "id": "1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y",
-          "name": "20250422_190724.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y/view?usp=drivesdk"
-        },
-        {
-          "id": "1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk",
-          "name": "20250422_190836.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk/view?usp=drivesdk"
-        },
-        {
-          "id": "1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe",
-          "name": "20250422_191209.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe/view?usp=drivesdk"
-        },
-        {
-          "id": "1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr",
-          "name": "20250422_191742.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr/view?usp=drivesdk"
-        },
-        {
-          "id": "1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh",
-          "name": "20250422_192527.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh/view?usp=drivesdk"
-        }
-      ]
-    },
-    {
-      "type": "drive",
       "id": "1GAIpPAWQoWEK-QJgEMTP0KMW4cyMBaSf",
-      "month": "0000-00",
-      "title": "August HH Photos - Stefan",
+      "month": "2025-08",
+      "title": "August 2025 HH Photos - Stefan",
       "folder_url": "https://drive.google.com/drive/folders/1GAIpPAWQoWEK-QJgEMTP0KMW4cyMBaSf",
       "photographer": "",
       "note": "",
@@ -738,8 +657,8 @@
     {
       "type": "drive",
       "id": "1FnikNK7BlSgXfUQ-zvu3MrbZNYZA9GUn",
-      "month": "0000-00",
-      "title": "May HH Photos - Stefan",
+      "month": "2025-05",
+      "title": "May 2025 HH Photos - Stefan",
       "folder_url": "https://drive.google.com/drive/folders/1FnikNK7BlSgXfUQ-zvu3MrbZNYZA9GUn",
       "photographer": "",
       "note": "",
@@ -792,6 +711,87 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1JESBKWcXOSTM_D9tXwuRt7v5tkHZCOz0&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1JESBKWcXOSTM_D9tXwuRt7v5tkHZCOz0/view?usp=drivesdk"
+        }
+      ]
+    },
+    {
+      "type": "drive",
+      "id": "10uBBZvKn4vWD1LACg9lPGazXeIE9wsT7",
+      "month": "2025-04",
+      "title": "April 2025 HH - Stefan",
+      "folder_url": "https://drive.google.com/drive/folders/10uBBZvKn4vWD1LACg9lPGazXeIE9wsT7",
+      "photographer": "",
+      "note": "",
+      "images": [
+        {
+          "id": "1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW",
+          "name": "20250422_183113.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW/view?usp=drivesdk"
+        },
+        {
+          "id": "1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ",
+          "name": "20250422_183159.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1sHtQRy3-fEiB2hc14zSiK7lIRzfwA-NJ/view?usp=drivesdk"
+        },
+        {
+          "id": "1d_EssLq68-DseO5E1skQB0F7hmNPBl2J",
+          "name": "20250422_183421.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1d_EssLq68-DseO5E1skQB0F7hmNPBl2J&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1d_EssLq68-DseO5E1skQB0F7hmNPBl2J/view?usp=drivesdk"
+        },
+        {
+          "id": "1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6",
+          "name": "20250422_183550.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1-zLoKbGQc0KUn52YvNR0105hpq1o97Q6/view?usp=drivesdk"
+        },
+        {
+          "id": "16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY",
+          "name": "20250422_185918.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/16OA1f2QEVHRQTN2xq_zRkNvjx_Krm6sY/view?usp=drivesdk"
+        },
+        {
+          "id": "1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y",
+          "name": "20250422_190724.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1FgG5Ylv8a-sa9aCHNY5fQpWYJu3XEG-Y/view?usp=drivesdk"
+        },
+        {
+          "id": "1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk",
+          "name": "20250422_190836.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1HORYJvCn81nyHFB00CsUZt3p_yr9d3Rk/view?usp=drivesdk"
+        },
+        {
+          "id": "1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe",
+          "name": "20250422_191209.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1NfASDO1cAyHJyMwFGTn5S9fOsdAxGjXe/view?usp=drivesdk"
+        },
+        {
+          "id": "1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr",
+          "name": "20250422_191742.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1mrHYU_3M1EtFdC0QzQ5s8i1RFxVSTdwr/view?usp=drivesdk"
+        },
+        {
+          "id": "1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh",
+          "name": "20250422_192527.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh/view?usp=drivesdk"
         }
       ]
     }
