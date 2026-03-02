@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Usage:
-#   export GOOGLE_API_KEY="..."
-#   ./scripts/update_gallery_json.sh "YOUR_FOLDER_ID"
+# Required env vars (provided by systemd EnvironmentFile):
+# - GOOGLE_API_KEY
+# - NYRG_GDRIVE_FOLDER_ID
+#
+# Optional env vars:
+# - NYRG_EXTERNAL_EVENTS_CSV_URL   (Google Sheet published as CSV; external events only)
 
 FOLDER_ID="${1:-}"
 if [[ -z "$FOLDER_ID" ]]; then
@@ -11,4 +14,6 @@ if [[ -z "$FOLDER_ID" ]]; then
   exit 1
 fi
 
-python3 scripts/update_gallery_json.py --folder-id "$FOLDER_ID" --out "data/gallery.json"
+python3 update_gallery_json.py \
+  --folder-id "$FOLDER_ID" \
+  --out "data/gallery.json"

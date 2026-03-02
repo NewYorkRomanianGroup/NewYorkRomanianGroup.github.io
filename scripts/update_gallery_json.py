@@ -1,50 +1,68 @@
 #!/usr/bin/env python3
 """
-Update data/gallery.json with image files from a Google Drive folder, recursively.
+Update data/gallery.json with:
+- A flat list of images for the homepage rotator (backward compatible with current site.js)
+- A structured "events" list for the Gallery page (Drive folders + external events from a Google Sheet)
 
 Usage:
-  GOOGLE_API_KEY="..." python3 scripts/update_gallery_json.py \
+  GOOGLE_API_KEY="..." python3 update_gallery_json.py \
     --folder-id "YOUR_FOLDER_ID" \
     --out "data/gallery.json"
 
+Optional external events (Google Sheet published as CSV):
+  export NYRG_EXTERNAL_EVENTS_CSV_URL="https://...output=csv"
+or:
+  python3 update_gallery_json.py ... --external-events-csv "https://...output=csv"
+
 Notes:
-- This uses the Google Drive v3 REST API via an API key.
-- It works for publicly accessible folders/files. If your folder is not public, the API key
-  will not be enough. In that case you would switch to OAuth or a service account.
-- We keep this script heavily commented for collaborators.
+- Uses Google Drive v3 REST API via an API key.
+- Works for publicly accessible folders/files.
+- This file is intentionally heavily commented for collaborators.
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
+import re
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Tuple
+from io import StringIO
+from typing import Dict, List, Optional, Tuple
 
 import requests
 
 
 DRIVE_FILES_ENDPOINT = "https://www.googleapis.com/drive/v3/files"
 
+# High caps are fine for you right now (few folders, 10-20 images per folder).
+MAX_IMAGES_PER_EVENT = 200
+MAX_EVENTS_FROM_DRIVE = 50
+
+# Exclusion rule: anything starting with this prefix is not included on the website.
+EXCLUDE_PREFIXES = ["(not for website)"]
+
 
 def iso_utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def drive_list_children(api_key: str, parent_id: str, page_token: str | None = None) -> Tuple[List[dict], str | None]:
+def drive_list_children(
+    api_key: str,
+    parent_id: str,
+    page_token: str | None = None,
+) -> Tuple[List[dict], str | None]:
     """
     List direct children of a Drive folder.
     Returns (files, nextPageToken).
     """
     params = {
         "key": api_key,
-        # Query: items whose parent is the folder, and not trashed
         "q": f"'{parent_id}' in parents and trashed=false",
-        # We need mimeType to detect folders vs images
         "fields": "nextPageToken, files(id, name, mimeType, webViewLink)",
-        # Public drives sometimes include shortcuts. Keep it simple for now.
         "pageSize": 1000,
         "supportsAllDrives": "true",
         "includeItemsFromAllDrives": "true",
@@ -58,17 +76,113 @@ def drive_list_children(api_key: str, parent_id: str, page_token: str | None = N
     return data.get("files", []), data.get("nextPageToken")
 
 
-def walk_drive_folder(api_key: str, root_folder_id: str) -> List[dict]:
+def is_excluded_folder(name: str) -> bool:
+    n = (name or "").strip().lower()
+    return any(n.startswith(p.lower()) for p in EXCLUDE_PREFIXES)
+
+
+def drive_folder_url(folder_id: str) -> str:
+    return f"https://drive.google.com/drive/folders/{folder_id}"
+
+
+def prettify_title(folder_name: str) -> str:
     """
-    Recursively walk Drive folder, collecting image files.
+    Make folder names nicer for display without needing a GitHub edit.
+    Examples:
+      "NYRG Jan 2026 Ski Trip" -> "Jan 2026 Ski Trip"
+      "nov.2025.featured"      -> "nov 2025 featured"
+    """
+    s = (folder_name or "").strip()
+    s = re.sub(r"^\s*NYRG\s+", "", s, flags=re.IGNORECASE)
+    s = s.replace("_", " ").replace(".", " ")
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+_MONTHS = {
+    "jan": "01", "january": "01",
+    "feb": "02", "february": "02",
+    "mar": "03", "march": "03",
+    "apr": "04", "april": "04",
+    "may": "05",
+    "jun": "06", "june": "06",
+    "jul": "07", "july": "07",
+    "aug": "08", "august": "08",
+    "sep": "09", "sept": "09", "september": "09",
+    "oct": "10", "october": "10",
+    "nov": "11", "november": "11",
+    "dec": "12", "december": "12",
+}
+
+
+def parse_month_from_name(name: str) -> Optional[str]:
+    """
+    Parse month-level YYYY-MM from a folder name.
+    Supports patterns like:
+      - "NYRG Jan 2026 Ski Trip"
+      - "Jan 2026 Ski Trip"
+      - "NYRG Dec2025"
+      - "dec2025"
+      - "nov.2025.featured"
+    Returns "YYYY-MM" or None if not found.
+    """
+    raw = (name or "").strip().lower()
+    raw = raw.replace("_", " ").replace(".", " ").replace("-", " ")
+    raw = re.sub(r"\s+", " ", raw)
+
+    # Pattern A: MMM YYYY (with optional punctuation already normalized)
+    # Example: "jan 2026"
+    m = re.search(r"\b([a-z]{3,9})\s+(\d{4})\b", raw)
+    if m:
+        mon = _MONTHS.get(m.group(1))
+        yr = m.group(2)
+        if mon:
+            return f"{yr}-{mon}"
+
+    # Pattern B: MMMYYYY (no space)
+    # Example: "dec2025"
+    m = re.search(r"\b([a-z]{3,9})(\d{4})\b", raw)
+    if m:
+        mon = _MONTHS.get(m.group(1))
+        yr = m.group(2)
+        if mon:
+            return f"{yr}-{mon}"
+
+    # Pattern C: YYYY MMM (rare, but harmless to support)
+    m = re.search(r"\b(\d{4})\s+([a-z]{3,9})\b", raw)
+    if m:
+        yr = m.group(1)
+        mon = _MONTHS.get(m.group(2))
+        if mon:
+            return f"{yr}-{mon}"
+
+    return None
+
+
+def drive_thumbnail_url(file_id: str) -> str:
+    """
+    Thumbnail URL that works well in <img> tags for public files.
+    sz=w2000 is fine for the site. If you want smaller, change here.
+    """
+    return f"https://drive.google.com/thumbnail?id={file_id}&sz=w2000"
+
+
+def walk_drive_folder_collect_images(
+    api_key: str,
+    root_folder_id: str,
+    max_images: int,
+) -> List[dict]:
+    """
+    Recursively walk a Drive folder and collect up to max_images image files.
+    Returns a list of image dicts: {id, name, mimeType, url, webViewLink}.
     """
     stack = [root_folder_id]
     images: List[dict] = []
 
-    while stack:
+    while stack and len(images) < max_images:
         folder_id = stack.pop()
-
         token = None
+
         while True:
             files, token = drive_list_children(api_key, folder_id, token)
 
@@ -78,57 +192,202 @@ def walk_drive_folder(api_key: str, root_folder_id: str) -> List[dict]:
                     stack.append(f["id"])
                     continue
 
-                # Keep only image files
                 if mime.startswith("image/"):
                     file_id = f["id"]
-                    name = f.get("name", "")
-                    web = f.get("webViewLink", "")
-
-                    # Direct-view URL that works well in <img> tags for public files
-                    # view_url = f"https://drive.google.com/uc?export=view&id={file_id}"
-                    view_url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w2000"
-
-
                     images.append({
                         "id": file_id,
-                        "name": name,
+                        "name": f.get("name", ""),
                         "mimeType": mime,
-                        "url": view_url,
-                        "webViewLink": web
+                        "url": drive_thumbnail_url(file_id),
+                        "webViewLink": f.get("webViewLink", ""),
                     })
 
-            if not token:
+                    if len(images) >= max_images:
+                        break
+
+            if not token or len(images) >= max_images:
                 break
 
+    # Stable ordering helps reduce churn in commits.
+    images.sort(key=lambda x: (x.get("name", "") or "").lower())
     return images
+
+
+def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
+    """
+    List top-level subfolders under the root folder.
+    Filters exclusions. Returns folder dicts with id, name, webViewLink, mimeType.
+    """
+    token = None
+    out: List[dict] = []
+
+    while True:
+        files, token = drive_list_children(api_key, root_folder_id, token)
+        for f in files:
+            if f.get("mimeType") == "application/vnd.google-apps.folder":
+                name = f.get("name", "")
+                if is_excluded_folder(name):
+                    continue
+                out.append(f)
+
+        if not token:
+            break
+
+    # Sort by name for stability; recency is determined later via parsed month.
+    out.sort(key=lambda x: (x.get("name", "") or "").lower())
+    return out[:MAX_EVENTS_FROM_DRIVE]
+
+
+def fetch_external_events_from_csv(csv_url: str) -> List[dict]:
+    """
+    Fetch external events from a Google Sheet published as CSV.
+
+    Expected columns (case-insensitive):
+      month (YYYY-MM), title, url, thumb_url, photographer, note
+
+    Returns list of event dicts with type="external".
+    """
+    if not csv_url:
+        return []
+
+    r = requests.get(csv_url, timeout=30)
+    r.raise_for_status()
+
+    text = r.text
+    buf = StringIO(text)
+    reader = csv.DictReader(buf)
+
+    events: List[dict] = []
+    for i, row in enumerate(reader):
+        # Normalize keys to lowercase for robustness.
+        row_lc = { (k or "").strip().lower(): (v or "").strip() for k, v in (row or {}).items() }
+
+        month = row_lc.get("month", "")
+        title = row_lc.get("title", "")
+        url = row_lc.get("url", "")
+
+        if not month or not title or not url:
+            # Skip incomplete rows quietly (collaborator-friendly).
+            continue
+
+        # Very light validation: month must look like YYYY-MM
+        if not re.match(r"^\d{4}-\d{2}$", month):
+            continue
+
+        slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
+        events.append({
+            "type": "external",
+            "id": f"external:{slug or i}",
+            "month": month,
+            "title": title,
+            "url": url,
+            "thumb_url": row_lc.get("thumb_url", ""),
+            "photographer": row_lc.get("photographer", ""),
+            "note": row_lc.get("note", ""),
+        })
+
+    return events
+
+
+def month_sort_key(month: str) -> str:
+    """
+    Sort descending by month. Format is YYYY-MM so string sort works.
+    Unknown months sort last.
+    """
+    if re.match(r"^\d{4}-\d{2}$", month or ""):
+        return month
+    return "0000-00"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--folder-id", required=True, help="Google Drive folder ID")
+    ap.add_argument("--folder-id", required=True, help="Google Drive root folder ID")
     ap.add_argument("--out", default="data/gallery.json", help="Output JSON path")
+    ap.add_argument(
+        "--external-events-csv",
+        default="",
+        help="Optional CSV URL for external events (Google Sheet published as CSV). "
+             "If not set, uses NYRG_EXTERNAL_EVENTS_CSV_URL env var.",
+    )
     args = ap.parse_args()
 
     api_key = os.environ.get("GOOGLE_API_KEY", "").strip()
     if not api_key:
         print("ERROR: GOOGLE_API_KEY is not set.", file=sys.stderr)
-        print("Set it like: GOOGLE_API_KEY='...' python3 scripts/update_gallery_json.py --folder-id ...", file=sys.stderr)
         return 2
 
-    images = walk_drive_folder(api_key, args.folder_id)
+    external_csv = (args.external_events_csv or os.environ.get("NYRG_EXTERNAL_EVENTS_CSV_URL", "")).strip()
+
+    # 1) Internal Drive events: each top-level folder is an event.
+    folders = list_drive_event_folders(api_key, args.folder_id)
+    drive_events: List[dict] = []
+
+    for f in folders:
+        folder_id = f["id"]
+        folder_name = f.get("name", "")
+        month = parse_month_from_name(folder_name) or "0000-00"
+
+        images = walk_drive_folder_collect_images(api_key, folder_id, MAX_IMAGES_PER_EVENT)
+
+        drive_events.append({
+            "type": "drive",
+            "id": folder_id,
+            "month": month,
+            "title": prettify_title(folder_name) or folder_name,
+            "folder_url": drive_folder_url(folder_id),
+            "photographer": "",
+            "note": "",
+            "images": images,
+        })
+
+    # 2) External events from Google Sheet (published as CSV)
+    external_events: List[dict] = []
+    if external_csv:
+        try:
+            external_events = fetch_external_events_from_csv(external_csv)
+        except Exception as e:
+            # Do not fail the entire pipeline if the external sheet is temporarily unavailable.
+            print(f"[NYRG] WARNING: failed to fetch external events CSV: {e}", file=sys.stderr)
+            external_events = []
+
+    # 3) Merge and sort events by month desc
+    all_events = drive_events + external_events
+    all_events.sort(key=lambda ev: month_sort_key(ev.get("month", "")), reverse=True)
+
+    # 4) Backward-compatible flat images array for the homepage rotator
+    #    Flatten only DRIVE images; external events do not have Drive images.
+    flat_images: List[dict] = []
+    for ev in all_events:
+        if ev.get("type") != "drive":
+            continue
+        for img in ev.get("images", [])[:MAX_IMAGES_PER_EVENT]:
+            flat_images.append(img)
+
+    # Stable sort for rotator list to reduce churn.
+    flat_images.sort(key=lambda x: (x.get("name", "") or "").lower())
 
     payload = {
         "updated_at": iso_utc_now(),
         "folder_id": args.folder_id,
-        "count": len(images),
-        "images": sorted(images, key=lambda x: x.get("name", "").lower())
+        "root_folder": {
+            "id": args.folder_id,
+            "url": drive_folder_url(args.folder_id),
+        },
+
+        # Backward compatible fields (used by current homepage rotator logic)
+        "count": len(flat_images),
+        "images": flat_images,
+
+        # New structured events list (for the Gallery page)
+        "events": all_events,
+        "external_events_csv": external_csv,
     }
 
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)
 
-    print(f"Wrote {len(images)} images -> {args.out}")
+    print(f"Wrote {len(flat_images)} images and {len(all_events)} events -> {args.out}")
     return 0
 
 
