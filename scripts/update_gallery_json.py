@@ -66,7 +66,7 @@ def drive_list_children(
     params = {
         "key": api_key,
         "q": f"'{parent_id}' in parents and trashed=false",
-        "fields": "nextPageToken, files(id,name,mimeType,webViewLink,shortcutDetails(targetId,targetMimeType))",
+        "fields": "nextPageToken, files(id, name, mimeType, webViewLink, shortcutDetails(targetId,targetMimeType))",
         "pageSize": 1000,
     }
     if page_token:
@@ -207,30 +207,28 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
     while True:
         files, token = drive_list_children(api_key, root_folder_id, token)
         for f in files:
-            FOLDER_MIME = "application/vnd.google-apps.folder"
-            SHORTCUT_MIME = "application/vnd.google-apps.shortcut"
-
             mime = f.get("mimeType", "")
+            name = f.get("name", "")
 
-            # Real folder
-            if mime == FOLDER_MIME:
-                folder_id = f.get("id", "")
-                name = f.get("name", "")
-                link = f.get("webViewLink") or f"https://drive.google.com/drive/folders/{folder_id}"
-                out.append({"id": folder_id, "name": name, "webViewLink": link})
+            # A) Normal folder
+            if mime == "application/vnd.google-apps.folder":
+                if is_excluded_folder(name):
+                    continue
+                out.append(f)
                 continue
 
-            # Shortcut that points to a folder
-            if mime == SHORTCUT_MIME:
+            # B) Shortcut that points to a folder
+            if mime == "application/vnd.google-apps.shortcut":
                 sd = f.get("shortcutDetails") or {}
-                if sd.get("targetMimeType") == FOLDER_MIME:
-                    target_id = sd.get("targetId", "")
-                    if not target_id:
+                if sd.get("targetMimeType") == "application/vnd.google-apps.folder":
+                    if is_excluded_folder(name):
                         continue
-                    name = f.get("name", "")  # keep the shortcut display name (NYRG Dec2025)
-                    link = f"https://drive.google.com/drive/folders/{target_id}"
-                    out.append({"id": target_id, "name": name, "webViewLink": link})
-                    continue
+                    out.append({
+                        "id": sd.get("targetId"),      # this is the REAL folder id
+                        "name": name,                  # keep the display name (NYRG Dec2025)
+                        "mimeType": "application/vnd.google-apps.folder",
+                        "webViewLink": f.get("webViewLink", ""),
+                    })
 
         if not token:
             break
