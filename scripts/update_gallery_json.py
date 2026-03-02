@@ -225,7 +225,7 @@ def fetch_external_events_from_csv(csv_url: str) -> List[dict]:
     if not csv_url:
         return []
 
-    r = requests.get(csv_url, timeout=30)
+    r = requests.get(csv_url, timeout=30, allow_redirects=True)
     r.raise_for_status()
 
     buf = StringIO(r.text)
