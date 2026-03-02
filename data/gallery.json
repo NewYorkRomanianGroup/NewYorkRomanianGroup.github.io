@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-03-02T08:27:47Z",
+  "updated_at": "2026-03-02T14:56:28Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
@@ -796,5 +796,5 @@
       ]
     }
   ],
-  "external_events_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcmKtgLrljkJu60b-kjPIDLh4mw8oWSPXJ5o0JCmMQukJdNXIG9Ac5S9Aqi7HBavLddh7VOv8mwwF/pub?gid=2105492941&single=true&output=csv"
+  "external_events_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcmKtgLrljkJu60b-kjPIDLh4mw8oWSPXJ5o0JCmMQukJdNXIG9uAc5S9Aqi7HBavLddh7VOv8mwwF/pub?gid=2105492941&single=true&output=csv"
 }
