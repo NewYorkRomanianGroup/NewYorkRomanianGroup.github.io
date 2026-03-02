@@ -185,7 +185,7 @@ def walk_drive_folder_collect_images(
                         "name": f.get("name", ""),
                         "mimeType": mime,
                         "url": drive_thumbnail_url(file_id),
-                        "webViewLink": f.get("webViewLink", ""),
+                        "webViewLink": drive_folder_url(sd.get("targetId","")),
                     })
 
                     if len(images) >= max_images:
@@ -227,7 +227,7 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
                         "id": sd.get("targetId"),      # this is the REAL folder id
                         "name": name,                  # keep the display name (NYRG Dec2025)
                         "mimeType": "application/vnd.google-apps.folder",
-                        "webViewLink": f.get("webViewLink", ""),
+                        "webViewLink": drive_folder_url(sd.get("targetId","")),
                     })
 
         if not token:
