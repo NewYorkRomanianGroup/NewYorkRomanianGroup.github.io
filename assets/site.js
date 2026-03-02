@@ -348,3 +348,264 @@ function hideIfDriveRequiresLogin() {
 }
 
 document.addEventListener("DOMContentLoaded", hideIfDriveRequiresLogin);
+
+/* =========================================================
+   Gallery page renderer (data/gallery.json -> cards)
+
+   This powers /gallery.html.
+   Requirements:
+   - Desktop: show 4 event cards (2x2)
+   - Mobile: show only 2 event cards
+   - Below: show a full-width (C5) link card to the root Google Drive folder
+   - Rotate Drive event thumbnails every 5 seconds
+
+   Important:
+   - External events come from a Google Sheet (published as CSV) and are merged
+     into data/gallery.json by update_gallery_json.py.
+   - We use document.baseURI so this works on branch previews too.
+   ========================================================= */
+
+function galleryMaxCardsForWidth() {
+  return window.matchMedia("(max-width: 980px)").matches ? 2 : 4;
+}
+
+function monthLabel(yyyyMm) {
+  // Input: "YYYY-MM" -> Output: "Mon YYYY"
+  if (typeof yyyyMm !== "string") return "";
+  const m = yyyyMm.trim().match(/^([0-9]{4})-([0-9]{2})$/);
+  if (!m) return "";
+  const year = m[1];
+  const month = m[2];
+  const names = {
+    "01": "Jan", "02": "Feb", "03": "Mar", "04": "Apr",
+    "05": "May", "06": "Jun", "07": "Jul", "08": "Aug",
+    "09": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+  };
+  return `${names[month] || month} ${year}`;
+}
+
+function pickRandom(arr) {
+  if (!Array.isArray(arr) || arr.length === 0) return null;
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function buildGalleryCard({ title, meta, href, thumbUrl, isExternal }) {
+  const card = document.createElement("div");
+  card.className = "gallery-card";
+
+  const a = document.createElement("a");
+  a.href = href;
+  a.target = "_blank";
+  a.rel = "noopener";
+  a.setAttribute("aria-label", `${title} (opens in a new tab)`);
+
+  const img = document.createElement("img");
+  img.className = "gallery-thumb";
+  img.loading = "lazy";
+  img.alt = title;
+  img.src = thumbUrl;
+
+  const body = document.createElement("div");
+  body.className = "gallery-card-body";
+
+  const h = document.createElement("div");
+  h.className = "gallery-title";
+  h.textContent = title;
+
+  const p = document.createElement("p");
+  p.className = "small gallery-meta";
+  p.textContent = meta;
+
+  // Small hint for external albums (password-locked sites, etc.).
+  if (isExternal) {
+    const ext = document.createElement("div");
+    ext.className = "small";
+    ext.style.marginTop = "6px";
+    ext.style.color = "var(--muted)";
+    ext.textContent = "External link";
+    body.appendChild(ext);
+  }
+
+  body.prepend(p);
+  body.prepend(h);
+
+  a.appendChild(img);
+  a.appendChild(body);
+  card.appendChild(a);
+
+  return { card, imgEl: img };
+}
+
+async function loadGalleryPage() {
+  const grid = document.getElementById("gallery-events-grid");
+  const driveLinkRoot = document.getElementById("gallery-drive-link");
+  const pastRoot = document.getElementById("gallery-past-events");
+
+  // If we're not on /gallery.html, stop early.
+  if (!grid) return;
+
+  const setMessage = (el, msg) => {
+    if (!el) return;
+    el.innerHTML = `<div class="small">${msg}</div>`;
+  };
+
+  // Keep track of rotation timers so we can rerender on resize.
+  // (We clear them before rebuilding the grid.)
+  let rotationTimers = [];
+  const clearRotationTimers = () => {
+    rotationTimers.forEach((t) => clearInterval(t));
+    rotationTimers = [];
+  };
+
+  try {
+    // Build an absolute URL for the default thumbnail that works on branch previews.
+    const defaultThumb = new URL("assets/icon.png", document.baseURI).toString();
+
+    const jsonUrl = new URL("data/gallery.json", document.baseURI);
+    jsonUrl.searchParams.set("_ts", String(Date.now()));
+    const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
+    if (!res.ok) {
+      setMessage(grid, "Gallery temporarily unavailable.");
+      return;
+    }
+
+    const data = await res.json();
+    const events = Array.isArray(data?.events) ? data.events : [];
+    const rootFolderUrl = data?.root_folder?.url || (data?.folder_id ? `https://drive.google.com/drive/folders/${data.folder_id}` : "");
+
+    if (events.length === 0) {
+      setMessage(grid, "No events loaded yet. Check back soon.");
+      return;
+    }
+
+    // Split “recent 4” vs “past” based on the spec.
+    const recent4 = events.slice(0, 4);
+    const past = events.slice(4);
+
+    const render = () => {
+      clearRotationTimers();
+      grid.innerHTML = "";
+      if (pastRoot) pastRoot.innerHTML = "";
+      if (driveLinkRoot) driveLinkRoot.innerHTML = "";
+
+      // Desktop shows 4, mobile shows 2.
+      const maxCards = galleryMaxCardsForWidth();
+      const toShow = recent4.slice(0, maxCards);
+
+      toShow.forEach((ev) => {
+        const type = ev?.type;
+        const title = (ev?.title || "Event").trim();
+        const label = monthLabel(ev?.month);
+
+        const photographer = (ev?.photographer || "").trim();
+        const note = (ev?.note || "").trim();
+
+        const metaParts = [];
+        if (label) metaParts.push(label);
+        if (photographer) metaParts.push(`Photo: ${photographer}`);
+        if (note) metaParts.push(note);
+        const meta = metaParts.join(" • ") || "";
+
+        if (type === "drive") {
+          const folderUrl = (ev?.folder_url || "").trim();
+          const imgs = Array.isArray(ev?.images) ? ev.images : [];
+          const first = pickRandom(imgs);
+          const thumbUrl = (first && typeof first.url === "string") ? first.url : defaultThumb;
+
+          const built = buildGalleryCard({
+            title,
+            meta,
+            href: folderUrl || rootFolderUrl || "#",
+            thumbUrl,
+            isExternal: false,
+          });
+          grid.appendChild(built.card);
+
+          // Rotate thumbnails every 5 seconds.
+          // (Only if there is more than 1 image.)
+          if (imgs.length > 1) {
+            const timer = setInterval(() => {
+              const next = pickRandom(imgs);
+              const nextUrl = (next && typeof next.url === "string") ? next.url : "";
+              if (!nextUrl) return;
+
+              // Small fade for nicer swaps.
+              built.imgEl.style.opacity = "0.15";
+              setTimeout(() => {
+                built.imgEl.src = nextUrl;
+                built.imgEl.style.opacity = "1";
+              }, 180);
+            }, 5000);
+            rotationTimers.push(timer);
+          }
+        } else {
+          // External event
+          const url = (ev?.url || "").trim();
+          const thumbUrl = (ev?.thumb_url || "").trim() || defaultThumb;
+
+          const built = buildGalleryCard({
+            title,
+            meta,
+            href: url || "#",
+            thumbUrl,
+            isExternal: true,
+          });
+          grid.appendChild(built.card);
+        }
+      });
+
+      // C5 full-width Drive link card
+      if (driveLinkRoot && rootFolderUrl) {
+        const a = document.createElement("a");
+        a.className = "gallery-drive-link";
+        a.href = rootFolderUrl;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.innerHTML = `
+          <div style="font-weight:700; margin-bottom:6px;">Open the full shared Google Drive folder</div>
+          <div class="small" style="color: var(--muted);">See all events, all photos, and download originals.</div>
+        `;
+        driveLinkRoot.appendChild(a);
+      }
+
+      // Past list (always based on the remaining events beyond the top 4)
+      if (pastRoot) {
+        if (past.length === 0) {
+          setMessage(pastRoot, "No past events yet.");
+        } else {
+          past.forEach((ev) => {
+            const type = ev?.type;
+            const title = (ev?.title || "Event").trim();
+            const label = monthLabel(ev?.month);
+            const href = type === "drive" ? (ev?.folder_url || rootFolderUrl) : (ev?.url || "#");
+
+            const a = document.createElement("a");
+            a.href = href;
+            a.target = "_blank";
+            a.rel = "noopener";
+            a.textContent = label ? `${label} • ${title}` : title;
+            pastRoot.appendChild(a);
+          });
+        }
+      }
+    };
+
+    // Initial render + rerender when crossing the breakpoint.
+    render();
+
+    let lastMax = galleryMaxCardsForWidth();
+    window.addEventListener("resize", () => {
+      const nextMax = galleryMaxCardsForWidth();
+      if (nextMax !== lastMax) {
+        lastMax = nextMax;
+        render();
+      }
+    });
+  } catch (e) {
+    setMessage(grid, "Gallery temporarily unavailable.");
+    console.error(e);
+  }
+}
+
+// Run on every page load, but it no-ops unless #gallery-events-grid exists.
+loadGalleryPage();

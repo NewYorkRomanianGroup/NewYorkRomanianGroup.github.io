@@ -28,17 +28,16 @@ import json
 import os
 import re
 import sys
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from io import StringIO
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional, Tuple
 
 import requests
 
 
 DRIVE_FILES_ENDPOINT = "https://www.googleapis.com/drive/v3/files"
 
-# High caps are fine for you right now (few folders, 10-20 images per folder).
+# High caps are fine for you right now (few folders, ~10-20 images per folder).
 MAX_IMAGES_PER_EVENT = 200
 MAX_EVENTS_FROM_DRIVE = 50
 
@@ -55,10 +54,7 @@ def drive_list_children(
     parent_id: str,
     page_token: str | None = None,
 ) -> Tuple[List[dict], str | None]:
-    """
-    List direct children of a Drive folder.
-    Returns (files, nextPageToken).
-    """
+    """List direct children of a Drive folder."""
     params = {
         "key": api_key,
         "q": f"'{parent_id}' in parents and trashed=false",
@@ -86,12 +82,7 @@ def drive_folder_url(folder_id: str) -> str:
 
 
 def prettify_title(folder_name: str) -> str:
-    """
-    Make folder names nicer for display without needing a GitHub edit.
-    Examples:
-      "NYRG Jan 2026 Ski Trip" -> "Jan 2026 Ski Trip"
-      "nov.2025.featured"      -> "nov 2025 featured"
-    """
+    """Make folder names nicer for display without needing a GitHub edit."""
     s = (folder_name or "").strip()
     s = re.sub(r"^\s*NYRG\s+", "", s, flags=re.IGNORECASE)
     s = s.replace("_", " ").replace(".", " ")
@@ -116,22 +107,12 @@ _MONTHS = {
 
 
 def parse_month_from_name(name: str) -> Optional[str]:
-    """
-    Parse month-level YYYY-MM from a folder name.
-    Supports patterns like:
-      - "NYRG Jan 2026 Ski Trip"
-      - "Jan 2026 Ski Trip"
-      - "NYRG Dec2025"
-      - "dec2025"
-      - "nov.2025.featured"
-    Returns "YYYY-MM" or None if not found.
-    """
+    """Parse month-level YYYY-MM from a folder name (best-effort)."""
     raw = (name or "").strip().lower()
     raw = raw.replace("_", " ").replace(".", " ").replace("-", " ")
     raw = re.sub(r"\s+", " ", raw)
 
-    # Pattern A: MMM YYYY (with optional punctuation already normalized)
-    # Example: "jan 2026"
+    # Pattern A: MMM YYYY (e.g., "jan 2026")
     m = re.search(r"\b([a-z]{3,9})\s+(\d{4})\b", raw)
     if m:
         mon = _MONTHS.get(m.group(1))
@@ -139,8 +120,7 @@ def parse_month_from_name(name: str) -> Optional[str]:
         if mon:
             return f"{yr}-{mon}"
 
-    # Pattern B: MMMYYYY (no space)
-    # Example: "dec2025"
+    # Pattern B: MMMYYYY (e.g., "dec2025")
     m = re.search(r"\b([a-z]{3,9})(\d{4})\b", raw)
     if m:
         mon = _MONTHS.get(m.group(1))
@@ -148,7 +128,7 @@ def parse_month_from_name(name: str) -> Optional[str]:
         if mon:
             return f"{yr}-{mon}"
 
-    # Pattern C: YYYY MMM (rare, but harmless to support)
+    # Pattern C: YYYY MMM (rare)
     m = re.search(r"\b(\d{4})\s+([a-z]{3,9})\b", raw)
     if m:
         yr = m.group(1)
@@ -160,10 +140,6 @@ def parse_month_from_name(name: str) -> Optional[str]:
 
 
 def drive_thumbnail_url(file_id: str) -> str:
-    """
-    Thumbnail URL that works well in <img> tags for public files.
-    sz=w2000 is fine for the site. If you want smaller, change here.
-    """
     return f"https://drive.google.com/thumbnail?id={file_id}&sz=w2000"
 
 
@@ -172,10 +148,7 @@ def walk_drive_folder_collect_images(
     root_folder_id: str,
     max_images: int,
 ) -> List[dict]:
-    """
-    Recursively walk a Drive folder and collect up to max_images image files.
-    Returns a list of image dicts: {id, name, mimeType, url, webViewLink}.
-    """
+    """Recursively walk a Drive folder and collect up to max_images image files."""
     stack = [root_folder_id]
     images: List[dict] = []
 
@@ -214,10 +187,7 @@ def walk_drive_folder_collect_images(
 
 
 def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
-    """
-    List top-level subfolders under the root folder.
-    Filters exclusions. Returns folder dicts with id, name, webViewLink, mimeType.
-    """
+    """List top-level subfolders under the root folder and apply exclusions."""
     token = None
     out: List[dict] = []
 
@@ -233,44 +203,31 @@ def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
         if not token:
             break
 
-    # Sort by name for stability; recency is determined later via parsed month.
     out.sort(key=lambda x: (x.get("name", "") or "").lower())
     return out[:MAX_EVENTS_FROM_DRIVE]
 
 
 def fetch_external_events_from_csv(csv_url: str) -> List[dict]:
-    """
-    Fetch external events from a Google Sheet published as CSV.
-
-    Expected columns (case-insensitive):
-      month (YYYY-MM), title, url, thumb_url, photographer, note
-
-    Returns list of event dicts with type="external".
-    """
+    """Fetch external events from a Google Sheet published as CSV."""
     if not csv_url:
         return []
 
     r = requests.get(csv_url, timeout=30)
     r.raise_for_status()
 
-    text = r.text
-    buf = StringIO(text)
+    buf = StringIO(r.text)
     reader = csv.DictReader(buf)
 
     events: List[dict] = []
     for i, row in enumerate(reader):
-        # Normalize keys to lowercase for robustness.
-        row_lc = { (k or "").strip().lower(): (v or "").strip() for k, v in (row or {}).items() }
+        row_lc = {(k or "").strip().lower(): (v or "").strip() for k, v in (row or {}).items()}
 
         month = row_lc.get("month", "")
         title = row_lc.get("title", "")
         url = row_lc.get("url", "")
 
         if not month or not title or not url:
-            # Skip incomplete rows quietly (collaborator-friendly).
             continue
-
-        # Very light validation: month must look like YYYY-MM
         if not re.match(r"^\d{4}-\d{2}$", month):
             continue
 
@@ -290,10 +247,6 @@ def fetch_external_events_from_csv(csv_url: str) -> List[dict]:
 
 
 def month_sort_key(month: str) -> str:
-    """
-    Sort descending by month. Format is YYYY-MM so string sort works.
-    Unknown months sort last.
-    """
     if re.match(r"^\d{4}-\d{2}$", month or ""):
         return month
     return "0000-00"
@@ -306,8 +259,10 @@ def main() -> int:
     ap.add_argument(
         "--external-events-csv",
         default="",
-        help="Optional CSV URL for external events (Google Sheet published as CSV). "
-             "If not set, uses NYRG_EXTERNAL_EVENTS_CSV_URL env var.",
+        help=(
+            "Optional CSV URL for external events (Google Sheet published as CSV). "
+            "If not set, uses NYRG_EXTERNAL_EVENTS_CSV_URL env var."
+        ),
     )
     args = ap.parse_args()
 
@@ -346,7 +301,6 @@ def main() -> int:
         try:
             external_events = fetch_external_events_from_csv(external_csv)
         except Exception as e:
-            # Do not fail the entire pipeline if the external sheet is temporarily unavailable.
             print(f"[NYRG] WARNING: failed to fetch external events CSV: {e}", file=sys.stderr)
             external_events = []
 
@@ -355,7 +309,6 @@ def main() -> int:
     all_events.sort(key=lambda ev: month_sort_key(ev.get("month", "")), reverse=True)
 
     # 4) Backward-compatible flat images array for the homepage rotator
-    #    Flatten only DRIVE images; external events do not have Drive images.
     flat_images: List[dict] = []
     for ev in all_events:
         if ev.get("type") != "drive":
@@ -363,22 +316,14 @@ def main() -> int:
         for img in ev.get("images", [])[:MAX_IMAGES_PER_EVENT]:
             flat_images.append(img)
 
-    # Stable sort for rotator list to reduce churn.
     flat_images.sort(key=lambda x: (x.get("name", "") or "").lower())
 
     payload = {
         "updated_at": iso_utc_now(),
         "folder_id": args.folder_id,
-        "root_folder": {
-            "id": args.folder_id,
-            "url": drive_folder_url(args.folder_id),
-        },
-
-        # Backward compatible fields (used by current homepage rotator logic)
+        "root_folder": {"id": args.folder_id, "url": drive_folder_url(args.folder_id)},
         "count": len(flat_images),
         "images": flat_images,
-
-        # New structured events list (for the Gallery page)
         "events": all_events,
         "external_events_csv": external_csv,
     }

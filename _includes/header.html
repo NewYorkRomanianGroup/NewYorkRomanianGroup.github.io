@@ -16,8 +16,9 @@
 
     <nav class="navlinks" aria-label="Main navigation">
       <a href="{{ '/' | relative_url }}" class="{% if page.url == '/' %}active{% endif %}">Home</a>
+      <a href="{{ '/gallery.html' | relative_url }}" class="{% if page.url contains 'gallery' %}active{% endif %}">Gallery</a>
+      <a href="{{ '/jobs.html' | relative_url }}" class="{% if page.url contains 'jobs' %}active{% endif %}">Job Postings</a>
       <a href="{{ '/mentorship.html' | relative_url }}" class="{% if page.url contains 'mentorship' %}active{% endif %}">Mentorship</a>
-      <a href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">Instagram</a>
     </nav>
   </div>
 </header>
