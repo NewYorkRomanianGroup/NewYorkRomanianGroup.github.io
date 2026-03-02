@@ -1,6 +1,12 @@
 {
-  "updated_at": "2026-03-02T04:27:03Z",
+  "updated_at": "2026-03-02T08:03:57Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
+  "root_folder": {
+    "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
+    "url": "https://drive.google.com/drive/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u"
+  },
   "count": 0,
-  "images": []
+  "images": [],
+  "events": [],
+  "external_events_csv": ""
 }
