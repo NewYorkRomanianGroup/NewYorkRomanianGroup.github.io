@@ -174,10 +174,42 @@ def walk_drive_folder_collect_images(
 
             for f in files:
                 mime = f.get("mimeType", "")
+
+                # ---------------------------------------------
+                # Shortcut handling (folders or images)
+                # ---------------------------------------------
+                if mime == "application/vnd.google-apps.shortcut":
+                    sd = f.get("shortcutDetails") or {}
+                    target_id = sd.get("targetId", "")
+                    target_mime = sd.get("targetMimeType", "")
+
+                    # Shortcut -> folder: traverse it
+                    if target_mime == "application/vnd.google-apps.folder" and target_id:
+                        stack.append(target_id)
+                        continue
+
+                    # Shortcut -> image: include it
+                    if target_mime.startswith("image/") and target_id:
+                        images.append({
+                            "id": target_id,
+                            "name": f.get("name", ""),
+                            "mimeType": target_mime,
+                            "url": drive_thumbnail_url(target_id),
+                            "webViewLink": f.get("webViewLink", ""),
+                        })
+                        if len(images) >= max_images:
+                            break
+                        continue
+
+                    # Shortcut to something else: ignore
+                    continue
+
+                # Normal folder: traverse it
                 if mime == "application/vnd.google-apps.folder":
                     stack.append(f["id"])
                     continue
 
+                # Normal image file: include it
                 if mime.startswith("image/"):
                     file_id = f["id"]
                     images.append({
@@ -194,10 +226,8 @@ def walk_drive_folder_collect_images(
             if not token or len(images) >= max_images:
                 break
 
-    # Stable ordering helps reduce churn in commits.
     images.sort(key=lambda x: (x.get("name", "") or "").lower())
     return images
-
 
 def list_drive_event_folders(api_key: str, root_folder_id: str) -> List[dict]:
     """List top-level subfolders under the root folder and apply exclusions."""
