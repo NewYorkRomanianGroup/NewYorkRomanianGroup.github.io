@@ -185,7 +185,7 @@ def walk_drive_folder_collect_images(
                         "name": f.get("name", ""),
                         "mimeType": mime,
                         "url": drive_thumbnail_url(file_id),
-                        "webViewLink": drive_folder_url(sd.get("targetId","")),
+                        "webViewLink": f.get("webViewLink", ""),
                     })
 
                     if len(images) >= max_images:
