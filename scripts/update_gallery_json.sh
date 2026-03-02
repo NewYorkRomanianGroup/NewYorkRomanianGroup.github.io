@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+echo "[NYRG] external CSV url (env) = ${NYRG_EXTERNAL_EVENTS_CSV_URL:-<unset>}"
+
 # scripts/update_gallery_json.sh
 #
 # Usage:
