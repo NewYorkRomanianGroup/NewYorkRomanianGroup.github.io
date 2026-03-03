@@ -512,7 +512,7 @@ async function loadGalleryPage() {
       toShow.forEach((ev) => {
         const type = ev?.type;
         const title = (ev?.title || "Event").trim();
-        const label = monthLabel(ev?.month);
+        // const label = monthLabel(ev?.month);
 
         const photographer = (ev?.photographer || "").trim();
         const note = (ev?.note || "").trim();
@@ -590,7 +590,7 @@ async function loadGalleryPage() {
           past.forEach((ev) => {
             const type = ev?.type;
             const title = (ev?.title || "Event").trim();
-            const label = monthLabel(ev?.month);
+            // const label = monthLabel(ev?.month);
             const href = type === "drive" ? (ev?.folder_url || rootFolderUrl) : (ev?.url || "#");
 
             const a = document.createElement("a");
