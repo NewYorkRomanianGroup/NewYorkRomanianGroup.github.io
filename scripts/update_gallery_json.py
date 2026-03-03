@@ -66,7 +66,7 @@ def drive_list_children(
     params = {
         "key": api_key,
         "q": f"'{parent_id}' in parents and trashed=false",
-        "fields": "nextPageToken, files(id, name, mimeType, webViewLink, shortcutDetails(targetId,targetMimeType))",
+        "fields": "nextPageToken, files(id, name, mimeType, webViewLink, description, shortcutDetails(targetId,targetMimeType))",
         "pageSize": 1000,
     }
     if page_token:
@@ -93,6 +93,43 @@ def is_excluded_folder(name: str) -> bool:
 def drive_folder_url(folder_id: str) -> str:
     return f"https://drive.google.com/drive/folders/{folder_id}"
 
+def parse_event_meta_from_description(desc: str) -> tuple[str, str]:
+    """
+    Parse a Drive folder description into:
+      - photographer
+      - note
+
+    Supported patterns (case-insensitive):
+      Photo: Name
+      Photographer: Name
+      Credit: Name
+      Note: some note
+      Notes: some note
+
+    Any other non-empty lines are appended to note.
+    """
+    if not desc:
+        return ("", "")
+
+    lines = [ln.strip() for ln in desc.splitlines() if ln.strip()]
+    photographer = ""
+    notes: list[str] = []
+
+    for ln in lines:
+        m = re.match(r"(?i)^(photo|photographer|credit)\s*:\s*(.+)$", ln)
+        if m and not photographer:
+            photographer = m.group(2).strip()
+            continue
+
+        m = re.match(r"(?i)^notes?\s*:\s*(.+)$", ln)
+        if m:
+            notes.append(m.group(1).strip())
+            continue
+
+        # Any other line is treated as a note line
+        notes.append(ln)
+
+    return (photographer, " ".join(notes).strip())
 
 def prettify_title(folder_name: str) -> str:
     """Make folder names nicer for display without needing a GitHub edit."""
@@ -353,14 +390,17 @@ def main() -> int:
 
         images = walk_drive_folder_collect_images(api_key, folder_id, MAX_IMAGES_PER_EVENT)
 
+        folder_desc = (f.get("description") or "").strip()
+        photographer, note = parse_event_meta_from_description(folder_desc)
+
         drive_events.append({
             "type": "drive",
             "id": folder_id,
             "month": month,
             "title": prettify_title(folder_name) or folder_name,
             "folder_url": drive_folder_url(folder_id),
-            "photographer": "",
-            "note": "",
+            "photographer": photographer,
+            "note": note,
             "images": images,
         })
 

@@ -389,7 +389,7 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function buildGalleryCard({ title, meta, href, thumbUrl, isExternal }) {
+function buildGalleryCard({ title, label, photographer, note, href, thumbUrl, linkHint }) {
   const card = document.createElement("div");
   card.className = "gallery-card";
 
@@ -412,22 +412,39 @@ function buildGalleryCard({ title, meta, href, thumbUrl, isExternal }) {
   h.className = "gallery-title";
   h.textContent = title;
 
-  const p = document.createElement("p");
-  p.className = "small gallery-meta";
-  p.textContent = meta;
+  const meta = document.createElement("p");
+  meta.className = "small gallery-meta";
+  meta.textContent = label || "";
 
-  // Small hint for external albums (password-locked sites, etc.).
-  if (isExternal) {
-    const ext = document.createElement("div");
-    ext.className = "small";
-    ext.style.marginTop = "6px";
-    ext.style.color = "var(--muted)";
-    ext.textContent = "External link";
-    body.appendChild(ext);
+  body.appendChild(h);
+  body.appendChild(meta);
+
+  if (photographer) {
+    const credit = document.createElement("div");
+    credit.className = "small";
+    credit.style.marginTop = "6px";
+    credit.style.color = "var(--muted)";
+    credit.textContent = `Photo: ${photographer}`;
+    body.appendChild(credit);
   }
 
-  body.prepend(p);
-  body.prepend(h);
+  if (note) {
+    const n = document.createElement("div");
+    n.className = "small";
+    n.style.marginTop = "6px";
+    n.style.color = "var(--muted)";
+    n.textContent = note;
+    body.appendChild(n);
+  }
+
+  if (linkHint) {
+    const hint = document.createElement("div");
+    hint.className = "small";
+    hint.style.marginTop = "10px";
+    hint.style.color = "var(--muted)";
+    hint.textContent = linkHint;
+    body.appendChild(hint);
+  }
 
   a.appendChild(img);
   a.appendChild(body);
@@ -500,12 +517,6 @@ async function loadGalleryPage() {
         const photographer = (ev?.photographer || "").trim();
         const note = (ev?.note || "").trim();
 
-        const metaParts = [];
-        if (label) metaParts.push(label);
-        if (photographer) metaParts.push(`Photo: ${photographer}`);
-        if (note) metaParts.push(note);
-        const meta = metaParts.join(" • ") || "";
-
         if (type === "drive") {
           const folderUrl = (ev?.folder_url || "").trim();
           const imgs = Array.isArray(ev?.images) ? ev.images : [];
@@ -514,10 +525,12 @@ async function loadGalleryPage() {
 
           const built = buildGalleryCard({
             title,
-            meta,
+            label,
+            photographer,
+            note,
             href: folderUrl || rootFolderUrl || "#",
             thumbUrl,
-            isExternal: false,
+            linkHint: "Google Drive folder",
           });
           grid.appendChild(built.card);
 
@@ -545,12 +558,13 @@ async function loadGalleryPage() {
 
           const built = buildGalleryCard({
             title,
-            meta,
+            label,
+            photographer,
+            note,
             href: url || "#",
             thumbUrl,
-            isExternal: true,
+            linkHint: "External link",
           });
-          grid.appendChild(built.card);
         }
       });
 
