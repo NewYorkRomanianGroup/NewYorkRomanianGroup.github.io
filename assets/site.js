@@ -231,7 +231,7 @@ async function loadGalleryRotatorSlides() {
 
     // Fill slides for the rotator logic.
     slidesRoot.innerHTML = "";
-    urls.slice(0, 20).forEach((s) => {
+    urls.forEach((s) => {
       const d = document.createElement("div");
       d.setAttribute("data-image-url", s.url);
       d.setAttribute("data-caption", s.caption || "Featured photo");

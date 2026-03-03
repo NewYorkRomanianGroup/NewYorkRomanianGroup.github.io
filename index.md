@@ -101,38 +101,6 @@ description: New York Romanian Group is a community for Romanians in New York. W
     </div>
   </div>
 
-  <!-- =========================
-       RIGHT CARD: PHOTO GALLERY
-       ========================= -->
-  <div class="card photo-highlights" id="photo-highlights-card">
-    <h2>Photo Highlights</h2>
-    <p>Browse the full shared folder and open individual files below.</p>
-
-    <div class="embed-wrap">
-      <!--
-        Shared Google Drive folder embed.
-        Replace only the folder ID after /folders/ to switch folders.
-      -->
-      <iframe
-        src="https://drive.google.com/embeddedfolderview?id=1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u#grid"
-        height="520"
-        loading="lazy"
-        title="NYRG Photo Highlights"
-      ></iframe>
-
-
-      <!-- <div class="small" style="margin-top: 10px;">
-        To update this gallery, keep the URL format and replace only the folder ID.
-      </div> -->
-    </div>
-
-    <div style="margin-top: 12px;">
-      <a class="btn" href="https://drive.google.com/drive/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u?usp=sharing" target="_blank" rel="noopener">
-        Open Shared Folder
-      </a>
-    </div>
-  </div>
-</section>
 
 <section style="padding-bottom: 36px;">
   <iframe
