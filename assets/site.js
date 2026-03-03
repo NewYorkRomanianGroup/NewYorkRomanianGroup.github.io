@@ -389,7 +389,7 @@ function pickRandom(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function buildGalleryCard({ title, label, photographer, note, href, thumbUrl, linkHint }) {
+function buildGalleryCard({ title, photographer, note, href, thumbUrl, linkHint }) {
   const card = document.createElement("div");
   card.className = "gallery-card";
 
@@ -411,13 +411,7 @@ function buildGalleryCard({ title, label, photographer, note, href, thumbUrl, li
   const h = document.createElement("div");
   h.className = "gallery-title";
   h.textContent = title;
-
-  const meta = document.createElement("p");
-  meta.className = "small gallery-meta";
-  meta.textContent = label || "";
-
   body.appendChild(h);
-  body.appendChild(meta);
 
   if (photographer) {
     const credit = document.createElement("div");
@@ -525,7 +519,7 @@ async function loadGalleryPage() {
 
           const built = buildGalleryCard({
             title,
-            label,
+            // label,
             photographer,
             note,
             href: folderUrl || rootFolderUrl || "#",
@@ -558,7 +552,7 @@ async function loadGalleryPage() {
 
           const built = buildGalleryCard({
             title,
-            label,
+            // label,
             photographer,
             note,
             href: url || "#",
@@ -597,7 +591,8 @@ async function loadGalleryPage() {
             a.href = href;
             a.target = "_blank";
             a.rel = "noopener";
-            a.textContent = label ? `${label} • ${title}` : title;
+            // a.textContent = label ? `${label} • ${title}` : title;
+            a.textContent = `${title}`;
             pastRoot.appendChild(a);
           });
         }
