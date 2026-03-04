@@ -209,8 +209,11 @@ async function loadGalleryRotatorSlides() {
   const imgEl = document.getElementById("hero-rotator-image");
 
   // If the featured rotator markup is not on this page, do nothing.
-  // (This avoids errors on pages that do not include the rotator.)
   if (!slidesRoot || !imgEl) return;
+
+  // Knobs:
+  const PER_EVENT_BATCH = 5;   // how many photos to draw per event each refresh
+  const MAX_EVENTS_USED = 50;  // safety cap for homepage
 
   try {
     const jsonUrl = new URL("data/gallery.json", document.baseURI);
@@ -218,53 +221,132 @@ async function loadGalleryRotatorSlides() {
 
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
 
-    // If gallery.json fails to load, hide Featured Photos.
     if (!res.ok) {
       setPhotosVisibility({ show: false });
       return;
     }
 
     const data = await res.json();
-    const images = Array.isArray(data?.images) ? data.images : [];
 
-    let urls = images
-      .map((x) => ({
-        url: x && typeof x.url === "string" ? x.url.trim() : "",
-        caption: "",
-        webViewLink: x && typeof x.webViewLink === "string" ? x.webViewLink.trim() : ""
-      }))
-      .filter((x) => x.url);
+    const shapeImage = (img, caption) => ({
+      url: img && typeof img.url === "string" ? img.url.trim() : "",
+      caption: typeof caption === "string" ? caption : "Featured photo",
+      webViewLink: img && typeof img.webViewLink === "string" ? img.webViewLink.trim() : ""
+    });
 
-    // If there are no usable images, hide Featured Photos.
-    if (urls.length === 0) {
+    // Pull events (folders)
+    const eventsRaw = Array.isArray(data?.events) ? data.events : [];
+    const events = eventsRaw
+      .map((ev) => {
+        const title = typeof ev?.title === "string" ? ev.title.trim() : "";
+        const imgs = Array.isArray(ev?.images) ? ev.images : [];
+
+        // Shape + remove empties
+        const shaped = imgs
+          .map((img) => shapeImage(img, title || "Featured photo"))
+          .filter((x) => x.url);
+
+        // De-dupe within event by URL
+        const seen = new Set();
+        const deduped = shaped.filter((x) => {
+          if (seen.has(x.url)) return false;
+          seen.add(x.url);
+          return true;
+        });
+
+        return { title: title || "Featured photo", all: deduped };
+      })
+      .filter((ev) => ev.all.length > 0)
+      .slice(0, MAX_EVENTS_USED);
+
+    if (events.length === 0) {
       setPhotosVisibility({ show: false });
       return;
     }
 
-    // IMPORTANT CHANGE:
-    // Randomize so you do not just see the earliest folders (like Apr/May 2025).
-    urls = shuffleInPlace(urls);
-
-    // Show Featured Photos.
     setPhotosVisibility({ show: true });
 
-    // Fill slides for the rotator logic.
-    slidesRoot.innerHTML = "";
+    // Fisher-Yates shuffle
+    const shuffle = (arr) => {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
+      }
+      return arr;
+    };
 
-    // Keep this capped so we do not build a massive hidden DOM if Drive grows.
-    // The rotator will cycle through these.
-    urls.slice(0, 30).forEach((s) => {
-      const d = document.createElement("div");
-      d.setAttribute("data-image-url", s.url);
-      d.setAttribute("data-caption", s.caption || "Featured photo");
-      slidesRoot.appendChild(d);
-    });
+    // Per-event pools: remaining is consumed without replacement.
+    // When remaining empties, we reshuffle the full set and start over.
+    const pools = events.map((ev) => ({
+      title: ev.title,
+      all: ev.all.slice(),
+      remaining: shuffle(ev.all.slice())
+    }));
 
-    if (captionEl) captionEl.textContent = "Featured photo";
-    imgEl.src = urls[0].url;
-    imgEl.alt = "Featured photo";
+    const takeFromPool = (pool, n) => {
+      const out = [];
+      while (out.length < n) {
+        if (pool.remaining.length === 0) {
+          pool.remaining = shuffle(pool.all.slice());
+          if (pool.remaining.length === 0) break;
+        }
+        out.push(pool.remaining.shift());
+      }
+      return out;
+    };
+
+    // Build the next deck:
+    // - take 5 from each event (without replacement per event)
+    // - then shuffle the whole deck for "truly random" ordering
+    const buildNextDeck = () => {
+      const deck = [];
+      for (const p of pools) {
+        deck.push(...takeFromPool(p, PER_EVENT_BATCH));
+      }
+
+      // De-dupe across deck (rare, but cheap insurance)
+      const seen = new Set();
+      const deduped = deck.filter((x) => {
+        if (!x || !x.url) return false;
+        if (seen.has(x.url)) return false;
+        seen.add(x.url);
+        return true;
+      });
+
+      return shuffle(deduped);
+    };
+
+    // Store state for the rotator so it can request a fresh deck when it wraps.
+    window.__NYRG_HERO_ROTATOR_STATE = {
+      buildNextDeck,
+      setSlidesOnPage(deck) {
+        slidesRoot.innerHTML = "";
+
+        deck.forEach((s) => {
+          const d = document.createElement("div");
+          d.setAttribute("data-image-url", s.url);
+          d.setAttribute("data-caption", s.caption || "Featured photo");
+          slidesRoot.appendChild(d);
+        });
+
+        if (deck.length > 0) {
+          if (captionEl) captionEl.textContent = deck[0].caption || "Featured photo";
+          imgEl.src = deck[0].url;
+          imgEl.alt = deck[0].caption || "Featured photo";
+        }
+      }
+    };
+
+    // Initial render
+    const firstDeck = window.__NYRG_HERO_ROTATOR_STATE.buildNextDeck();
+    if (!firstDeck || firstDeck.length === 0) {
+      setPhotosVisibility({ show: false });
+      return;
+    }
+    window.__NYRG_HERO_ROTATOR_STATE.setSlidesOnPage(firstDeck);
   } catch (e) {
-    // Any unexpected error: hide Featured Photos.
     setPhotosVisibility({ show: false });
     console.error(e);
   }
@@ -284,16 +366,19 @@ function loadHeroRotator() {
   const prevBtn = document.getElementById("hero-rotator-prev");
   const nextBtn = document.getElementById("hero-rotator-next");
 
-  // If this page does not have the rotator section, stop early.
   if (!imgEl || !slidesRoot) return;
 
-  const slides = Array.from(slidesRoot.children)
-    .map((el) => ({
-      url: (el.getAttribute("data-image-url") || "").trim(),
-      caption: (el.getAttribute("data-caption") || "").trim()
-    }))
-    .filter((s) => s.url);
+  const state = window.__NYRG_HERO_ROTATOR_STATE || null;
 
+  const readSlidesFromDOM = () =>
+    Array.from(slidesRoot.children)
+      .map((el) => ({
+        url: (el.getAttribute("data-image-url") || "").trim(),
+        caption: (el.getAttribute("data-caption") || "").trim()
+      }))
+      .filter((s) => s.url);
+
+  let slides = readSlidesFromDOM();
   if (slides.length === 0) return;
 
   let idx = 0;
@@ -301,19 +386,46 @@ function loadHeroRotator() {
   const render = () => {
     const active = slides[idx];
     imgEl.src = active.url;
-    if (active.caption) imgEl.alt = active.caption;
+    imgEl.alt = active.caption || "Featured photo";
     if (captionEl) captionEl.textContent = active.caption || "Featured photo";
   };
 
+  const swapToNextDeck = () => {
+    if (!state || typeof state.buildNextDeck !== "function" || typeof state.setSlidesOnPage !== "function") {
+      return false;
+    }
+
+    const deck = state.buildNextDeck();
+    if (!deck || deck.length === 0) return false;
+
+    state.setSlidesOnPage(deck);
+
+    slides = readSlidesFromDOM();
+    idx = 0;
+    render();
+    return true;
+  };
+
   const move = (step) => {
+    if (slides.length === 0) return;
+
+    const oldIdx = idx;
     idx = (idx + step + slides.length) % slides.length;
+
+    // When we wrap forward (end -> start), we treat that as "deck consumed"
+    // and load a fresh deck that continues the without-replacement pools.
+    const wrappedForward = step > 0 && oldIdx === slides.length - 1 && idx === 0;
+    if (wrappedForward) {
+      const swapped = swapToNextDeck();
+      if (swapped) return;
+    }
+
     render();
   };
 
   if (prevBtn) prevBtn.addEventListener("click", () => move(-1));
   if (nextBtn) nextBtn.addEventListener("click", () => move(1));
 
-  // Auto-rotate every 4 seconds.
   if (slides.length > 1) {
     setInterval(() => move(1), 4000);
   }
