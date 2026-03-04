@@ -653,3 +653,30 @@ iframe {
   border: 1px dashed var(--border);
   color: var(--muted);
 }
+
+/* Collapsible description block */
+.job-desc {
+  margin-top: 6px;
+}
+
+.job-desc details {
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  background: rgba(255,255,255,0.25);
+}
+
+.job-desc summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.job-desc-text {
+  margin-top: 8px;
+  color: var(--text);
+  opacity: 0.95;
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: pre-wrap; /* keeps line breaks from the sheet */
+}
