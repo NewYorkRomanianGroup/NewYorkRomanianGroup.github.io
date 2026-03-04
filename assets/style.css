@@ -508,64 +508,59 @@ iframe {
    ========================================= */
 
 /* =========================================
-  Mobile flag stripe alignment improvement
-  ========================================= */
-
+   Mobile header fix (matches header.html)
+   ========================================= */
 @media (max-width: 640px) {
 
-  /* make the stripe align perfectly with header edges */
-  .header-stripe {
-    margin-left: -16px;
-    margin-right: -16px;
-  }
-
-  /* allow header to wrap */
-  .site-header-inner {
+  /* Make the header layout wrap instead of overflowing right */
+  .container.nav {
     flex-wrap: wrap;
     align-items: flex-start;
-  }
-
-  /* logo + title block */
-  .site-brand {
-    width: 100%;
-    margin-bottom: 8px;
     gap: 10px;
   }
 
-  /* slightly shrink logo */
-  .site-logo {
+  /* Brand takes full width on mobile */
+  .brand {
+    width: 100%;
+  }
+
+  /* Slightly smaller logo on mobile */
+  .brand-logo {
     width: 36px;
     height: 36px;
   }
 
-  /* title */
-  .site-title {
+  /* Title + tagline sizing */
+  .brand > div > div:first-child {
     font-size: 18px;
     line-height: 1.15;
   }
 
-  /* subtitle */
-  .site-tagline {
+  .brand .small {
     font-size: 13px;
     line-height: 1.2;
   }
 
-  /* navigation becomes 2x2 grid */
-  .site-nav {
+  /* Nav becomes a 2x2 grid */
+  .navlinks {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    margin-top: 6px;
   }
 
-  /* nav buttons */
-  .site-nav a {
+  /* Nav buttons */
+  .navlinks a {
     text-align: center;
     padding: 8px 10px;
     font-size: 14px;
+    white-space: nowrap; /* keeps "Job Postings" on one line */
   }
 
+  /* Romanian flag stripe polish */
+  .flag-strip {
+    height: 4px;
+  }
 }
 
 /* ===================================
