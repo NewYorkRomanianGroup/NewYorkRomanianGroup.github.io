@@ -869,6 +869,16 @@ function _populateSelect(selectEl, values) {
 function _renderJobs(grid, jobs) {
   grid.innerHTML = "";
 
+  const description = _norm(job.description);
+  ${description ? `
+    <div class="job-desc">
+      <details>
+        <summary>Details</summary>
+        <div class="job-desc-text">${description}</div>
+      </details>
+    </div>
+  ` : ""}
+
   jobs.forEach(job => {
     const title = _norm(job.title);
     const company = _norm(job.company);
