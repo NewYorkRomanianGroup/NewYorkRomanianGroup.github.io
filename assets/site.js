@@ -774,6 +774,7 @@ async function loadGalleryPage() {
           });
         }
       }
+    };
     // Initial render + rerender when crossing the breakpoint.
     render();
 
