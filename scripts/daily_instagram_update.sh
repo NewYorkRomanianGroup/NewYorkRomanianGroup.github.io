@@ -11,7 +11,9 @@ set -euo pipefail
 #
 # Notes for collaborators:
 # - This script modifies ONLY the instagram.json file (unless you changed other files).
-# - If your working tree has other uncommitted edits, this script will exit for safety.
+# - If your working tree has other uncommitted edits, this script will exit for safety
+#   (standalone mode only).
+# - If NYRG_SKIP_GIT=1, umbrella handles git, so we allow dirty trees.
 # - If you do not have a .venv, it will fall back to python3.
 # ============================================================
 
@@ -43,21 +45,24 @@ else
   SKIP_GIT=0
 fi
 
-# Safety: do not run if there are unrelated uncommitted changes.
-if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "[NYRG] Working tree is not clean."
-  echo "[NYRG] Please commit or stash your changes before running this script."
-  exit 1
+# Standalone mode safety only. Umbrella mode can tolerate dirty trees.
+if [[ "$SKIP_GIT" == "0" ]]; then
+  if ! git diff --quiet || ! git diff --cached --quiet; then
+    echo "[NYRG] Working tree is not clean."
+    echo "[NYRG] Please commit or stash your changes before running this script."
+    exit 1
+  fi
 fi
 
 # Run the scraper. It should only write JSON if it successfully finds posts.
 "$PYTHON" "$SCRAPER_PATH"
 
+# Umbrella mode stops here.
 if [[ "$SKIP_GIT" == "1" ]]; then
   exit 0
 fi
 
-# Stage just the JSON file. (Keeps commits tight and predictable.)
+# Stage just the JSON file.
 git add "$JSON_PATH"
 
 # If nothing changed, exit cleanly.
@@ -66,7 +71,7 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
-# Only push if we are on main (prevents accidentally pushing from a feature branch).
+# Only push if we are on main.
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "$BRANCH" != "main" ]]; then
   echo "[NYRG] Current branch is '$BRANCH'."
