@@ -211,9 +211,9 @@ async function loadGalleryRotatorSlides() {
   // If the featured rotator markup is not on this page, do nothing.
   if (!slidesRoot || !imgEl) return;
 
-  // Knobs:
-  const PER_EVENT_BATCH = 5;   // how many photos to draw per event each refresh
-  const MAX_EVENTS_USED = 50;  // safety cap for homepage
+  // Knobs you can adjust:
+  const PER_EVENT_PICK = 5;      // 5 photos per event per deck
+  const MAX_EVENTS_USED = 50;    // safety cap
 
   try {
     const jsonUrl = new URL("data/gallery.json", document.baseURI);
@@ -221,50 +221,21 @@ async function loadGalleryRotatorSlides() {
 
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
 
+    // If gallery.json fails to load, treat it as "no accessible photos".
     if (!res.ok) {
       setPhotosVisibility({ show: false });
       return;
     }
 
     const data = await res.json();
+    const events = Array.isArray(data?.events) ? data.events : [];
 
+    // Helper: normalize images into a consistent shape
     const shapeImage = (img, caption) => ({
       url: img && typeof img.url === "string" ? img.url.trim() : "",
-      caption: typeof caption === "string" ? caption : "Featured photo",
+      caption: typeof caption === "string" && caption.trim() ? caption.trim() : "Featured photo",
       webViewLink: img && typeof img.webViewLink === "string" ? img.webViewLink.trim() : ""
     });
-
-    // Pull events (folders)
-    const eventsRaw = Array.isArray(data?.events) ? data.events : [];
-    const events = eventsRaw
-      .map((ev) => {
-        const title = typeof ev?.title === "string" ? ev.title.trim() : "";
-        const imgs = Array.isArray(ev?.images) ? ev.images : [];
-
-        // Shape + remove empties
-        const shaped = imgs
-          .map((img) => shapeImage(img, title || "Featured photo"))
-          .filter((x) => x.url);
-
-        // De-dupe within event by URL
-        const seen = new Set();
-        const deduped = shaped.filter((x) => {
-          if (seen.has(x.url)) return false;
-          seen.add(x.url);
-          return true;
-        });
-
-        return { title: title || "Featured photo", all: deduped };
-      })
-      .filter((ev) => ev.all.length > 0)
-      .slice(0, MAX_EVENTS_USED);
-
-    if (events.length === 0) {
-      setPhotosVisibility({ show: false });
-      return;
-    }
-
-    setPhotosVisibility({ show: true });
 
     // Fisher-Yates shuffle
     const shuffle = (arr) => {
@@ -277,18 +248,48 @@ async function loadGalleryRotatorSlides() {
       return arr;
     };
 
-    // Per-event pools: remaining is consumed without replacement.
-    // When remaining empties, we reshuffle the full set and start over.
-    const pools = events.map((ev) => ({
-      title: ev.title,
-      all: ev.all.slice(),
-      remaining: shuffle(ev.all.slice())
-    }));
+    // Build per-event pools
+    const pools = events
+      .map((ev) => {
+        const title = typeof ev?.title === "string" ? ev.title.trim() : "Event";
+        const imgs = Array.isArray(ev?.images) ? ev.images : [];
 
-    const takeFromPool = (pool, n) => {
+        // Shape + remove empties
+        const shaped = imgs.map((img) => shapeImage(img, title)).filter((x) => x.url);
+
+        // Deduplicate within event by URL
+        const seen = new Set();
+        const deduped = shaped.filter((x) => {
+          if (seen.has(x.url)) return false;
+          seen.add(x.url);
+          return true;
+        });
+
+        if (deduped.length === 0) return null;
+
+        return {
+          title,
+          all: deduped.slice(),
+          remaining: shuffle(deduped.slice())
+        };
+      })
+      .filter(Boolean)
+      .slice(0, MAX_EVENTS_USED);
+
+    // If there are no usable images, hide both photo cards and let Instagram fill the width.
+    if (pools.length === 0) {
+      setPhotosVisibility({ show: false });
+      return;
+    }
+
+    setPhotosVisibility({ show: true });
+
+    // Take N from an event pool without replacement.
+    // If the pool is exhausted, reshuffle that event and continue.
+    const takeNFromPool = (pool, n) => {
       const out = [];
       while (out.length < n) {
-        if (pool.remaining.length === 0) {
+        if (!pool.remaining || pool.remaining.length === 0) {
           pool.remaining = shuffle(pool.all.slice());
           if (pool.remaining.length === 0) break;
         }
@@ -297,16 +298,14 @@ async function loadGalleryRotatorSlides() {
       return out;
     };
 
-    // Build the next deck:
-    // - take 5 from each event (without replacement per event)
-    // - then shuffle the whole deck for "truly random" ordering
+    // Build one deck:
+    //  - 5 per event from remaining
+    //  - then shuffle deck so order is random within the deck
     const buildNextDeck = () => {
       const deck = [];
-      for (const p of pools) {
-        deck.push(...takeFromPool(p, PER_EVENT_BATCH));
-      }
+      pools.forEach((p) => deck.push(...takeNFromPool(p, PER_EVENT_PICK)));
 
-      // De-dupe across deck (rare, but cheap insurance)
+      // Deduplicate across deck just in case (cheap insurance)
       const seen = new Set();
       const deduped = deck.filter((x) => {
         if (!x || !x.url) return false;
@@ -318,34 +317,37 @@ async function loadGalleryRotatorSlides() {
       return shuffle(deduped);
     };
 
-    // Store state for the rotator so it can request a fresh deck when it wraps.
-    window.__NYRG_HERO_ROTATOR_STATE = {
-      buildNextDeck,
-      setSlidesOnPage(deck) {
-        slidesRoot.innerHTML = "";
+    // Render a deck into the hidden slides container.
+    const renderDeckToDOM = (deck) => {
+      slidesRoot.innerHTML = "";
+      deck.forEach((s) => {
+        const d = document.createElement("div");
+        d.setAttribute("data-image-url", s.url);
+        d.setAttribute("data-caption", s.caption || "Featured photo");
+        slidesRoot.appendChild(d);
+      });
 
-        deck.forEach((s) => {
-          const d = document.createElement("div");
-          d.setAttribute("data-image-url", s.url);
-          d.setAttribute("data-caption", s.caption || "Featured photo");
-          slidesRoot.appendChild(d);
-        });
-
-        if (deck.length > 0) {
-          if (captionEl) captionEl.textContent = deck[0].caption || "Featured photo";
-          imgEl.src = deck[0].url;
-          imgEl.alt = deck[0].caption || "Featured photo";
-        }
+      // Prime hero image
+      if (deck.length > 0) {
+        if (captionEl) captionEl.textContent = deck[0].caption || "Featured photo";
+        imgEl.src = deck[0].url;
+        imgEl.alt = deck[0].caption || "Featured photo";
       }
     };
 
-    // Initial render
-    const firstDeck = window.__NYRG_HERO_ROTATOR_STATE.buildNextDeck();
+    // Store state globally so loadHeroRotator can refresh the deck on wrap.
+    window.__NYRG_HERO_DECK_STATE = {
+      buildNextDeck,
+      renderDeckToDOM
+    };
+
+    // Initial deck
+    const firstDeck = buildNextDeck();
     if (!firstDeck || firstDeck.length === 0) {
       setPhotosVisibility({ show: false });
       return;
     }
-    window.__NYRG_HERO_ROTATOR_STATE.setSlidesOnPage(firstDeck);
+    renderDeckToDOM(firstDeck);
   } catch (e) {
     setPhotosVisibility({ show: false });
     console.error(e);
@@ -366,9 +368,10 @@ function loadHeroRotator() {
   const prevBtn = document.getElementById("hero-rotator-prev");
   const nextBtn = document.getElementById("hero-rotator-next");
 
+  // If this page does not have the rotator section, stop early.
   if (!imgEl || !slidesRoot) return;
 
-  const state = window.__NYRG_HERO_ROTATOR_STATE || null;
+  const state = window.__NYRG_HERO_DECK_STATE || null;
 
   const readSlidesFromDOM = () =>
     Array.from(slidesRoot.children)
@@ -390,16 +393,16 @@ function loadHeroRotator() {
     if (captionEl) captionEl.textContent = active.caption || "Featured photo";
   };
 
-  const swapToNextDeck = () => {
-    if (!state || typeof state.buildNextDeck !== "function" || typeof state.setSlidesOnPage !== "function") {
+  // Refresh the whole deck, using the unused photos remaining per event.
+  const refreshDeck = () => {
+    if (!state || typeof state.buildNextDeck !== "function" || typeof state.renderDeckToDOM !== "function") {
       return false;
     }
 
     const deck = state.buildNextDeck();
     if (!deck || deck.length === 0) return false;
 
-    state.setSlidesOnPage(deck);
-
+    state.renderDeckToDOM(deck);
     slides = readSlidesFromDOM();
     idx = 0;
     render();
@@ -412,12 +415,11 @@ function loadHeroRotator() {
     const oldIdx = idx;
     idx = (idx + step + slides.length) % slides.length;
 
-    // When we wrap forward (end -> start), we treat that as "deck consumed"
-    // and load a fresh deck that continues the without-replacement pools.
+    // If we wrapped forward (end -> start), refresh the deck now.
     const wrappedForward = step > 0 && oldIdx === slides.length - 1 && idx === 0;
     if (wrappedForward) {
-      const swapped = swapToNextDeck();
-      if (swapped) return;
+      const ok = refreshDeck();
+      if (ok) return;
     }
 
     render();
@@ -426,6 +428,7 @@ function loadHeroRotator() {
   if (prevBtn) prevBtn.addEventListener("click", () => move(-1));
   if (nextBtn) nextBtn.addEventListener("click", () => move(1));
 
+  // Auto-rotate every 4 seconds.
   if (slides.length > 1) {
     setInterval(() => move(1), 4000);
   }
