@@ -76,9 +76,7 @@ permalink: /jobs.html
           <option value="">All locations</option>
         </select>
 
-        <select id="jobs-filter-type" class="jobs-select">
-          <option value="">All types</option>
-        </select>
+        <!-- Removed: Type filter -->
 
         <select id="jobs-filter-company" class="jobs-select">
           <option value="">All companies</option>

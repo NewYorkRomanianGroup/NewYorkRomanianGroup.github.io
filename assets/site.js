@@ -630,13 +630,42 @@ async function loadGalleryPage() {
     el.innerHTML = `<div class="small">${msg}</div>`;
   };
 
-  // Keep track of rotation timers so we can rerender on resize.
-  // (We clear them before rebuilding the grid.)
-  let rotationTimers = [];
-  const clearRotationTimers = () => {
-    rotationTimers.forEach((t) => clearInterval(t));
-    rotationTimers = [];
+  // We use a single round-robin timeout so only 1 thumbnail changes at a time.
+  let rotationTimeout = null;
+  const clearRotationTimer = () => {
+    if (rotationTimeout) clearTimeout(rotationTimeout);
+    rotationTimeout = null;
   };
+
+  // Desktop: 2000ms per swap, Mobile: 3000ms per swap
+  function galleryThumbStepMs() {
+    return window.matchMedia("(max-width: 980px)").matches ? 3000 : 2000;
+  }
+
+  // Pick a new image URL, trying to avoid repeating the current image.
+  function pickNextUrl(imgs, currentUrl) {
+    if (!Array.isArray(imgs) || imgs.length === 0) return "";
+
+    const urls = imgs
+      .map((x) => (x && typeof x.url === "string" ? x.url : ""))
+      .filter(Boolean);
+
+    if (urls.length === 0) return "";
+    if (urls.length === 1) return urls[0];
+
+    // Try a few random picks that differ from the current URL
+    for (let k = 0; k < 6; k++) {
+      const candidate = urls[Math.floor(Math.random() * urls.length)];
+      if (candidate && candidate !== currentUrl) return candidate;
+    }
+
+    // Fallback: first different
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i] !== currentUrl) return urls[i];
+    }
+
+    return urls[0];
+  }
 
   try {
     // Build an absolute URL for the default thumbnail that works on branch previews.
@@ -652,7 +681,9 @@ async function loadGalleryPage() {
 
     const data = await res.json();
     const events = Array.isArray(data?.events) ? data.events : [];
-    const rootFolderUrl = data?.root_folder?.url || (data?.folder_id ? `https://drive.google.com/drive/folders/${data.folder_id}` : "");
+    const rootFolderUrl =
+      data?.root_folder?.url ||
+      (data?.folder_id ? `https://drive.google.com/drive/folders/${data.folder_id}` : "");
 
     if (events.length === 0) {
       setMessage(grid, "No events loaded yet. Check back soon.");
@@ -664,7 +695,7 @@ async function loadGalleryPage() {
     const past = events.slice(4);
 
     const render = () => {
-      clearRotationTimers();
+      clearRotationTimer();
       grid.innerHTML = "";
       if (pastRoot) pastRoot.innerHTML = "";
       if (driveLinkRoot) driveLinkRoot.innerHTML = "";
@@ -673,10 +704,13 @@ async function loadGalleryPage() {
       const maxCards = galleryMaxCardsForWidth();
       const toShow = recent4.slice(0, maxCards);
 
+      // Track the visible Drive cards that can rotate thumbnails.
+      // We will rotate these 1 at a time in a round-robin loop.
+      const rotatables = [];
+
       toShow.forEach((ev) => {
         const type = ev?.type;
         const title = (ev?.title || "Event").trim();
-        // const label = monthLabel(ev?.month);
 
         const photographer = (ev?.photographer || "").trim();
         const note = (ev?.note || "").trim();
@@ -684,36 +718,28 @@ async function loadGalleryPage() {
         if (type === "drive") {
           const folderUrl = (ev?.folder_url || "").trim();
           const imgs = Array.isArray(ev?.images) ? ev.images : [];
+
           const first = pickRandom(imgs);
-          const thumbUrl = (first && typeof first.url === "string") ? first.url : defaultThumb;
+          const initialUrl = (first && typeof first.url === "string") ? first.url : defaultThumb;
 
           const built = buildGalleryCard({
             title,
-            // label,
             photographer,
             note,
             href: folderUrl || rootFolderUrl || "#",
-            thumbUrl,
+            thumbUrl: initialUrl,
             linkHint: "Google Drive folder",
           });
+
           grid.appendChild(built.card);
 
-          // Rotate thumbnails every 5 seconds.
-          // (Only if there is more than 1 image.)
+          // Only rotate if there are 2+ images
           if (imgs.length > 1) {
-            const timer = setInterval(() => {
-              const next = pickRandom(imgs);
-              const nextUrl = (next && typeof next.url === "string") ? next.url : "";
-              if (!nextUrl) return;
-
-              // Small fade for nicer swaps.
-              built.imgEl.style.opacity = "0.15";
-              setTimeout(() => {
-                built.imgEl.src = nextUrl;
-                built.imgEl.style.opacity = "1";
-              }, 180);
-            }, 5000);
-            rotationTimers.push(timer);
+            rotatables.push({
+              imgEl: built.imgEl,
+              imgs,
+              currentUrl: initialUrl,
+            });
           }
         } else {
           // External event
@@ -722,16 +748,50 @@ async function loadGalleryPage() {
 
           const built = buildGalleryCard({
             title,
-            // label,
             photographer,
             note,
             href: url || "#",
             thumbUrl,
             linkHint: "External link",
           });
+
           grid.appendChild(built.card);
         }
       });
+
+      // Round-robin thumbnail rotation:
+      // - Desktop: 1 card changes every 2s
+      // - Mobile: 1 card changes every 3s
+      // - Initial delay: first change happens after stepMs (not immediately)
+      if (rotatables.length > 0) {
+        const stepMs = galleryThumbStepMs();
+        const initialDelayMs = stepMs;
+
+        let slot = 0;
+
+        const tick = () => {
+          // If the viewport changed since we started, we re-render anyway on breakpoint changes.
+          // But this keeps timing correct even without a rerender.
+          const liveStepMs = galleryThumbStepMs();
+
+          const r = rotatables[slot];
+          slot = (slot + 1) % rotatables.length;
+
+          const nextUrl = pickNextUrl(r.imgs, r.currentUrl);
+          if (nextUrl && nextUrl !== r.currentUrl) {
+            r.imgEl.style.opacity = "0.15";
+            setTimeout(() => {
+              r.imgEl.src = nextUrl;
+              r.imgEl.style.opacity = "1";
+              r.currentUrl = nextUrl;
+            }, 180);
+          }
+
+          rotationTimeout = setTimeout(tick, liveStepMs);
+        };
+
+        rotationTimeout = setTimeout(tick, initialDelayMs);
+      }
 
       // C5 full-width Drive link card
       if (driveLinkRoot && rootFolderUrl) {
@@ -775,6 +835,7 @@ async function loadGalleryPage() {
         }
       }
     };
+
     // Initial render + rerender when crossing the breakpoint.
     render();
 
@@ -1039,7 +1100,6 @@ async function loadJobsPage() {
 
   const searchEl = document.getElementById("jobs-search");
   const locEl = document.getElementById("jobs-filter-location");
-  const typeEl = document.getElementById("jobs-filter-type");
   const compEl = document.getElementById("jobs-filter-company");
   const sortEl = document.getElementById("jobs-sort");
   const clearBtn = document.getElementById("jobs-clear");
@@ -1069,31 +1129,26 @@ async function loadJobsPage() {
 
     // Build dropdown options from available jobs
     const locations = _uniqueSorted(allJobs.map(j => _norm(j.location)));
-    const types = _uniqueSorted(allJobs.map(j => _norm(j.type)));
     const companies = _uniqueSorted(allJobs.map(j => _norm(j.company)));
 
     _populateSelect(locEl, locations);
-    _populateSelect(typeEl, types);
     _populateSelect(compEl, companies);
 
     function applyFiltersAndRender() {
       const q = _keyLower(searchEl ? searchEl.value : "");
       const loc = _norm(locEl ? locEl.value : "");
-      const typ = _norm(typeEl ? typeEl.value : "");
       const comp = _norm(compEl ? compEl.value : "");
       const sortMode = _norm(sortEl ? sortEl.value : "deadline_soonest");
 
       let filtered = allJobs.slice();
 
       if (loc) filtered = filtered.filter(j => _norm(j.location) === loc);
-      if (typ) filtered = filtered.filter(j => _norm(j.type) === typ);
       if (comp) filtered = filtered.filter(j => _norm(j.company) === comp);
 
       if (q) {
         filtered = filtered.filter(j => {
-          const blob = [
-            j.title, j.company, j.location, j.type, j.note
-          ].map(_keyLower).join(" ");
+          // Keeping j.type in the search blob is optional, but it is handy even without a dropdown.
+          const blob = [j.title, j.company, j.location, j.type, j.note].map(_keyLower).join(" ");
           return blob.includes(q);
         });
       }
@@ -1132,7 +1187,6 @@ async function loadJobsPage() {
 
     if (searchEl) searchEl.addEventListener("input", rerender);
     if (locEl) locEl.addEventListener("change", rerender);
-    if (typeEl) typeEl.addEventListener("change", rerender);
     if (compEl) compEl.addEventListener("change", rerender);
     if (sortEl) sortEl.addEventListener("change", rerender);
 
@@ -1140,7 +1194,6 @@ async function loadJobsPage() {
       clearBtn.addEventListener("click", () => {
         if (searchEl) searchEl.value = "";
         if (locEl) locEl.value = "";
-        if (typeEl) typeEl.value = "";
         if (compEl) compEl.value = "";
         if (sortEl) sortEl.value = "deadline_soonest";
         applyFiltersAndRender();
@@ -1156,4 +1209,3 @@ async function loadJobsPage() {
     if (board) board.style.display = "none";
   }
 }
-
