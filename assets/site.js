@@ -747,29 +747,33 @@ async function loadGalleryPage() {
         driveLinkRoot.appendChild(a);
       }
 
-      // Past list (always based on the remaining events beyond the top 4)
+      // Past list
+      // On desktop: past = events beyond the top 4 (or 2 on mobile)
+      // On mobile: also include the "hidden" recent cards (the ones we did not render)
       if (pastRoot) {
-        if (past.length === 0) {
+        const hiddenRecent = recent4.slice(maxCards);
+        const pastList = hiddenRecent.concat(past);
+
+        if (pastList.length === 0) {
           setMessage(pastRoot, "No past events yet.");
         } else {
-          past.forEach((ev) => {
+          pastList.forEach((ev) => {
             const type = ev?.type;
             const title = (ev?.title || "Event").trim();
-            // const label = monthLabel(ev?.month);
-            const href = type === "drive" ? (ev?.folder_url || rootFolderUrl) : (ev?.url || "#");
+            const href =
+              type === "drive"
+                ? (ev?.folder_url || rootFolderUrl)
+                : (ev?.url || "#");
 
             const a = document.createElement("a");
             a.href = href;
             a.target = "_blank";
             a.rel = "noopener";
-            // a.textContent = label ? `${label} • ${title}` : title;
             a.textContent = `${title}`;
             pastRoot.appendChild(a);
           });
         }
       }
-    };
-
     // Initial render + rerender when crossing the breakpoint.
     render();
 
