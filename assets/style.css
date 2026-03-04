@@ -502,6 +502,72 @@ iframe {
 
 #insta-fallback-links { display: none; }
 
+/* =========================================
+   Mobile Header Improvements
+   Makes header clean and readable on phones
+   ========================================= */
+
+/* =========================================
+  Mobile flag stripe alignment improvement
+  ========================================= */
+
+@media (max-width: 640px) {
+
+  /* make the stripe align perfectly with header edges */
+  .header-stripe {
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+
+  /* allow header to wrap */
+  .site-header-inner {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  /* logo + title block */
+  .site-brand {
+    width: 100%;
+    margin-bottom: 8px;
+    gap: 10px;
+  }
+
+  /* slightly shrink logo */
+  .site-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* title */
+  .site-title {
+    font-size: 18px;
+    line-height: 1.15;
+  }
+
+  /* subtitle */
+  .site-tagline {
+    font-size: 13px;
+    line-height: 1.2;
+  }
+
+  /* navigation becomes 2x2 grid */
+  .site-nav {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  /* nav buttons */
+  .site-nav a {
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+}
+
 /* ===================================
    JOB BOARD (NYRG)
    =================================== */
