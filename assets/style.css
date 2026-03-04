@@ -128,7 +128,7 @@ header {
 
 .brand {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -510,57 +510,78 @@ iframe {
 /* =========================================
    Mobile header fix (matches header.html)
    ========================================= */
-@media (max-width: 640px) {
+@media (max-width: 980px) {
 
-  /* Make the header layout wrap instead of overflowing right */
-  .container.nav {
+  /* Header row wraps */
+  .nav {
     flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 10px;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 10px 0;
   }
 
-  /* Brand takes full width on mobile */
+  /* Brand occupies its own row */
   .brand {
     width: 100%;
+    align-items: center;
   }
 
-  /* Slightly smaller logo on mobile */
+  /* Slightly smaller logo */
   .brand-logo {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
-  /* Title + tagline sizing */
+  /* Title slightly tighter */
   .brand > div > div:first-child {
     font-size: 18px;
     line-height: 1.15;
   }
 
+  /* Tagline */
   .brand .small {
     font-size: 13px;
     line-height: 1.2;
   }
 
-  /* Nav becomes a 2x2 grid */
+  /* Navigation grid */
   .navlinks {
     width: 100%;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px;
+    gap: 10px;
+    margin-top: 6px;
   }
 
-  /* Nav buttons */
+  /* Mobile nav buttons */
   .navlinks a {
+    display: block;
     text-align: center;
-    padding: 8px 10px;
+    padding: 10px 12px;
     font-size: 14px;
-    white-space: nowrap; /* keeps "Job Postings" on one line */
+
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.35);
+
+    transition: background 0.15s ease, border 0.15s ease;
   }
 
-  /* Romanian flag stripe polish */
+  .navlinks a:hover {
+    background: rgba(255,255,255,0.55);
+  }
+
+  /* Keep active page highlighted */
+  .navlinks a.active {
+    background: rgba(var(--accent-rgb), 0.15);
+    border: 1px solid rgba(var(--accent-rgb), 0.35);
+  }
+
+  /* Romanian flag stripe looks cleaner on mobile */
   .flag-strip {
     height: 4px;
   }
+
 }
 
 /* ===================================
