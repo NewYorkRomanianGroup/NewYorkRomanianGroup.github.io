@@ -869,23 +869,14 @@ function _populateSelect(selectEl, values) {
 function _renderJobs(grid, jobs) {
   grid.innerHTML = "";
 
-  const description = _norm(job.description);
-  ${description ? `
-    <div class="job-desc">
-      <details>
-        <summary>Details</summary>
-        <div class="job-desc-text">${description}</div>
-      </details>
-    </div>
-  ` : ""}
-
   jobs.forEach(job => {
     const title = _norm(job.title);
     const company = _norm(job.company);
     const location = _norm(job.location);
     const type = _norm(job.type);
-    const applyUrl = _norm(job.apply_url || job.url);
-    const note = _norm(job.note);
+    const applyUrl = _norm(job.apply_url || job.url || job.apply);
+    const note = _norm(job.note || job.notes);
+    const description = _norm(job.description);
 
     const deadlineDate = _parseDeadlineToDate(job);
     const deadlineLabel = deadlineDate
@@ -895,25 +886,103 @@ function _renderJobs(grid, jobs) {
     const card = document.createElement("div");
     card.className = "job-card";
 
-    card.innerHTML = `
-      <div class="job-top">
-        <div class="job-title">${title || "Untitled role"}</div>
-        ${type ? `<div class="job-pill">${type}</div>` : ""}
-      </div>
+    // ----- Top row (title + pill) -----
+    const top = document.createElement("div");
+    top.className = "job-top";
 
-      ${company ? `<div class="job-company">${company}</div>` : ""}
+    const titleEl = document.createElement("div");
+    titleEl.className = "job-title";
+    titleEl.textContent = title || "Untitled role";
 
-      <div class="job-meta">
-        ${location ? `<span class="job-meta-item">${location}</span>` : ""}
-        <span class="job-meta-item">${deadlineDate ? `Apply by: ${deadlineLabel}` : `Rolling applications`}</span>
-      </div>
+    top.appendChild(titleEl);
 
-      ${note ? `<div class="job-note">${note}</div>` : ""}
+    if (type) {
+      const pill = document.createElement("div");
+      pill.className = "job-pill";
+      pill.textContent = type;
+      top.appendChild(pill);
+    }
 
-      <div class="job-actions">
-        ${applyUrl ? `<a class="job-apply" href="${applyUrl}" target="_blank" rel="noopener">View / Apply</a>` : ""}
-      </div>
-    `;
+    card.appendChild(top);
+
+    // ----- Company -----
+    if (company) {
+      const c = document.createElement("div");
+      c.className = "job-company";
+      c.textContent = company;
+      card.appendChild(c);
+    }
+
+    // ----- Meta (location + deadline) -----
+    const meta = document.createElement("div");
+    meta.className = "job-meta";
+
+    if (location) {
+      const m1 = document.createElement("span");
+      m1.className = "job-meta-item";
+      m1.textContent = location;
+      meta.appendChild(m1);
+    }
+
+    const m2 = document.createElement("span");
+    m2.className = "job-meta-item";
+    m2.textContent = deadlineDate ? `Apply by: ${deadlineLabel}` : "Rolling applications";
+    meta.appendChild(m2);
+
+    card.appendChild(meta);
+
+    // ----- Note -----
+    if (note) {
+      const n = document.createElement("div");
+      n.className = "job-note";
+      n.textContent = note;
+      card.appendChild(n);
+    }
+
+    // ----- Collapsible Description (your CSS already supports .job-desc / .job-desc-text) -----
+    if (description) {
+      const descWrap = document.createElement("div");
+      descWrap.className = "job-desc";
+
+      const details = document.createElement("details");
+
+      const summary = document.createElement("summary");
+      summary.textContent = "Details";
+
+      const body = document.createElement("div");
+      body.className = "job-desc-text";
+      body.textContent = description;
+
+      details.appendChild(summary);
+      details.appendChild(body);
+      descWrap.appendChild(details);
+      card.appendChild(descWrap);
+    }
+
+    // ----- Apply link -----
+    if (applyUrl) {
+      const actions = document.createElement("div");
+      actions.className = "job-actions";
+
+      const a = document.createElement("a");
+      a.className = "job-apply";
+      a.textContent = "View / Apply";
+      a.target = "_blank";
+      a.rel = "noopener";
+
+      // Best-effort: accept absolute http(s) and mailto.
+      // If someone pastes "www....", prepend https://
+      let href = applyUrl;
+      if (/^mailto:/i.test(href)) {
+        // ok
+      } else if (!/^https?:\/\//i.test(href)) {
+        href = "https://" + href.replace(/^\/+/, "");
+      }
+      a.href = href;
+
+      actions.appendChild(a);
+      card.appendChild(actions);
+    }
 
     grid.appendChild(card);
   });
