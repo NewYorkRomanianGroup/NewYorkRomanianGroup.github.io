@@ -36,9 +36,9 @@ fail_any=0
 # - If you already have scripts like scripts/update_instagram_daily.sh, use those.
 # - If you rely on python -m venv stuff, make sure your systemd unit sets PATH/VIRTUAL_ENV.
 
-run_step "Instagram JSON" ./scripts/update_instagram_daily.sh || fail_any=1
-run_step "Gallery JSON"   ./scripts/update_gallery_json.sh   || fail_any=1
-run_step "Jobs JSON"      ./scripts/update_jobs_json.sh      || fail_any=1
+run_step "Instagram JSON" ./scripts/daily_instagram_update.sh || fail_any=1
+run_step "Gallery JSON"   ./scripts/update_gallery_daily.sh   || fail_any=1
+run_step "Jobs JSON"      ./scripts/update_jobs_daily.sh      || fail_any=1
 
 # Choose ONE behavior:
 
