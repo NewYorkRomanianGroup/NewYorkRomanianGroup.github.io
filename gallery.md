@@ -5,6 +5,24 @@ description: Photos from NYRG events.
 permalink: /gallery.html
 ---
 
+<!--
+  PAGE: Gallery (gallery.md)
+
+  This page contains placeholders that are filled in by assets/site.js using data/gallery.json.
+
+  Two sections are rendered:
+  - Recent Events: card layout with thumbnails (desktop: 4 cards, mobile: 2 cards)
+  - Past Events: simple list of older albums
+
+  Safe edits:
+  - Headings and descriptive text
+  - The helper text above each section
+
+  Avoid:
+  - Renaming the container IDs (gallery-events-grid, gallery-drive-link, gallery-past-events)
+  - Removing the surrounding .card containers unless you also update CSS/JS
+-->
+
 <section class="hero">
   <div class="container">
     <h1>Gallery</h1>

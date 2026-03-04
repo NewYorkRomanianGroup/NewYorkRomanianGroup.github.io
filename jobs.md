@@ -5,6 +5,27 @@ description: Monthly job postings for the NYRG community.
 permalink: /jobs.html
 ---
 
+<!--
+  PAGE: Jobs (jobs.md)
+
+  This file defines the HTML shell for the jobs board:
+  - the empty state card (shown when 0 jobs)
+  - the filter/search controls
+  - the container where job cards are injected
+
+  Job data is loaded at runtime from: data/jobs.json
+  The renderer lives in: assets/site.js (function loadJobsPage)
+
+  Safe edits:
+  - Wording on this page (headings, empty state message)
+  - The "Submit a job" button text
+  - The sort option labels (do not change option values without updating JS)
+
+  Avoid:
+  - Renaming the element IDs used by JS (jobs-grid, jobs-search, etc.)
+  - Removing window.__NYRG_BASEURL or __NYRG_JOBS_SUBMIT_URL
+-->
+
 <section class="hero">
   <div class="container">
     <h1>Job Postings</h1>
@@ -43,7 +64,11 @@ permalink: /jobs.html
         </a>
       </div>
 
-      <!-- Controls -->
+      <!-- Controls
+           - Search: free text across title/company/location/notes
+           - Filters: options are populated from jobs.json at runtime
+           - Sort: only changes ordering client-side (no server)
+      -->
       <div class="jobs-controls">
         <input id="jobs-search" class="jobs-input" type="text" placeholder="Search title, company, location, notes" />
 

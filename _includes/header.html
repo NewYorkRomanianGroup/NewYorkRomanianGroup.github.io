@@ -1,3 +1,12 @@
+<!--
+  COLLABORATOR NOTE
+  - This file is included on every page.
+  - Keep nav href values using | relative_url so branch previews work.
+  - If you add a new page, add a new <a> link here and ensure the page has
+    front matter like: ---\nlayout: default\ntitle: ...\n---
+  - The logo src MUST use | relative_url (no hard-coded /assets/...) so previews work.
+-->
+
 <!-- =========================
      SITE HEADER / NAVIGATION
      Shared across all pages
@@ -7,7 +16,7 @@
 
   <div class="container nav">
     <div class="brand">
-      <img src="/assets/image.png" class="brand-logo" alt="NYRG logo">
+      <img src="{{ \'/assets/image.png\' | relative_url }}" class="brand-logo" alt="NYRG logo">
       <div>
         <div>New York Romanian Group</div>
         <div class="small">Community • Events • Mentorship</div>

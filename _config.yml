@@ -43,3 +43,7 @@ exclude:
 # Encoding
 # -------------------------
 encoding: "utf-8"
+# Branch previews:
+# - A GitHub Action copies non-main branches into subfolders on main.
+# - In previews, Jekyll sets site.baseurl to /<branch-name>.
+# - Use the Liquid filter | relative_url for internal asset links.

@@ -14,6 +14,11 @@ How to run:
 - From repo root:
     python3 scripts/selenium_instagram_scrape.py
 
+MAINTAINERS:
+- If scraping stops working, Instagram likely changed markup or added a new login wall.
+- In that case, run with NYRG_IG_HEADLESS=0 and NYRG_IG_DEBUG=1 to inspect.
+- This script is designed to NOT overwrite data/instagram.json on failure.
+
 Optional environment variables:
 - NYRG_IG_PROFILE_URL   (default: NYRG profile)
 - NYRG_IG_LIMIT         (default: 4)
@@ -251,6 +256,7 @@ def main() -> int:
             return 0
 
         payload = {
+            "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Edit the source or run the generator script instead.",
             "source": profile_url,
             "updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
             "count": len(urls),

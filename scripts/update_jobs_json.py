@@ -1,3 +1,27 @@
+"""NYRG jobs.json generator.
+
+This script downloads a published CSV from the NYRG Jobs Google Sheet and writes `data/jobs.json`.
+
+IMPORTANT:
+- The published CSV is expected to come from the curated tab (usually "For Show").
+- Rows in "For Show" are typically created by reviewers approving submissions, and a Google Apps Script
+  copies approved form responses into "For Show".
+- If you rename sheet tabs or columns, update BOTH:
+  1) the Apps Script (in the Google Sheet), and
+  2) this script’s column detection logic.
+
+Environment:
+- NYRG_JOBS_CSV_URL (required): published CSV link for the "For Show" sheet/tab.
+
+Output:
+- data/jobs.json
+
+Filtering rules (website display):
+- If Deadline parses as a date and is in the past, the job is hidden.
+- Otherwise, the job is shown only if the "Show?" column is truthy.
+
+"""
+
 import csv
 import json
 import os
@@ -7,6 +31,7 @@ import re
 
 CSV_URL = os.environ.get("NYRG_JOBS_CSV_URL")
 OUTPUT_PATH = "data/jobs.json"
+
 
 TODAY = datetime.now(timezone.utc).date()
 
@@ -140,11 +165,28 @@ def main():
 
     os.makedirs("data", exist_ok=True)
 
-    with open(OUTPUT_PATH, "w") as f:
-        json.dump({"jobs": jobs}, f, indent=2)
+    payload = {
+        "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Jobs come from the NYRG Google Sheet.",
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "jobs": jobs
+    }
 
+    safe_write_json(OUTPUT_PATH, payload)
+    
     print(f"Saved {len(jobs)} jobs → {OUTPUT_PATH}")
 
 
 if __name__ == "__main__":
     main()
+
+# -----------------------------------------------------
+# Safe JSON write (atomic)
+# -----------------------------------------------------
+
+def safe_write_json(path, payload):
+    os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
+    tmp = path + '.tmp'
+    with open(tmp, 'w', encoding='utf-8') as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+        f.write('\n')
+    os.replace(tmp, path)

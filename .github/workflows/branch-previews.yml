@@ -1,5 +1,19 @@
 name: Branch previews (to folders)
 
+# COLLABORATOR NOTE
+# This workflow enables branch preview deployments on GitHub Pages.
+# How it works:
+# - On any push to a non-main branch, we copy the branch contents into a folder
+#   on main: main/<branch-name>/
+# - GitHub Pages serves that folder at: https://newyorkromaniangroup.github.io/<branch-name>/
+# - On branch deletion, we delete the folder on main.
+#
+# IMPORTANT:
+# - Any internal asset links must use Jekyll's | relative_url filter so they work
+#   in both production (/) and previews (/<branch>/).
+# - This workflow intentionally skips copying: .git, _main, .github, .venv, scripts
+
+
 on:
   push:
     branches-ignore:
@@ -41,7 +55,7 @@ jobs:
           shopt -s dotglob
           for item in *; do
             case "$item" in
-              .git|_main|.github|.venv|scripts)
+              .git|_main|.github|.venv|scripts)  # do not publish internal folders
                 continue
                 ;;
             esac

@@ -17,6 +17,13 @@ if ! getent hosts www.googleapis.com >/dev/null 2>&1; then
   exit 1
 fi
 
+# ---------------- COLLABORATOR NOTE -------------------------
+# This is intended for systemd automation (daily refresh of data/gallery.json).
+# It wraps scripts/update_gallery_json.sh and commits only if gallery.json changed.
+#
+# If you are just testing, run:
+#   bash scripts/update_gallery_json.sh "$NYRG_GDRIVE_FOLDER_ID"
+# ------------------------------------------------------------
 # ============================================================
 # NYRG: Daily Google Drive gallery.json updater (systemd)
 #
@@ -76,3 +83,18 @@ fi
 
 git commit -m "Update gallery.json (daily)"
 git push origin main
+
+# ------------------------------------------------------------
+# Troubleshooting (quick)
+# ------------------------------------------------------------
+# - "Missing ... env var": your environment file is not loaded.
+#   If you use systemd, confirm the unit uses EnvironmentFile=~/.config/nyrg/nyrg.env
+#   If running manually, export the variable in your shell first.
+#
+# - "Working tree has unrelated changes": commit/stash your work first.
+#   These scripts are intentionally strict so automation does not accidentally
+#   commit unrelated edits.
+#
+# - "Not pushing (not on main)": switch to main if this is meant to be the
+#   automated daily commit. For feature branches, commit manually and open a PR.
+# ------------------------------------------------------------

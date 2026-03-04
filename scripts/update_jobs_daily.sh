@@ -12,6 +12,18 @@ set -euo pipefail
 # - NYRG_JOBS_CSV_URL
 # ============================================================
 
+# ---------------- COLLABORATOR NOTE -------------------------
+# This is intended for systemd automation (daily refresh of data/jobs.json).
+#
+# Source of truth:
+# - Google Form submissions go to Form_Responses
+# - Reviewers approve/reject via the Status dropdown
+# - A Google Apps Script appends approved rows to "For Show"
+# - The published CSV URL should point to the "For Show" tab
+#
+# Maintainer docs:
+# - docs/jobs-pipeline.md
+# ------------------------------------------------------------
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
@@ -66,3 +78,18 @@ git commit -m "Update jobs.json (daily)"
 git push origin main
 
 echo "[NYRG] Pushed."
+
+# ------------------------------------------------------------
+# Troubleshooting (quick)
+# ------------------------------------------------------------
+# - "Missing ... env var": your environment file is not loaded.
+#   If you use systemd, confirm the unit uses EnvironmentFile=~/.config/nyrg/nyrg.env
+#   If running manually, export the variable in your shell first.
+#
+# - "Working tree has unrelated changes": commit/stash your work first.
+#   These scripts are intentionally strict so automation does not accidentally
+#   commit unrelated edits.
+#
+# - "Not pushing (not on main)": switch to main if this is meant to be the
+#   automated daily commit. For feature branches, commit manually and open a PR.
+# ------------------------------------------------------------

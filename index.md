@@ -5,6 +5,24 @@ description: New York Romanian Group is a community for Romanians in New York. W
 # permalink: /
 ---
 
+<!--
+  PAGE: Home (index.md)
+
+  This file is mostly HTML inside a Jekyll markdown wrapper.
+
+  Safe edits for non-technical collaborators:
+  - Text inside <h1>, <h2>, <p>, <a> tags
+  - Links (href values) that point to NYRG resources
+  - The Spotify playlist embed URL (src) if we ever change playlists
+
+  Please avoid:
+  - Removing element IDs (like id="insta-latest") because assets/site.js looks them up
+  - Removing the Liquid filter | relative_url on internal assets
+  - Changing the layout front matter unless you know Jekyll
+
+  If something looks broken, check the browser console first.
+-->
+
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
   <img src="{{ '/assets/nyrg.banner.png' | relative_url }}" 
@@ -21,7 +39,11 @@ description: New York Romanian Group is a community for Romanians in New York. W
 </section>
 
 <!--
-  Rotating photos section
+  Rotating photos section (Featured Photos)
+  NOTE for collaborators:
+  - The rotator is populated by assets/site.js using data/gallery.json.
+  - If the rotator looks empty, confirm data/gallery.json is present on the site.
+  - If you want to switch back to hard-coded slides, uncomment the example block below.
   - Replace image URLs in data-image-url with your event photos.
   - Keep at least 2 slides for visible rotation.
 -->

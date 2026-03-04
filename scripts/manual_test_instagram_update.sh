@@ -18,6 +18,11 @@ set -euo pipefail
 # (Or commit manually once you confirm the JSON looks correct.)
 # ============================================================
 
+# ---------------- COLLABORATOR NOTE -------------------------
+# Use this script if you want to test the scrape locally without committing.
+# It will stage data/instagram.json and show a diff.
+# You can reset staging with: git reset data/instagram.json
+# ------------------------------------------------------------
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
@@ -55,3 +60,18 @@ echo
 echo "[NYRG] If everything looks good, you can commit and push with:"
 echo "  git commit -m \"Update instagram.json (manual)\" && git push origin main"
 echo "  (or run scripts/daily_instagram_update.sh)"
+
+# ------------------------------------------------------------
+# Troubleshooting (quick)
+# ------------------------------------------------------------
+# - "Missing ... env var": your environment file is not loaded.
+#   If you use systemd, confirm the unit uses EnvironmentFile=~/.config/nyrg/nyrg.env
+#   If running manually, export the variable in your shell first.
+#
+# - "Working tree has unrelated changes": commit/stash your work first.
+#   These scripts are intentionally strict so automation does not accidentally
+#   commit unrelated edits.
+#
+# - "Not pushing (not on main)": switch to main if this is meant to be the
+#   automated daily commit. For feature branches, commit manually and open a PR.
+# ------------------------------------------------------------

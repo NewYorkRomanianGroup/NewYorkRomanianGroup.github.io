@@ -9,6 +9,15 @@ set -euo pipefail
 # - Does NOT commit or push
 # ============================================================
 
+# ---------------- COLLABORATOR NOTE -------------------------
+# This jobs pipeline expects a Google Sheet that is published as CSV.
+# Approved jobs are curated into the "For Show" tab by a Google Apps Script.
+# (The Apps Script lives inside the Sheet, not in this repo by default.)
+#
+# Maintainer docs:
+# - docs/jobs-pipeline.md
+# - docs/google-apps-script/jobs_approval_and_email.js
+# ------------------------------------------------------------
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
@@ -46,3 +55,18 @@ git --no-pager diff --cached -- "$JSON_PATH"
 echo
 echo "[NYRG] If everything looks good, commit + push with:"
 echo "  git commit -m \"Update jobs.json (manual)\" && git push origin main"
+
+# ------------------------------------------------------------
+# Troubleshooting (quick)
+# ------------------------------------------------------------
+# - "Missing ... env var": your environment file is not loaded.
+#   If you use systemd, confirm the unit uses EnvironmentFile=~/.config/nyrg/nyrg.env
+#   If running manually, export the variable in your shell first.
+#
+# - "Working tree has unrelated changes": commit/stash your work first.
+#   These scripts are intentionally strict so automation does not accidentally
+#   commit unrelated edits.
+#
+# - "Not pushing (not on main)": switch to main if this is meant to be the
+#   automated daily commit. For feature branches, commit manually and open a PR.
+# ------------------------------------------------------------

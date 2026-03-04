@@ -1,4 +1,27 @@
 /**
+ * NYRG site.js (collaborator-friendly)
+ *
+ * This file contains the client-side rendering for:
+ * - Instagram embeds (from data/instagram.json)
+ * - Gallery cards (from data/gallery.json)
+ * - Jobs board (from data/jobs.json)
+ *
+ * IMPORTANT:
+ * - Do not rename DOM element IDs referenced here unless you update BOTH:
+ *   1) the page HTML (index.md, gallery.md, jobs.md), and
+ *   2) the corresponding querySelector/getElementById calls here.
+ *
+ * Branch previews:
+ * - In previews, the site is served under /<branch-name>/.
+ * - Use Liquid | relative_url for internal asset links in HTML layouts.
+ * - In JS, we compute a base prefix from <base> tags or window.__NYRG_BASEURL if present.
+ *
+ * If something looks broken:
+ * - open DevTools Console
+ * - search for "NYRG" logs
+ */
+
+/**
  * NYRG site.js
  *
  * Purpose:
@@ -89,6 +112,11 @@ function setPhotosVisibility({ show }) {
   }
 }
 
+
+
+// =========================================================
+// Instagram helpers
+// =========================================================
 function instaMaxPostsForWidth() {
   // "Narrow" breakpoint: match your CSS stack breakpoint
   return window.matchMedia("(max-width: 980px)").matches ? 2 : 4;
@@ -584,6 +612,11 @@ function buildGalleryCard({ title, photographer, note, href, thumbUrl, linkHint 
   return { card, imgEl: img };
 }
 
+
+
+// =========================================================
+// Gallery renderer
+// =========================================================
 async function loadGalleryPage() {
   const grid = document.getElementById("gallery-events-grid");
   const driveLinkRoot = document.getElementById("gallery-drive-link");
@@ -988,6 +1021,11 @@ function _renderJobs(grid, jobs) {
   });
 }
 
+
+
+// =========================================================
+// Jobs renderer
+// =========================================================
 async function loadJobsPage() {
   const grid = document.getElementById("jobs-grid");
   const empty = document.getElementById("jobs-empty");

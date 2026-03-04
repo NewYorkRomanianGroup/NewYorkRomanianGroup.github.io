@@ -44,6 +44,19 @@ MAX_EVENTS_FROM_DRIVE = 50
 # Exclusion rule: anything starting with this prefix is not included on the website.
 EXCLUDE_PREFIXES = ["(not for website)"]
 
+# -------------------------------------------------------------
+# Collaborator tips (content maintainers)
+# -------------------------------------------------------------
+# - Each top-level folder under the configured Drive root becomes an "event".
+# - Folder names are parsed for month (best-effort) to sort events on the site.
+#   Recommended naming: "Feb 2026 - Event Name" or "Feb2026 Event Name"
+# - To hide a folder from the site, prefix it with: "(not for website)"
+# - Photo credits can be added in the Drive folder description, for example:
+#     Photographer: Jane Doe
+#     Note: Thanks to everyone who came!
+# -------------------------------------------------------------
+
+
 
 def iso_utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
@@ -428,6 +441,7 @@ def main() -> int:
     flat_images.sort(key=lambda x: (x.get("name", "") or "").lower())
 
     payload = {
+        "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
         "updated_at": iso_utc_now(),
         "folder_id": args.folder_id,
         "root_folder": {"id": args.folder_id, "url": drive_folder_url(args.folder_id)},
@@ -436,7 +450,7 @@ def main() -> int:
         "events": all_events,
         "external_events_csv": external_csv,
     }
-
+    
     os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, ensure_ascii=False)

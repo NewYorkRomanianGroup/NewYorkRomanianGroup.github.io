@@ -1,4 +1,20 @@
 /* =========================================================
+   Table of contents (high level)
+
+   1) :root theme variables (colors, spacing)
+   2) Base / typography
+   3) Header + navigation
+   4) Home page sections (hero, rotator, Instagram)
+   5) Gallery page
+   6) Jobs page
+   7) Footer
+
+   Collaborator tip:
+   - If you want to "theme" the site, start in :root and adjust colors.
+   - Keep Romanian flag strip colors intact unless a maintainer requests changes.
+   ========================================================= */
+
+/* =========================================================
    NYRG styles (collaborator-friendly)
    - Change colors, fonts, spacing, and rounded corners here.
    - Keep selectors simple (no frameworks).
