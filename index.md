@@ -7,7 +7,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
 
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
-  <img src="{{ '/assets/banner.jpeg' | relative_url }}" 
+  <img src="{{ '/assets/nyrg.banner.png' | relative_url }}" 
      alt="New York skyline banner" 
      class="hero-banner-image">
 
