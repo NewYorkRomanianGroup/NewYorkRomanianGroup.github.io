@@ -756,3 +756,281 @@ async function loadGalleryPage() {
 
 // Run on every page load, but it no-ops unless #gallery-events-grid exists.
 loadGalleryPage();
+
+/**
+ * ============================
+ * JOBS PAGE LOADER (Job Board)
+ * ============================
+ *
+ * Features:
+ * - Nearest deadline first, then rolling
+ * - Filters: search, location, type, company
+ * - Sort dropdown
+ * - "Submit a job" button (Google Form)
+ * - Works with branch previews via window.__NYRG_BASEURL
+ *
+ * Notes for collaborators:
+ * - The Python script decides which jobs are open and writes data/jobs.json
+ * - This JS only handles display, sorting, and filtering
+ */
+
+function _nyrgBaseurl() {
+  // Jekyll baseurl is "" on main, "/branch-name" on previews
+  return (window.__NYRG_BASEURL || "").replace(/\/+$/, "");
+}
+
+function _setJobsSubmitLinks() {
+  const url = window.__NYRG_JOBS_SUBMIT_URL || "";
+  const a1 = document.getElementById("jobs-submit-btn");
+  const a2 = document.getElementById("jobs-submit-btn-empty");
+
+  // If no URL is set, hide the button(s) so we do not show a dead link
+  [a1, a2].forEach(a => {
+    if (!a) return;
+    if (!url) {
+      a.style.display = "none";
+    } else {
+      a.href = url;
+      a.style.display = "inline-flex";
+    }
+  });
+}
+
+function _norm(s) {
+  return (s || "").toString().trim();
+}
+
+function _keyLower(s) {
+  return _norm(s).toLowerCase();
+}
+
+function _parseDeadlineToDate(job) {
+  // Prefer deadline_iso if present (YYYY-MM-DD), otherwise try deadline string
+  const iso = _norm(job.deadline_iso) || _norm(job.deadline);
+  if (!iso) return null;
+
+  // Try YYYY-MM-DD first
+  const m1 = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m1) {
+    const d = new Date(Date.UTC(+m1[1], +m1[2] - 1, +m1[3]));
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  // Try MM/DD/YYYY
+  const m2 = iso.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m2) {
+    const d = new Date(Date.UTC(+m2[3], +m2[1] - 1, +m2[2]));
+    return isNaN(d.getTime()) ? null : d;
+  }
+
+  return null;
+}
+
+function _jobHasDeadline(job) {
+  return !!_parseDeadlineToDate(job);
+}
+
+function _deadlineSortKey(job) {
+  // For sorting: deadline jobs first. Rolling gets a large key.
+  const d = _parseDeadlineToDate(job);
+  if (!d) return Number.POSITIVE_INFINITY;
+  return d.getTime();
+}
+
+function _compareAZ(a, b) {
+  return a.localeCompare(b, undefined, { sensitivity: "base" });
+}
+
+function _uniqueSorted(values) {
+  const set = new Set(values.filter(v => v));
+  return Array.from(set).sort((a, b) => _compareAZ(a, b));
+}
+
+function _populateSelect(selectEl, values) {
+  if (!selectEl) return;
+  const cur = selectEl.value;
+
+  // Keep first option, then rebuild others
+  const first = selectEl.querySelector("option");
+  selectEl.innerHTML = "";
+  if (first) selectEl.appendChild(first);
+
+  values.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v;
+    opt.textContent = v;
+    selectEl.appendChild(opt);
+  });
+
+  // Restore selection if possible
+  selectEl.value = cur;
+}
+
+function _renderJobs(grid, jobs) {
+  grid.innerHTML = "";
+
+  jobs.forEach(job => {
+    const title = _norm(job.title);
+    const company = _norm(job.company);
+    const location = _norm(job.location);
+    const type = _norm(job.type);
+    const applyUrl = _norm(job.apply_url || job.url);
+    const note = _norm(job.note);
+
+    const deadlineDate = _parseDeadlineToDate(job);
+    const deadlineLabel = deadlineDate
+      ? (job.deadline || job.deadline_iso || "").toString()
+      : "Rolling";
+
+    const card = document.createElement("div");
+    card.className = "job-card";
+
+    card.innerHTML = `
+      <div class="job-top">
+        <div class="job-title">${title || "Untitled role"}</div>
+        ${type ? `<div class="job-pill">${type}</div>` : ""}
+      </div>
+
+      ${company ? `<div class="job-company">${company}</div>` : ""}
+
+      <div class="job-meta">
+        ${location ? `<span class="job-meta-item">${location}</span>` : ""}
+        <span class="job-meta-item">${deadlineDate ? `Apply by: ${deadlineLabel}` : `Rolling applications`}</span>
+      </div>
+
+      ${note ? `<div class="job-note">${note}</div>` : ""}
+
+      <div class="job-actions">
+        ${applyUrl ? `<a class="job-apply" href="${applyUrl}" target="_blank" rel="noopener">View / Apply</a>` : ""}
+      </div>
+    `;
+
+    grid.appendChild(card);
+  });
+}
+
+async function loadJobsPage() {
+  const grid = document.getElementById("jobs-grid");
+  const empty = document.getElementById("jobs-empty");
+  const board = document.getElementById("jobs-board");
+  const countEl = document.getElementById("jobs-count");
+
+  const searchEl = document.getElementById("jobs-search");
+  const locEl = document.getElementById("jobs-filter-location");
+  const typeEl = document.getElementById("jobs-filter-type");
+  const compEl = document.getElementById("jobs-filter-company");
+  const sortEl = document.getElementById("jobs-sort");
+  const clearBtn = document.getElementById("jobs-clear");
+
+  _setJobsSubmitLinks();
+
+  if (!grid) return;
+
+  let allJobs = [];
+
+  try {
+    const url = `${_nyrgBaseurl()}/data/jobs.json`;
+    const res = await fetch(url, { cache: "no-cache" });
+    const data = await res.json();
+
+    allJobs = Array.isArray(data.jobs) ? data.jobs : [];
+
+    // If 0 jobs (already filtered by Python generator), show empty state
+    if (allJobs.length === 0) {
+      if (empty) empty.style.display = "block";
+      if (board) board.style.display = "none";
+      return;
+    }
+
+    if (empty) empty.style.display = "none";
+    if (board) board.style.display = "block";
+
+    // Build dropdown options from available jobs
+    const locations = _uniqueSorted(allJobs.map(j => _norm(j.location)));
+    const types = _uniqueSorted(allJobs.map(j => _norm(j.type)));
+    const companies = _uniqueSorted(allJobs.map(j => _norm(j.company)));
+
+    _populateSelect(locEl, locations);
+    _populateSelect(typeEl, types);
+    _populateSelect(compEl, companies);
+
+    function applyFiltersAndRender() {
+      const q = _keyLower(searchEl ? searchEl.value : "");
+      const loc = _norm(locEl ? locEl.value : "");
+      const typ = _norm(typeEl ? typeEl.value : "");
+      const comp = _norm(compEl ? compEl.value : "");
+      const sortMode = _norm(sortEl ? sortEl.value : "deadline_soonest");
+
+      let filtered = allJobs.slice();
+
+      if (loc) filtered = filtered.filter(j => _norm(j.location) === loc);
+      if (typ) filtered = filtered.filter(j => _norm(j.type) === typ);
+      if (comp) filtered = filtered.filter(j => _norm(j.company) === comp);
+
+      if (q) {
+        filtered = filtered.filter(j => {
+          const blob = [
+            j.title, j.company, j.location, j.type, j.note
+          ].map(_keyLower).join(" ");
+          return blob.includes(q);
+        });
+      }
+
+      // Default sorting: deadline soonest first, then rolling
+      if (sortMode === "deadline_soonest") {
+        filtered.sort((a, b) => _deadlineSortKey(a) - _deadlineSortKey(b));
+      } else if (sortMode === "deadline_latest") {
+        filtered.sort((a, b) => _deadlineSortKey(b) - _deadlineSortKey(a));
+      } else if (sortMode === "company_az") {
+        filtered.sort((a, b) => _compareAZ(_keyLower(a.company), _keyLower(b.company)));
+      } else if (sortMode === "title_az") {
+        filtered.sort((a, b) => _compareAZ(_keyLower(a.title), _keyLower(b.title)));
+      }
+
+      // Update count text
+      const total = allJobs.length;
+      const shown = filtered.length;
+
+      if (countEl) {
+        if (shown === total) countEl.textContent = `${shown} open opportunity(s)`;
+        else countEl.textContent = `${shown} shown (of ${total} open)`;
+      }
+
+      // If filters hide everything, show a friendly message inside the board
+      if (shown === 0) {
+        grid.innerHTML = `<div class="jobs-no-results">No matches. Try clearing filters.</div>`;
+        return;
+      }
+
+      _renderJobs(grid, filtered);
+    }
+
+    // Hook controls
+    const rerender = () => applyFiltersAndRender();
+
+    if (searchEl) searchEl.addEventListener("input", rerender);
+    if (locEl) locEl.addEventListener("change", rerender);
+    if (typeEl) typeEl.addEventListener("change", rerender);
+    if (compEl) compEl.addEventListener("change", rerender);
+    if (sortEl) sortEl.addEventListener("change", rerender);
+
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        if (searchEl) searchEl.value = "";
+        if (locEl) locEl.value = "";
+        if (typeEl) typeEl.value = "";
+        if (compEl) compEl.value = "";
+        if (sortEl) sortEl.value = "deadline_soonest";
+        applyFiltersAndRender();
+      });
+    }
+
+    // Initial render
+    applyFiltersAndRender();
+
+  } catch (err) {
+    console.error(err);
+    if (empty) empty.style.display = "block";
+    if (board) board.style.display = "none";
+  }
+}
