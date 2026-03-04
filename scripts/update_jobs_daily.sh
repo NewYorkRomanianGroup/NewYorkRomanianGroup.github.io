@@ -59,7 +59,7 @@ fi
 BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 if [[ "$BRANCH" != "main" ]]; then
   echo "[NYRG] On branch '$BRANCH'. Not pushing."
-  exit 1
+  exit 0
 fi
 
 git commit -m "Update jobs.json (daily)"
