@@ -1034,3 +1034,4 @@ async function loadJobsPage() {
     if (board) board.style.display = "none";
   }
 }
+
