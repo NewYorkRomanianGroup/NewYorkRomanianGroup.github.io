@@ -49,6 +49,14 @@ RUNNER_SH="scripts/update_gallery_json.sh"
 : "${GOOGLE_API_KEY:?Missing GOOGLE_API_KEY env var}"
 : "${NYRG_GDRIVE_FOLDER_ID:?Missing NYRG_GDRIVE_FOLDER_ID env var}"
 
+# If umbrella is orchestrating, it will do the git commit/push once at the end.
+if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
+  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
+  SKIP_GIT=1
+else
+  SKIP_GIT=0
+fi
+
 # Safety: do not run if there are unrelated uncommitted changes
 # Allow ONLY data/gallery.json to change (everything else must be clean).
 if git status --porcelain --untracked-files=no \
@@ -62,27 +70,34 @@ fi
 # Run the existing manual updater (writes data/gallery.json)
 bash "$RUNNER_SH" "$NYRG_GDRIVE_FOLDER_ID"
 
-# Safety: do not commit empty results (usually means network or permissions issue)
-if python3 -c 'import json; d=json.load(open("data/gallery.json")); print(len(d.get("images", [])), len(d.get("events", [])))' | awk '{exit !($1==0 && $2==0)}'; then
-  echo "[NYRG] gallery.json contains 0 images and 0 events. Aborting commit."
-  exit 1
-fi
-
-git add "$JSON_PATH"
-
-if git diff --cached --quiet; then
-  echo "[NYRG] No changes to commit."
+if [[ "$SKIP_GIT" == "1" ]]; then
   exit 0
 fi
 
-BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [[ "$BRANCH" != "main" ]]; then
-  echo "[NYRG] On branch '$BRANCH'. Not pushing."
-  exit 1
-fi
+if [[ "$SKIP_GIT" == "0" ]]; then
+  # Safety: do not commit empty results (usually means network or permissions issue)
+  if python3 -c 'import json; d=json.load(open("data/gallery.json")); print(len(d.get("images", [])), len(d.get("events", [])))' | awk '{exit !($1==0 && $2==0)}'; then
+    echo "[NYRG] gallery.json contains 0 images and 0 events. Aborting commit."
+    exit 1
+  fi
 
-git commit -m "Update gallery.json (daily)"
-git push origin main
+  git add "$JSON_PATH"
+
+  if git diff --cached --quiet; then
+    echo "[NYRG] No changes to commit."
+    exit 0
+  fi
+
+  BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+  if [[ "$BRANCH" != "main" ]]; then
+    echo "[NYRG] On branch '$BRANCH'. Not pushing."
+    exit 1
+  fi
+
+  git commit -m "Update gallery.json (daily)"
+  git push origin main
+
+fi
 
 # ------------------------------------------------------------
 # Troubleshooting (quick)

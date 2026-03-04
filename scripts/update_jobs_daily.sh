@@ -24,6 +24,15 @@ set -euo pipefail
 # Maintainer docs:
 # - docs/jobs-pipeline.md
 # ------------------------------------------------------------
+
+# If umbrella is orchestrating, it will do the git commit/push once at the end.
+if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
+  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
+  SKIP_GIT=1
+else
+  SKIP_GIT=0
+fi
+
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
@@ -46,36 +55,46 @@ else
   fi
 fi
 
-# Safety: do not run if there are unrelated uncommitted changes.
-# Allow ONLY data/jobs.json to change (matches gallery pattern). :contentReference[oaicite:4]{index=4}
-if git status --porcelain --untracked-files=no \
-  | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
-then
-  echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
-  git status --porcelain
-  exit 1
+# If umbrella is orchestrating, it will do the git commit/push once at the end.
+if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
+  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
+  SKIP_GIT=1
+else
+  SKIP_GIT=0
 fi
 
-"$PYTHON" "$GENERATOR"
+if [[ "$SKIP_GIT" == "0" ]]; then
+  # Safety: do not run if there are unrelated uncommitted changes.
+  # Allow ONLY data/jobs.json to change (matches gallery pattern). :contentReference[oaicite:4]{index=4}
+  if git status --porcelain --untracked-files=no \
+    | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
+  then
+    echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
+    git status --porcelain
+    exit 1
+  fi
 
-# Stage just jobs.json
-git add "$JSON_PATH"
+  "$PYTHON" "$GENERATOR"
 
-# If nothing changed, exit cleanly
-if git diff --cached --quiet; then
-  echo "[NYRG] No changes to commit."
-  exit 0
+  # Stage just jobs.json
+  git add "$JSON_PATH"
+
+  # If nothing changed, exit cleanly
+  if git diff --cached --quiet; then
+    echo "[NYRG] No changes to commit."
+    exit 0
+  fi
+
+  # Only push on main
+  BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+  if [[ "$BRANCH" != "main" ]]; then
+    echo "[NYRG] On branch '$BRANCH'. Not pushing."
+    exit 0
+  fi
+
+  git commit -m "Update jobs.json (daily)"
+  git push origin main
 fi
-
-# Only push on main
-BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [[ "$BRANCH" != "main" ]]; then
-  echo "[NYRG] On branch '$BRANCH'. Not pushing."
-  exit 0
-fi
-
-git commit -m "Update jobs.json (daily)"
-git push origin main
 
 echo "[NYRG] Pushed."
 

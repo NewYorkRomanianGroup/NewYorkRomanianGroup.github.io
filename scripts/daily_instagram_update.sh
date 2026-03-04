@@ -35,6 +35,14 @@ else
   fi
 fi
 
+# If umbrella is orchestrating, it will do the git commit/push once at the end.
+if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
+  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
+  SKIP_GIT=1
+else
+  SKIP_GIT=0
+fi
+
 # Safety: do not run if there are unrelated uncommitted changes.
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "[NYRG] Working tree is not clean."
@@ -44,6 +52,10 @@ fi
 
 # Run the scraper. It should only write JSON if it successfully finds posts.
 "$PYTHON" "$SCRAPER_PATH"
+
+if [[ "$SKIP_GIT" == "1" ]]; then
+  exit 0
+fi
 
 # Stage just the JSON file. (Keeps commits tight and predictable.)
 git add "$JSON_PATH"
