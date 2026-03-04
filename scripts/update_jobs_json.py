@@ -175,10 +175,6 @@ def main():
     
     print(f"Saved {len(jobs)} jobs → {OUTPUT_PATH}")
 
-
-if __name__ == "__main__":
-    main()
-
 # -----------------------------------------------------
 # Safe JSON write (atomic)
 # -----------------------------------------------------
@@ -190,3 +186,7 @@ def safe_write_json(path, payload):
         json.dump(payload, f, indent=2, ensure_ascii=False)
         f.write('\n')
     os.replace(tmp, path)
+
+if __name__ == "__main__":
+    main()
+
