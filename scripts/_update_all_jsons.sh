@@ -40,6 +40,20 @@ run_step "Instagram JSON" env NYRG_SKIP_GIT=1 ./scripts/daily_instagram_update.s
 run_step "Gallery JSON"   env NYRG_SKIP_GIT=1 ./scripts/update_gallery_daily.sh   || fail_any=1
 run_step "Jobs JSON"      env NYRG_SKIP_GIT=1 ./scripts/update_jobs_daily.sh      || fail_any=1
 
+echo "[$(ts)] === Combined commit step ==="
+
+git add data/instagram.json data/gallery.json data/jobs.json
+
+if git diff --cached --quiet; then
+  echo "[NYRG] No JSON changes to commit."
+else
+  git commit -m "Update JSON data (daily)"
+  git push origin main
+  echo "[NYRG] Pushed combined JSON update."
+fi
+
+echo
+
 # Choose ONE behavior:
 
 # A) Never fail the umbrella job (it will still log failures)
