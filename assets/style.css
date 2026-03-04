@@ -517,17 +517,34 @@ iframe {
 }
 
 .jobs-controls {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr auto;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+  align-items: center;
 }
 
-@media (max-width: 980px) {
-  .jobs-controls {
-    grid-template-columns: 1fr 1fr;
-  }
+/* allow children to shrink properly */
+.jobs-controls > * {
+  min-width: 0;
+}
+
+/* search bar gets most space */
+#jobs-search.jobs-input {
+  flex: 2 1 360px;
+}
+
+/* dropdown filters */
+.jobs-select {
+  flex: 1 1 180px;
+}
+
+/* push clear button to the far right on wide screens */
+.jobs-clear-btn {
+  flex: 0 0 auto;
+  margin-left: auto;
+  white-space: nowrap;
 }
 
 .jobs-input,
