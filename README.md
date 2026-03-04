@@ -176,3 +176,6 @@ Collaborators do not need systemd to contribute. You can run the generator scrip
   - a branch preview path like `/your-branch-name/`
   because `site.baseurl` changes in previews.
 
+## Testing
+
+try "nyrg-run" on server
