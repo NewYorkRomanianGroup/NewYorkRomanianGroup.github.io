@@ -63,6 +63,12 @@ else
   SKIP_GIT=0
 fi
 
+"$PYTHON" "$GENERATOR"
+
+if [[ "$SKIP_GIT" == "1" ]]; then
+  exit 0
+fi
+
 if [[ "$SKIP_GIT" == "0" ]]; then
   # Safety: do not run if there are unrelated uncommitted changes.
   # Allow ONLY data/jobs.json to change (matches gallery pattern). :contentReference[oaicite:4]{index=4}
@@ -74,7 +80,7 @@ if [[ "$SKIP_GIT" == "0" ]]; then
     exit 1
   fi
 
-  "$PYTHON" "$GENERATOR"
+  
 
   # Stage just jobs.json
   git add "$JSON_PATH"
@@ -94,9 +100,11 @@ if [[ "$SKIP_GIT" == "0" ]]; then
 
   git commit -m "Update jobs.json (daily)"
   git push origin main
+
+  echo "[NYRG] Pushed."
 fi
 
-echo "[NYRG] Pushed."
+
 
 # ------------------------------------------------------------
 # Troubleshooting (quick)

@@ -63,14 +63,16 @@ else
   SKIP_GIT=0
 fi
 
-# Safety: do not run if there are unrelated uncommitted changes
-# Allow ONLY data/gallery.json to change (everything else must be clean).
-if git status --porcelain --untracked-files=no \
-  | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
-then
-  echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
-  git status --porcelain
-  exit 1
+if [[ "$SKIP_GIT" == "0" ]]; then
+  # Safety: do not run if there are unrelated uncommitted changes
+  # Allow ONLY data/gallery.json to change (everything else must be clean).
+  if git status --porcelain --untracked-files=no \
+    | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
+  then
+    echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
+    git status --porcelain
+    exit 1
+  fi
 fi
 
 # Run the existing manual updater (writes data/gallery.json)
