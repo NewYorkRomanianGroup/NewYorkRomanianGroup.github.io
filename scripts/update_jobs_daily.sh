@@ -27,7 +27,7 @@ set -euo pipefail
 
 # If umbrella is orchestrating, it will do the git commit/push once at the end.
 if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
-  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
+  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git checks/commit/push (umbrella will handle it)."
   SKIP_GIT=1
 else
   SKIP_GIT=0
@@ -41,7 +41,7 @@ GENERATOR="scripts/update_jobs_json.py"
 
 : "${NYRG_JOBS_CSV_URL:?Missing NYRG_JOBS_CSV_URL env var}"
 
-# Prefer repo venv, fall back to python3 (same style as IG scripts) :contentReference[oaicite:3]{index=3}
+# Prefer repo venv, fall back to python3 (same style as IG scripts)
 PY="$REPO_DIR/.venv/bin/python"
 if [[ -x "$PY" ]]; then
   PYTHON="$PY"
@@ -55,56 +55,47 @@ else
   fi
 fi
 
-# If umbrella is orchestrating, it will do the git commit/push once at the end.
-if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
-  echo "[NYRG] NYRG_SKIP_GIT=1, will skip git commit/push (umbrella will handle it)."
-  SKIP_GIT=1
-else
-  SKIP_GIT=0
-fi
-
+# Generate / refresh jobs.json
 "$PYTHON" "$GENERATOR"
 
+# Umbrella mode: stop here. Umbrella will stage + commit + push once.
 if [[ "$SKIP_GIT" == "1" ]]; then
   exit 0
 fi
 
-if [[ "$SKIP_GIT" == "0" ]]; then
-  # Safety: do not run if there are unrelated uncommitted changes.
-  # Allow ONLY data/jobs.json to change (matches gallery pattern). :contentReference[oaicite:4]{index=4}
-  if git status --porcelain --untracked-files=no \
-    | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
-  then
-    echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
-    git status --porcelain
-    exit 1
-  fi
+# ------------------------------------------------------------
+# Git safety + commit/push (standalone mode only)
+# ------------------------------------------------------------
 
-  
-
-  # Stage just jobs.json
-  git add "$JSON_PATH"
-
-  # If nothing changed, exit cleanly
-  if git diff --cached --quiet; then
-    echo "[NYRG] No changes to commit."
-    exit 0
-  fi
-
-  # Only push on main
-  BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-  if [[ "$BRANCH" != "main" ]]; then
-    echo "[NYRG] On branch '$BRANCH'. Not pushing."
-    exit 0
-  fi
-
-  git commit -m "Update jobs.json (daily)"
-  git push origin main
-
-  echo "[NYRG] Pushed."
+# Safety: do not run if there are unrelated uncommitted changes.
+# Allow ONLY data/jobs.json to change (matches gallery pattern).
+if git status --porcelain --untracked-files=no \
+  | grep -vqE "^[ MARC?]{1,2}[[:space:]]+$JSON_PATH$"
+then
+  echo "[NYRG] Working tree has unrelated changes (not $JSON_PATH). Commit or stash them first."
+  git status --porcelain
+  exit 1
 fi
 
+# Stage just jobs.json
+git add "$JSON_PATH"
 
+# If nothing changed, exit cleanly
+if git diff --cached --quiet; then
+  echo "[NYRG] No changes to commit."
+  exit 0
+fi
+
+# Only push on main
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+if [[ "$BRANCH" != "main" ]]; then
+  echo "[NYRG] On branch '$BRANCH'. Not pushing."
+  exit 0
+fi
+
+git commit -m "Update jobs.json (daily)"
+git push origin main
+echo "[NYRG] Pushed."
 
 # ------------------------------------------------------------
 # Troubleshooting (quick)

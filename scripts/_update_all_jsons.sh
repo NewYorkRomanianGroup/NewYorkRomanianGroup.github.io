@@ -42,6 +42,9 @@ run_step "Jobs JSON"      env NYRG_SKIP_GIT=1 ./scripts/update_jobs_daily.sh    
 
 echo "[$(ts)] === Combined commit step ==="
 
+# Ensure ONLY our 3 JSONs are staged (even if someone staged other files earlier)
+git reset
+
 git add data/instagram.json data/gallery.json data/jobs.json
 
 if git diff --cached --quiet; then
@@ -51,9 +54,7 @@ else
   git push origin main
   echo "[NYRG] Pushed combined JSON update."
 fi
-
 echo
-
 
 # Choose ONE behavior:
 

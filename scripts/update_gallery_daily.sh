@@ -39,13 +39,6 @@ fi
 # - GOOGLE_API_KEY
 # - NYRG_GDRIVE_FOLDER_ID
 # ============================================================
-
-if [[ "${NYRG_SKIP_GIT:-0}" == "1" ]]; then
-  SKIP_GIT=1
-else
-  SKIP_GIT=0
-fi
-
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
