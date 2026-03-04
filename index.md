@@ -91,7 +91,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
       </div>
     </div>
 
-    <div class="embed-wrap" style="padding: 12px; margin-bottom: 12px;">
+    <div class="embed-wrap insta-profile-wrap" style="padding: 12px; margin-bottom: 12px;">
       <blockquote
         class="instagram-media"
         data-instgrm-permalink="https://www.instagram.com/newyorkromaniangroup/"

@@ -323,8 +323,17 @@ iframe {
 /* Instagram embeds come in as <blockquote class="instagram-media"> */
 .instagram-media {
   width: 100%;
-  max-width: none;
+  max-width: 540px;  /* keeps it Instagram-native width */
   margin: 0 auto;
+}
+
+.insta-profile-wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.insta-profile-wrap .instagram-media {
+  max-width: 540px;
 }
 
 /* =========================================================
@@ -382,6 +391,12 @@ iframe {
   .insta-grid {
     grid-template-columns: 1fr; /* phones */
   }
+}
+
+/* Center the full Instagram profile embed (the page, not the posts grid) */
+#instagram-card .embed-wrap:last-of-type {
+  display: flex;
+  justify-content: center;
 }
 
 /* =========================================================
@@ -470,3 +485,4 @@ iframe {
 }
 
 #insta-fallback-links { display: none; }
+
