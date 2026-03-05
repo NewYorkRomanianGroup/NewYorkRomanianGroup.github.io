@@ -1,5 +1,7 @@
 # New York Romanian Group Website (NYRG)
 
+The open-source home of the New York Romanian Group (NYRG) on GitHub.
+
 This repository hosts the static website for the New York Romanian Group.
 
 This README is written for collaborators who may be new to GitHub Pages/Jekyll. It focuses on:
