@@ -1,8 +1,8 @@
-# New York Romanian Group Website (NYRG)
+# New York Romanian Group (NYRG) | Romania GitHub Community
 
 The open-source home of the New York Romanian Group (NYRG) on GitHub.
 
-This repository hosts the static website for the New York Romanian Group.
+This repository hosts the official website for the **New York Romanian Group**. We are a community-driven **Romania GitHub** project providing resources and connections for Romanians in the New York area.
 
 This README is written for collaborators who may be new to GitHub Pages/Jekyll. It focuses on:
 - Where to edit content safely
@@ -57,20 +57,16 @@ docs/EDITING_GUIDE.md
 ---
 
 ## What this site is
-- A **static website** (HTML, CSS, minimal JavaScript)
-- Hosted via **GitHub Pages**
-- Used to share:
-  - Community information
-  - Events and updates
+- A **New York Romanian Group** community resource.
+- A **static website** hosted via **GitHub Pages**.
+- A **Romania GitHub** hub used to share:
+  - Community information and New York events
   - Mentorship sign-ups
-  - Instagram highlights
-  - Photo galleries
+  - Instagram highlights and photo galleries
 
 ## What this site is NOT
-- Not a web app
-- Not a backend service
-- Not a CMS
-- Not a blog
+- Not a web app or backend service.
+- There is no database; it is purely a GitHub-based community site.
 
 There is no database and no server code running.
 
