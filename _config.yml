@@ -14,7 +14,8 @@ baseurl: ""   # Keep empty; use relative links so branch previews work without h
 # SEO Plugin Requirements
 plugins:
   - jekyll-seo-tag
-
+  - jekyll-sitemap
+  
 author:
   name: New York Romanian Group
   twitter: newyorkromaniangroup # Add if you have one
