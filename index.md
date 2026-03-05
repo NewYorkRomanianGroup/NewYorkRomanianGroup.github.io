@@ -1,8 +1,7 @@
 ---
 layout: default
-title: New York Romanian Group
-description: New York Romanian Group is a community for Romanians in New York. We host meetups, share resources, and connect people through mentorship.
-# permalink: /
+title: New York Romanian Group | Romania GitHub Community
+description: The official New York Romanian Group (NYRG). Connecting the Romanian community in New York through meetups, mentorship, and Romania GitHub resources.
 ---
 
 <!--
@@ -26,14 +25,14 @@ description: New York Romanian Group is a community for Romanians in New York. W
 <section class="hero banner-hero">
   <!-- Homepage banner image shown above welcome text -->
   <img src="{{ '/assets/nyrg.banner.png' | relative_url }}" 
-     alt="New York skyline banner" 
+     alt="New York Romanian Group community banner for the Romania GitHub project" 
      class="hero-banner-image">
 
   <div class="hero-banner-copy">
-    <h1>Welcome!</h1>
+    <h1>New York Romanian Group</h1>
     <p>
-      NYRG is a community for Romanians in New York. We host meetups,
-      share resources, and connect people through mentorship.
+      NYRG is a premier community for Romanians in New York. We host meetups, 
+      share New York Romania GitHub resources, and connect people through mentorship.
     </p>
   </div>
 </section>

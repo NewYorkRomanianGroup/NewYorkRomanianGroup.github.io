@@ -2,13 +2,22 @@
 # NYRG GitHub Pages Config
 # =========================
 
-# -------------------------
-# Site identity
-# -------------------------
+# =========================
+# NYRG GitHub Pages Config
+# =========================
+
 title: New York Romanian Group
-description: Community, events, and mentorship for Romanians in New York
-url: https://newyorkromaniangroup.github.io
+description: Community, events, and mentorship for Romanians in New York. Explore our Romania GitHub resources.
+url: "https://newyorkromaniangroup.github.io"
 baseurl: ""   # Keep empty; use relative links so branch previews work without hardcoding
+
+# SEO Plugin Requirements
+plugins:
+  - jekyll-seo-tag
+
+author:
+  name: New York Romanian Group
+  twitter: newyorkromaniangroup # Add if you have one
 
 # -------------------------
 # Jekyll behavior
