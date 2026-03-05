@@ -48,11 +48,6 @@ run_step () {
 
 fail_any=0
 
-# --- ADDED: Keep local refs reasonably fresh (best-effort, never fatal) ---
-# This reduces push races later, but still preserves your "allow dirty tree" goal,
-# because we stash before we do anything that could conflict with local edits.
-git fetch origin main >/dev/null 2>&1 || true
-
 # --- 0) Stash everything so updaters can run against a clean tree ---
 # This also handles your requirement: if JSONs are dirty/uncommitted,
 # the run will override them with fresh output.
@@ -69,13 +64,6 @@ else
   echo "[$(ts)] Working tree is clean."
 fi
 echo
-
-# --- ADDED: If we're on main, try to fast-forward to origin/main now that the tree is clean ---
-# This helps avoid "push rejected (fetch first)" when another machine pushed recently.
-BRANCH="$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")"
-if [[ "$BRANCH" == "main" ]]; then
-  git pull --rebase origin main >/dev/null 2>&1 || true
-fi
 
 # --- 1) Run the 3 updaters (no git inside them) ---
 run_step "Instagram JSON" env NYRG_SKIP_GIT=1 ./scripts/daily_instagram_update.sh || fail_any=1
@@ -127,31 +115,10 @@ else
     echo "[NYRG] On branch '$BRANCH'. Not pushing combined JSON update."
     echo
   else
-    # --- ADDED: Rebase onto origin/main BEFORE committing, so our commit sits on top ---
-    # This prevents the common failure mode:
-    #   "Updates were rejected because the remote contains work that you do not have locally"
-    git fetch origin main >/dev/null 2>&1 || true
-    git pull --rebase origin main >/dev/null 2>&1 || true
-
     git commit -m "Update JSON data (daily)"
-
-    # --- ADDED: Push with one retry to handle races (another machine pushed between pull and push) ---
-    if git push origin main; then
-      echo "[NYRG] Pushed combined JSON update."
-      echo
-    else
-      echo "[NYRG] Push rejected. Pulling and retrying once..."
-      git fetch origin main >/dev/null 2>&1 || true
-      git pull --rebase origin main >/dev/null 2>&1 || true
-      if git push origin main; then
-        echo "[NYRG] Pushed combined JSON update (after retry)."
-        echo
-      else
-        echo "[NYRG] ERROR: push failed after retry."
-        echo
-        fail_any=1
-      fi
-    fi
+    git push origin main
+    echo "[NYRG] Pushed combined JSON update."
+    echo
   fi
 fi
 
