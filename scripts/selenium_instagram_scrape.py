@@ -34,9 +34,12 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
+import platform
+import shutil
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
@@ -159,8 +162,9 @@ def build_driver(headless: bool) -> webdriver.Chrome:
     opts.add_argument("--lang=en-US")
 
     # Slightly more "real browser" feel (may help in some cases)
+    # Note: do not claim x86_64 explicitly so this works on ARM machines too.
     opts.add_argument(
-        "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "--user-agent=Mozilla/5.0 (X11; Linux) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/122 Safari/537.36"
     )
 
@@ -170,10 +174,30 @@ def build_driver(headless: bool) -> webdriver.Chrome:
     opts.add_argument("--disable-gpu")
     opts.add_argument("--window-size=1200,900")
 
-    driver = webdriver.Chrome(options=opts)
+    # Detect architecture. Selenium Manager currently has trouble on some ARM systems.
+    # If we are on ARM (like a NAS or Raspberry Pi), explicitly use the system
+    # Chromium + chromedriver installed via apt instead of Selenium Manager.
+    arch = platform.machine().lower()
+    is_arm = arch in ("aarch64", "arm64")
+
+    # Allow optional overrides via environment variables if needed.
+    chrome_bin = os.environ.get("NYRG_CHROME_BIN", "").strip() or None
+    chromedriver_bin = os.environ.get("NYRG_CHROMEDRIVER", "").strip() or None
+
+    if is_arm:
+        # ARM fallback: use system-installed Chromium and chromedriver.
+        chrome_path = chrome_bin or shutil.which("chromium") or "/usr/bin/chromium"
+        driver_path = chromedriver_bin or shutil.which("chromedriver") or "/usr/bin/chromedriver"
+
+        opts.binary_location = chrome_path
+        service = Service(executable_path=driver_path)
+        driver = webdriver.Chrome(service=service, options=opts)
+    else:
+        # Desktop / x86 machines: let Selenium Manager handle driver discovery.
+        driver = webdriver.Chrome(options=opts)
+
     driver.set_window_size(1200, 900)
     return driver
-
 
 def try_click(driver, by, value, timeout: int = 2) -> bool:
     """
@@ -204,8 +228,9 @@ def main() -> int:
 
     driver = build_driver(headless=headless)
 
+    driver = None
     try:
-        driver.get(profile_url)
+        driver = build_driver(headless=headless)
 
         # If IG shows a login page, we cannot scrape reliably without auth.
         # In headed mode, you might log in manually. In headless mode, treat as blocked.
@@ -269,8 +294,8 @@ def main() -> int:
 
     finally:
         # Keep this short. If you want to watch the browser, set NYRG_IG_HEADLESS=0.
-        time.sleep(1)
-        driver.quit()
+        if driver is not None:
+            driver.quit()
 
 
 if __name__ == "__main__":
