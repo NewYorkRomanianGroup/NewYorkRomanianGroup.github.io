@@ -1,6 +1,6 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
-  "updated_at": "2026-03-04T18:31:52Z",
+  "updated_at": "2026-03-05T20:46:13Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
@@ -3899,5 +3899,5 @@
       ]
     }
   ],
-  "external_events_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcmKtgLrljkJu60b-kjPIDLh4mw8oWSPXJ5o0JCmMQukJdNXIG9uAc5S9Aqi7HBavLddh7VOv8mwwF/pub?gid=2105492941&single=true&output=csv"
+  "external_events_csv": "https://docs.google.com/spreadsheets/d/e/2PACX-1vRcmKtgLrljkJu60b-kjPIDLh4mw8oWSPXJ5o0JCmM"
 }
