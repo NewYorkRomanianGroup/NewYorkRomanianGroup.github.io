@@ -135,11 +135,11 @@ header {
 }
 
 .brand-logo {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
+  width: 36px;
+  height: 36px;
+  /* border-radius: var(--radius-sm); */
   object-fit: contain;
-  border: 1px solid var(--border);
+  /* border: 1px solid var(--border); */
 }
 
 .brand-badge {
