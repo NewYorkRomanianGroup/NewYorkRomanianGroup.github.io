@@ -122,7 +122,7 @@ description: New York Romanian Group is a community for Romanians in New York. W
       ></blockquote>
     </div>
   </div>
-
+</section>
 
 <section style="padding-bottom: 36px;">
   <iframe
