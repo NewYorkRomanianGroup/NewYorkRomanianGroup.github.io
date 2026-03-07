@@ -7,6 +7,7 @@
 # =========================
 
 title: New York Romanian Group
+name: New York Romanian Group
 description: Community, events, and mentorship for Romanians in New York. Explore our Romania GitHub resources.
 url: "https://newyorkromaniangroup.github.io"
 baseurl: ""   # Keep empty; use relative links so branch previews work without hardcoding
@@ -18,7 +19,7 @@ plugins:
   
 author:
   name: New York Romanian Group
-  twitter: newyorkromaniangroup # Add if you have one
+  instagram: newyorkromaniangroup # Add if you have one
 
 # -------------------------
 # Jekyll behavior
