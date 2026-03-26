@@ -50,11 +50,12 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
   ║  EVENT_IMAGE   – URL of the cover image                     ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
+<!-- Put EXPIRY as day after -->
 <script>
 window.FEATURED_EVENT = {
-  EXPIRY_DATE:    "2026-03-29",
+  EXPIRY_DATE:    "2026-03-27",
   EVENT_TITLE:    "NY Romanian Group March Happy Hour",
-  EVENT_DATE:     "Saturday, March 29 · 7 PM",
+  EVENT_DATE:     "Saturday, March 26 · 18:00", 
   EVENT_LOCATION: "Magic Hour Rooftop Bar & Lounge, New York",
   EVENT_URL:      "https://luma.com/jid8tz7o",
   EVENT_IMAGE:    "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=800,height=800/event-covers/c2/b3ae47dc-6e5f-447f-9d0d-eab4e0257920.jpg"
