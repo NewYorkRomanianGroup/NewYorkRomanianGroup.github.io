@@ -15,9 +15,9 @@
    To HIDE the card immediately: set EXPIRY_DATE to yesterday.
    To ADD a new event: swap in the new values and push.
    ============================================================ */
-var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-30";
+var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-26";
 var FEATURED_EVENT_TITLE          = "NY Romanian Group March Happy Hour";
-var FEATURED_EVENT_DATE           = "Saturday, March 29 · 7 PM";
+var FEATURED_EVENT_DATE           = "Thursday, 26 March · 18:00";
 var FEATURED_EVENT_LOCATION       = "Magic Hour Rooftop Bar & Lounge, New York";
 var FEATURED_EVENT_URL            = "https://luma.com/jid8tz7o";
 var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=800,height=800/event-covers/c2/b3ae47dc-6e5f-447f-9d0d-eab4e0257920.jpg";
