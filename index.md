@@ -38,7 +38,31 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
 </section>
 
 <!--
-  Rotating photos section (Featured Photos)
+  ╔══════════════════════════════════════════════════════════════╗
+  ║  FEATURED EVENT — edit only the values in this block        ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║  EXPIRY_DATE   – card hides automatically after this date.  ║
+  ║                  Format: YYYY-MM-DD  (midnight, local time) ║
+  ║  EVENT_TITLE   – headline shown on the card                 ║
+  ║  EVENT_DATE    – human-readable date string                 ║
+  ║  EVENT_LOCATION– venue / address line                       ║
+  ║  EVENT_URL     – full link to the event page                ║
+  ║  EVENT_IMAGE   – URL of the cover image                     ║
+  ╚══════════════════════════════════════════════════════════════╝
+-->
+<script>
+window.FEATURED_EVENT = {
+  EXPIRY_DATE:    "2026-03-29",
+  EVENT_TITLE:    "NY Romanian Group March Happy Hour",
+  EVENT_DATE:     "Saturday, March 29 · 7 PM",
+  EVENT_LOCATION: "Magic Hour Rooftop Bar & Lounge, New York",
+  EVENT_URL:      "https://luma.com/jid8tz7o",
+  EVENT_IMAGE:    "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=800,height=800/event-covers/c2/b3ae47dc-6e5f-447f-9d0d-eab4e0257920.jpg"
+};
+</script>
+
+<!--
+  Rotating photos section (Featured Photos) — wrapped in a row with the event card above.
   NOTE for collaborators:
   - The rotator is populated by assets/site.js using data/gallery.json.
   - If the rotator looks empty, confirm data/gallery.json is present on the site.
@@ -46,6 +70,14 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
   - Replace image URLs in data-image-url with your event photos.
   - Keep at least 2 slides for visible rotation.
 -->
+
+<!-- Outer wrapper: on desktop, event card (left) + photos (right) sit side-by-side -->
+<div id="featured-row">
+
+  <!-- Featured Event card — injected & shown/hidden by site.js -->
+  <div id="featured-event-card" class="card featured-event-card" style="display:none;" aria-label="Featured upcoming event">
+  </div>
+
 <section class="photo-rotator card" id="featured-photos-card" aria-label="Featured community photos">
   <h2>Featured Photos</h2>
 
@@ -76,6 +108,8 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
     <button class="btn" id="hero-rotator-next" type="button" aria-label="Show next photo">Next</button>
   </div>
 </section>
+
+</div><!-- /featured-row -->
 
 <section class="grid" id="home-social-grid">
   <!-- =========================
