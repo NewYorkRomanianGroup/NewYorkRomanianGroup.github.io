@@ -1209,3 +1209,40 @@ async function loadJobsPage() {
     if (board) board.style.display = "none";
   }
 }
+/* =========================================================
+   Featured Event Card
+   Reads window.FEATURED_EVENT (defined inline in index.md)
+   and injects the card only if today is before EXPIRY_DATE.
+   ========================================================= */
+(function initFeaturedEvent() {
+  const cfg = window.FEATURED_EVENT;
+  if (!cfg) return;                          // not on the home page
+
+  const card = document.getElementById("featured-event-card");
+  if (!card) return;
+
+  // Parse expiry as end-of-day local time (midnight of the following day)
+  const parts = cfg.EXPIRY_DATE.split("-").map(Number);  // [YYYY, MM, DD]
+  const expiry = new Date(parts[0], parts[1] - 1, parts[2] + 1); // day after = midnight
+  if (Date.now() >= expiry.getTime()) return;             // expired — leave hidden
+
+  // Build inner HTML
+  card.innerHTML = `
+    <div class="fe-image-wrap">
+      <img src="${cfg.EVENT_IMAGE}" alt="${cfg.EVENT_TITLE} cover image" loading="lazy">
+    </div>
+    <div class="fe-body">
+      <div class="fe-eyebrow">Featured Event</div>
+      <h2 class="fe-title">${cfg.EVENT_TITLE}</h2>
+      <div class="fe-meta">
+        <span>📅 ${cfg.EVENT_DATE}</span>
+        <span>📍 ${cfg.EVENT_LOCATION}</span>
+      </div>
+      <a class="fe-cta" href="${cfg.EVENT_URL}" target="_blank" rel="noopener">
+        RSVP on Luma →
+      </a>
+    </div>
+  `;
+
+  card.style.display = "flex";
+})();
