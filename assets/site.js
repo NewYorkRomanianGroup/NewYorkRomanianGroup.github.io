@@ -1,3 +1,30 @@
+/* ============================================================
+   FEATURED EVENT — edit only this block to update the event
+   ============================================================
+   EXPIRY_DATE    Card hides automatically after this date.
+                  Format: "YYYY-MM-DD"
+                  The card is visible all day on that date,
+                  then gone from midnight onward (next day).
+
+   EVENT_TITLE    Headline shown on the card
+   EVENT_DATE     Human-readable date + time string
+   EVENT_LOCATION Venue / address line
+   EVENT_URL      Full link to the RSVP / event page
+   EVENT_IMAGE    URL of the cover photo
+
+   To HIDE the card immediately: set EXPIRY_DATE to yesterday.
+   To ADD a new event: swap in the new values and push.
+   ============================================================ */
+var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-30";
+var FEATURED_EVENT_TITLE          = "NY Romanian Group March Happy Hour";
+var FEATURED_EVENT_DATE           = "Saturday, March 29 · 7 PM";
+var FEATURED_EVENT_LOCATION       = "Magic Hour Rooftop Bar & Lounge, New York";
+var FEATURED_EVENT_URL            = "https://luma.com/jid8tz7o";
+var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=800,height=800/event-covers/c2/b3ae47dc-6e5f-447f-9d0d-eab4e0257920.jpg";
+/* ============================================================
+   END OF FEATURED EVENT CONFIG — do not edit below this line
+   ============================================================ */
+
 /**
  * NYRG site.js (collaborator-friendly)
  *
@@ -1215,34 +1242,30 @@ async function loadJobsPage() {
    and injects the card only if today is before EXPIRY_DATE.
    ========================================================= */
 (function initFeaturedEvent() {
-  const cfg = window.FEATURED_EVENT;
-  if (!cfg) return;                          // not on the home page
-
   const card = document.getElementById("featured-event-card");
-  if (!card) return;
+  if (!card) return;  // not on the home page
 
-  // Parse expiry as end-of-day local time (midnight of the following day)
-  const parts = cfg.EXPIRY_DATE.split("-").map(Number);  // [YYYY, MM, DD]
-  const expiry = new Date(parts[0], parts[1] - 1, parts[2] + 1); // day after = midnight
-  if (Date.now() >= expiry.getTime()) return;             // expired — leave hidden
+  // Parse expiry: card is visible all day on EXPIRY_DATE, gone the day after
+  const parts = FEATURED_EVENT_EXPIRY_DATE.split("-").map(Number); // [YYYY, MM, DD]
+  const expiry = new Date(parts[0], parts[1] - 1, parts[2] + 1);  // midnight of next day
+  if (Date.now() >= expiry.getTime()) return;  // expired — leave hidden
 
-  // Build inner HTML
-  card.innerHTML = `
-    <div class="fe-image-wrap">
-      <img src="${cfg.EVENT_IMAGE}" alt="${cfg.EVENT_TITLE} cover image" loading="lazy">
-    </div>
-    <div class="fe-body">
-      <div class="fe-eyebrow">Featured Event</div>
-      <h2 class="fe-title">${cfg.EVENT_TITLE}</h2>
-      <div class="fe-meta">
-        <span>📅 ${cfg.EVENT_DATE}</span>
-        <span>📍 ${cfg.EVENT_LOCATION}</span>
-      </div>
-      <a class="fe-cta" href="${cfg.EVENT_URL}" target="_blank" rel="noopener">
-        RSVP on Luma →
-      </a>
-    </div>
-  `;
+  // Build inner HTML from the config variables at the top of this file
+  card.innerHTML =
+    '<div class="fe-image-wrap">' +
+      '<img src="' + FEATURED_EVENT_IMAGE + '" alt="' + FEATURED_EVENT_TITLE + ' cover image" loading="lazy">' +
+    '</div>' +
+    '<div class="fe-body">' +
+      '<div class="fe-eyebrow">Featured Event</div>' +
+      '<h2 class="fe-title">' + FEATURED_EVENT_TITLE + '</h2>' +
+      '<div class="fe-meta">' +
+        '<span>📅 ' + FEATURED_EVENT_DATE + '</span>' +
+        '<span>📍 ' + FEATURED_EVENT_LOCATION + '</span>' +
+      '</div>' +
+      '<a class="fe-cta" href="' + FEATURED_EVENT_URL + '" target="_blank" rel="noopener">' +
+        'RSVP on Luma →' +
+      '</a>' +
+    '</div>';
 
   card.style.display = "flex";
 })();
