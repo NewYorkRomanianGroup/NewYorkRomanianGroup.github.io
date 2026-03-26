@@ -15,7 +15,7 @@
    To HIDE the card immediately: set EXPIRY_DATE to yesterday.
    To ADD a new event: swap in the new values and push.
    ============================================================ */
-var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-26";
+var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-30";
 var FEATURED_EVENT_TITLE          = "NY Romanian Group March Happy Hour";
 var FEATURED_EVENT_DATE           = "Thursday, 26 March · 18:00";
 var FEATURED_EVENT_LOCATION       = "Magic Hour Rooftop Bar & Lounge, New York";
