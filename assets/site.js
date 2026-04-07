@@ -15,12 +15,12 @@
    To HIDE the card immediately: set EXPIRY_DATE to yesterday.
    To ADD a new event: swap in the new values and push.
    ============================================================ */
-var FEATURED_EVENT_EXPIRY_DATE    = "2026-03-30";
-var FEATURED_EVENT_TITLE          = "NY Romanian Group March Happy Hour";
-var FEATURED_EVENT_DATE           = "Thursday, 26 March · 18:00";
-var FEATURED_EVENT_LOCATION       = "Magic Hour Rooftop Bar & Lounge, New York";
-var FEATURED_EVENT_URL            = "https://luma.com/jid8tz7o";
-var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=800,height=800/event-covers/c2/b3ae47dc-6e5f-447f-9d0d-eab4e0257920.jpg";
+var FEATURED_EVENT_EXPIRY_DATE    = "2026-04-26";
+var FEATURED_EVENT_TITLE          = "NY Romanian Group Anniversary Party";
+var FEATURED_EVENT_DATE           = "Saturday, 25 April · 21:00";
+var FEATURED_EVENT_LOCATION       = "The Crown Rooftop, 50 Bowery, New York";
+var FEATURED_EVENT_URL            = "https://luma.com/embed/event/evt-j41j1B6DzKdL5Zw/simple";
+var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=280,height=280/event-covers/8b/3a052896-1d9f-4c64-8927-5df5102186f6.jpg";
 /* ============================================================
    END OF FEATURED EVENT CONFIG — do not edit below this line
    ============================================================ */
