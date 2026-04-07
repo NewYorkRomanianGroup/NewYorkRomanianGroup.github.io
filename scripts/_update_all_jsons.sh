@@ -81,6 +81,7 @@ fi
 run_step "Instagram JSON" env NYRG_SKIP_GIT=1 ./scripts/daily_instagram_update.sh || fail_any=1
 run_step "Gallery JSON"   env NYRG_SKIP_GIT=1 ./scripts/update_gallery_daily.sh   || fail_any=1
 run_step "Jobs JSON"      env NYRG_SKIP_GIT=1 ./scripts/update_jobs_daily.sh      || fail_any=1
+run_step "Luma JSON"      env NYRG_SKIP_GIT=1 ./scripts/daily_luma_update.sh      || fail_any=1
 
 # --- 2) Restore previous local edits, but keep fresh JSON outputs ---
 if [[ "$had_stash" == "1" ]]; then
@@ -114,7 +115,7 @@ echo "[$(ts)] === Combined commit step ==="
 git reset
 
 # Stage just the JSONs (even if the tree has tons of other changes)
-git add data/instagram.json data/gallery.json data/jobs.json
+git add data/instagram.json data/gallery.json data/jobs.json data/luma.json
 
 # If no JSON changes, do nothing
 if git diff --cached --quiet; then
