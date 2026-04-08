@@ -28,11 +28,11 @@
    To remove the override: set all vars back to "".
    ============================================================ */
 var FEATURED_EVENT_OVERRIDE_TITLE    = "Among Us";
-var FEATURED_EVENT_OVERRIDE_DATE     = "2026-04-09T19:00:00-04:00"; // ISO 8601 format with timezone offset
+var FEATURED_EVENT_OVERRIDE_DATE     = "Wednesday, 9 April · 19:00";
 var FEATURED_EVENT_OVERRIDE_LOCATION = "";
 var FEATURED_EVENT_OVERRIDE_URL      = "https://www.innersloth.com/";
 var FEATURED_EVENT_OVERRIDE_IMAGE    = "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Among_Us_cover_art.jpg/220px-Among_Us_cover_art.jpg";
-var FEATURED_EVENT_OVERRIDE_START    = ""; // "YYYY-MM-DD" Eastern Time
+var FEATURED_EVENT_OVERRIDE_START    = "2026-04-09";
 /* ============================================================
    END OF FEATURED EVENT CONFIG — do not edit below this line
    ============================================================ */
