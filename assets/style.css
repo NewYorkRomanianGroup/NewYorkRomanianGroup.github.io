@@ -230,7 +230,7 @@ header {
 .rotator-image {
   width: 100%;
   height: clamp(220px, 34vw, 420px);
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   display: block;
   background: var(--card-2);
