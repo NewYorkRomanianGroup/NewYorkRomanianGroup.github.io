@@ -48,12 +48,35 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
 -->
 
 <!-- Outer wrapper: on desktop, event card (left) + photos (right) sit side-by-side -->
-<div id="featured-row">
+</div><!-- /featured-row -->
 
-  <!-- Featured Event card — injected & shown/hidden by site.js -->
-  <div id="featured-event-card" class="card featured-event-card" style="display:none;" aria-label="Featured upcoming event">
+<!--
+  Events sections — shown/hidden by site.js based on data/luma.json
+  and FEATURED_EVENT_OVERRIDE_* vars at the top of assets/site.js.
+  Do not rename the IDs.
+-->
+<section id="luma-calendar-section" class="container" style="display:none; padding-bottom: 14px;">
+  <div class="card">
+    <h2 style="margin-top: 0;">Luma Events</h2>
+    <iframe
+      src="https://lu.ma/embed/calendar/cal-qOrYkgFc93AqbB1/events"
+      width="100%"
+      height="450"
+      frameborder="0"
+      style="border: 1px solid #bfcbda88; border-radius: 4px;"
+      allow="fullscreen; payment"
+      aria-hidden="false"
+      tabindex="0"
+    ></iframe>
   </div>
+</section>
 
+<section id="other-events-section" class="container" style="display:none; padding-bottom: 14px;">
+  <div class="card">
+    <h2 style="margin-top: 0;">Other Events</h2>
+    <div id="other-events-container"></div>
+  </div>
+</section>
 <section class="photo-rotator card" id="featured-photos-card" aria-label="Featured community photos">
   <h2>Featured Photos</h2>
 

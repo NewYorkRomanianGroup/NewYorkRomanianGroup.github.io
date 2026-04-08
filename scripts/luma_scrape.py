@@ -82,6 +82,7 @@ def main() -> int:
             api_id = event.get("api_id", "").strip()
             start_at = event.get("start_at", "")
             cover_url = event.get("cover_url", "")
+            geo = event.get("geo_address_info", {}) or {}
 
             if url_slug:
                 url = f"{LUMA_BASE_URL}/{url_slug}"
@@ -95,6 +96,12 @@ def main() -> int:
                 "url": url,
                 "start_at": start_at,
                 "cover_url": cover_url,
+                "geo_address_info": {
+                    "address": geo.get("address", ""),
+                    "short_address": geo.get("short_address", ""),
+                    "full_address": geo.get("full_address", ""),
+                    "city": geo.get("city", ""),
+                },
             })
 
         print(f"[NYRG] Found {len(events)} upcoming event(s).")

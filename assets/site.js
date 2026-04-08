@@ -1,26 +1,38 @@
 /* ============================================================
-   FEATURED EVENT — edit only this block to update the event
+   FEATURED EVENT OVERRIDE
    ============================================================
-   EXPIRY_DATE    Card hides automatically after this date.
-                  Format: "YYYY-MM-DD"
-                  The card is visible all day on that date,
-                  then gone from midnight onward (next day).
+   Leave all vars as empty strings ("") to auto-populate the
+   featured event card from the first upcoming Luma event.
 
-   EVENT_TITLE    Headline shown on the card
-   EVENT_DATE     Human-readable date + time string
-   EVENT_LOCATION Venue / address line
-   EVENT_URL      Full link to the RSVP / event page
-   EVENT_IMAGE    URL of the cover photo
+   Fill them in to override with a custom (non-Luma) event.
 
-   To HIDE the card immediately: set EXPIRY_DATE to yesterday.
-   To ADD a new event: swap in the new values and push.
+   OVERRIDE_START   Machine-readable date in Eastern Time.
+                    Format: "YYYY-MM-DD"
+                    Used to decide priority vs Luma events.
+                    Leave empty if no override.
+
+   OVERRIDE_DATE    Human-readable date + time string shown on card.
+   OVERRIDE_TITLE   Headline shown on the card.
+   OVERRIDE_LOCATION Venue / address line.
+   OVERRIDE_URL     Full link to the RSVP / event page.
+   OVERRIDE_IMAGE   URL of the cover photo.
+
+   Priority rules (all comparisons in Eastern Time):
+   - If a Luma event is ≤ 3 days away AND override is either
+     not set or > 3 days away → Luma event is featured.
+   - If override is set but > 2 weeks away AND no Luma event
+     is ≤ 3 days away → Luma event is featured.
+   - Otherwise override wins if set.
+   - If no override is set, first Luma event is always featured.
+
+   To remove the override: set all vars back to "".
    ============================================================ */
-var FEATURED_EVENT_EXPIRY_DATE    = "2026-04-26";
-var FEATURED_EVENT_TITLE          = "NY Romanian Group Anniversary Party";
-var FEATURED_EVENT_DATE           = "Saturday, 25 April · 21:00";
-var FEATURED_EVENT_LOCATION       = "The Crown Rooftop, 50 Bowery, New York";
-var FEATURED_EVENT_URL            = "https://luma.com/embed/event/evt-j41j1B6DzKdL5Zw/simple";
-var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/event-covers/8b/3a052896-1d9f-4c64-8927-5df5102186f6.jpg";
+var FEATURED_EVENT_OVERRIDE_TITLE    = "";
+var FEATURED_EVENT_OVERRIDE_DATE     = "";
+var FEATURED_EVENT_OVERRIDE_LOCATION = "";
+var FEATURED_EVENT_OVERRIDE_URL      = "";
+var FEATURED_EVENT_OVERRIDE_IMAGE    = "";
+var FEATURED_EVENT_OVERRIDE_START    = ""; // "YYYY-MM-DD" Eastern Time
 /* ============================================================
    END OF FEATURED EVENT CONFIG — do not edit below this line
    ============================================================ */
@@ -1241,74 +1253,199 @@ async function loadJobsPage() {
    Reads window.FEATURED_EVENT (defined inline in index.md)
    and injects the card only if today is before EXPIRY_DATE.
    ========================================================= */
-(function initFeaturedEvent() {
-  const card = document.getElementById("featured-event-card");
-  if (!card) return;  // not on the home page
+/* =========================================================
+   Helpers for Eastern Time date comparisons
+   ========================================================= */
+function _nowEastern() {
+  // Returns a Date object representing the current moment,
+  // with getFullYear/Month/Date reflecting Eastern Time.
+  return new Date(new Date().toLocaleString("en-US", { timeZone: "America/New_York" }));
+}
 
-  // Parse expiry: card is visible all day on EXPIRY_DATE, gone the day after
-  const parts = FEATURED_EVENT_EXPIRY_DATE.split("-").map(Number); // [YYYY, MM, DD]
-  const expiry = new Date(parts[0], parts[1] - 1, parts[2] + 1);  // midnight of next day
-  if (Date.now() >= expiry.getTime()) return;  // expired — leave hidden
+function _parseEasternDate(yyyyMmDd) {
+  // Parse "YYYY-MM-DD" as a midnight Eastern Time date.
+  if (!yyyyMmDd || typeof yyyyMmDd !== "string") return null;
+  const parts = yyyyMmDd.trim().split("-").map(Number);
+  if (parts.length !== 3 || parts.some(isNaN)) return null;
+  // Build a date string that toLocaleString will read as ET midnight
+  return new Date(new Date(`${yyyyMmDd}T00:00:00`).toLocaleString("en-US", { timeZone: "America/New_York" }));
+}
 
-  // Build inner HTML from the config variables at the top of this file
-  card.innerHTML =
-    '<div class="fe-image-wrap">' +
-      '<img src="' + FEATURED_EVENT_IMAGE + '" alt="' + FEATURED_EVENT_TITLE + ' cover image" loading="lazy">' +
-    '</div>' +
-    '<div class="fe-body">' +
-      '<div class="fe-eyebrow">Featured Event</div>' +
-      '<h2 class="fe-title">' + FEATURED_EVENT_TITLE + '</h2>' +
-      '<div class="fe-meta">' +
-        '<span>📅 ' + FEATURED_EVENT_DATE + '</span>' +
-        '<span>📍 ' + FEATURED_EVENT_LOCATION + '</span>' +
-      '</div>' +
-      '<a class="fe-cta" href="' + FEATURED_EVENT_URL + '" target="_blank" rel="noopener">' +
-        'RSVP on Luma →' +
-      '</a>' +
-    '</div>';
+function _parseISOasEastern(isoStr) {
+  // Parse a UTC ISO string and return days-until in Eastern Time.
+  if (!isoStr) return Infinity;
+  const d = new Date(isoStr);
+  if (isNaN(d)) return Infinity;
+  const etStr = d.toLocaleString("en-US", { timeZone: "America/New_York" });
+  const etDate = new Date(etStr);
+  const now = _nowEastern();
+  // Strip time from both for day-level comparison
+  const etMidnight = new Date(etDate.getFullYear(), etDate.getMonth(), etDate.getDate());
+  const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((etMidnight - nowMidnight) / (1000 * 60 * 60 * 24));
+}
 
-  card.style.display = "flex";
-})();
+function _daysUntilEastern(yyyyMmDd) {
+  const d = _parseEasternDate(yyyyMmDd);
+  if (!d) return Infinity;
+  const now = _nowEastern();
+  const nowMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const dMidnight = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  return Math.round((dMidnight - nowMidnight) / (1000 * 60 * 60 * 24));
+}
+
+function _formatLumaDate(isoStr) {
+  // Format a UTC ISO string like "2026-04-26T01:00:00.000Z"
+  // into a human-readable Eastern Time string like "Saturday, 25 April · 21:00"
+  if (!isoStr) return "";
+  try {
+    const d = new Date(isoStr);
+    const days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const months = ["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+    const et = new Date(d.toLocaleString("en-US", { timeZone: "America/New_York" }));
+    const dayName = days[et.getDay()];
+    const monthName = months[et.getMonth()];
+    const date = et.getDate();
+    const hours = String(et.getHours()).padStart(2, "0");
+    const mins = String(et.getMinutes()).padStart(2, "0");
+    return `${dayName}, ${date} ${monthName} · ${hours}:${mins}`;
+  } catch (e) {
+    return "";
+  }
+}
 
 /* =========================================================
-   Luma Calendar Embed
-   Reads data/luma.json and shows/hides the calendar section
-   based on how many upcoming events there are and whether
-   the featured event card is already showing the only event.
+   Featured Event Card + Luma Calendar
+   Both read from data/luma.json and FEATURED_EVENT_OVERRIDE_*
    ========================================================= */
-(async function initLumaCalendar() {
-  const section = document.getElementById("luma-calendar-section");
-  if (!section) return;  // not on the home page
+(async function initEventsSection() {
+  const featuredCard = document.getElementById("featured-event-card");
+  const lumaSection  = document.getElementById("luma-calendar-section");
+  const otherSection = document.getElementById("other-events-section");
 
+  // Neither element exists — not on the home page
+  if (!featuredCard && !lumaSection) return;
+
+  // Fetch luma.json
+  let lumaEvents = [];
   try {
     const jsonUrl = new URL("data/luma.json", document.baseURI);
     jsonUrl.searchParams.set("_ts", String(Date.now()));
     const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
-    if (!res.ok) { section.style.display = "none"; return; }
+    if (res.ok) {
+      const data = await res.json();
+      lumaEvents = Array.isArray(data.events) ? data.events : [];
+    }
+  } catch (e) {
+    console.error("[NYRG] Failed to load luma.json:", e);
+  }
 
-    const data = await res.json();
-    const events = Array.isArray(data.events) ? data.events : [];
-    const count = events.length;
+  const firstLuma = lumaEvents[0] || null;
 
-    // 0 events — hide
-    if (count === 0) { section.style.display = "none"; return; }
+  // Override set?
+  const hasOverride = !!(
+    FEATURED_EVENT_OVERRIDE_TITLE &&
+    FEATURED_EVENT_OVERRIDE_URL &&
+    FEATURED_EVENT_OVERRIDE_START
+  );
 
-    // Check if featured card is currently visible
-    const featuredCard = document.getElementById("featured-event-card");
-    const featuredVisible = featuredCard && featuredCard.style.display !== "none";
+  // Days until each
+  const lumaDay  = firstLuma ? _parseISOasEastern(firstLuma.start_at) : Infinity;
+  const overDay  = hasOverride ? _daysUntilEastern(FEATURED_EVENT_OVERRIDE_START) : Infinity;
 
-    // 1 event — hide if it's already shown in the featured card
-    if (count === 1 && featuredVisible) {
-      const lumaUrl = (events[0].url || "").trim().replace(/\/$/, "");
-      const featuredUrl = (FEATURED_EVENT_URL || "").trim().replace(/\/$/, "");
-      if (lumaUrl === featuredUrl) { section.style.display = "none"; return; }
+  // Priority logic
+  // true = show Luma event in featured card, false = show override
+  let featuredIsLuma;
+
+  if (!hasOverride) {
+    featuredIsLuma = true;
+  } else if (lumaDay <= 3 && overDay > 3) {
+    // Luma is urgent, override is not
+    featuredIsLuma = true;
+  } else if (overDay > 14 && lumaDay > 3) {
+    // Override is too far out and Luma isn't urgent
+    featuredIsLuma = true;
+  } else {
+    // Override wins
+    featuredIsLuma = false;
+  }
+
+  // ---- Featured Card ----
+  if (featuredCard) {
+    let title, date, location, url, image;
+
+    if (featuredIsLuma && firstLuma) {
+      title    = firstLuma.title || "";
+      date     = _formatLumaDate(firstLuma.start_at);
+      location = firstLuma.geo_address_info
+                   ? (firstLuma.geo_address_info.short_address || firstLuma.geo_address_info.address || "")
+                   : "";
+      url      = firstLuma.url || "";
+      image    = firstLuma.cover_url || "";
+    } else if (!featuredIsLuma && hasOverride) {
+      title    = FEATURED_EVENT_OVERRIDE_TITLE;
+      date     = FEATURED_EVENT_OVERRIDE_DATE;
+      location = FEATURED_EVENT_OVERRIDE_LOCATION;
+      url      = FEATURED_EVENT_OVERRIDE_URL;
+      image    = FEATURED_EVENT_OVERRIDE_IMAGE;
     }
 
-    // Show the calendar
-    section.style.display = "block";
+    if (title && url) {
+      featuredCard.innerHTML =
+        '<div class="fe-image-wrap">' +
+          (image ? '<img src="' + image + '" alt="' + title + ' cover image" loading="lazy">' : '') +
+        '</div>' +
+        '<div class="fe-body">' +
+          '<div class="fe-eyebrow">Featured Event</div>' +
+          '<h2 class="fe-title">' + title + '</h2>' +
+          '<div class="fe-meta">' +
+            (date     ? '<span>📅 ' + date     + '</span>' : '') +
+            (location ? '<span>📍 ' + location + '</span>' : '') +
+          '</div>' +
+          '<a class="fe-cta" href="' + url + '" target="_blank" rel="noopener">' +
+            'RSVP →' +
+          '</a>' +
+        '</div>';
+      featuredCard.style.display = "flex";
+    }
+  }
 
-  } catch (e) {
-    console.error("[NYRG] Luma calendar error:", e);
-    section.style.display = "none";
+  // ---- Luma Calendar Section ----
+  if (lumaSection) {
+    const lumaCount = lumaEvents.length;
+
+    // Show if: 2+ luma events, OR 1 luma event that isn't featured
+    const showLuma = lumaCount >= 2 || (lumaCount === 1 && !featuredIsLuma);
+    lumaSection.style.display = showLuma ? "block" : "none";
+  }
+
+  // ---- Other Events Section ----
+  if (otherSection) {
+    // Show if override is set AND Luma is currently featured (override isn't)
+    const showOther = hasOverride && featuredIsLuma;
+
+    if (showOther) {
+      const d = FEATURED_EVENT_OVERRIDE_DATE;
+      const t = FEATURED_EVENT_OVERRIDE_TITLE;
+      const l = FEATURED_EVENT_OVERRIDE_LOCATION;
+      const u = FEATURED_EVENT_OVERRIDE_URL;
+      const img = FEATURED_EVENT_OVERRIDE_IMAGE;
+
+      otherSection.querySelector("#other-events-container").innerHTML =
+        '<div class="gallery-card" style="max-width: 400px;">' +
+          (img ? '<img class="gallery-thumb" src="' + img + '" alt="' + t + '" loading="lazy">' : '') +
+          '<div class="gallery-card-body">' +
+            '<div class="gallery-title">' + t + '</div>' +
+            (d ? '<div class="small" style="margin-top:6px;color:var(--muted)">📅 ' + d + '</div>' : '') +
+            (l ? '<div class="small" style="margin-top:4px;color:var(--muted)">📍 ' + l + '</div>' : '') +
+            '<a href="' + u + '" target="_blank" rel="noopener" class="fe-cta" style="margin-top:12px;display:inline-block;">RSVP →</a>' +
+          '</div>' +
+        '</div>';
+
+      otherSection.style.display = "block";
+    } else {
+      otherSection.style.display = "none";
+    }
   }
 })();
