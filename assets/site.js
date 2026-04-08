@@ -27,12 +27,12 @@
 
    To remove the override: set all vars back to "".
    ============================================================ */
-var FEATURED_EVENT_OVERRIDE_TITLE    = "Among Us";
-var FEATURED_EVENT_OVERRIDE_DATE     = "Wednesday, 9 April · 19:00"; // What is displayed on the site (human-friendly)
+var FEATURED_EVENT_OVERRIDE_TITLE    = "";
+var FEATURED_EVENT_OVERRIDE_DATE     = ""; // What is displayed on the site (human-friendly)
 var FEATURED_EVENT_OVERRIDE_LOCATION = "";
-var FEATURED_EVENT_OVERRIDE_URL      = "https://www.innersloth.com/";
-var FEATURED_EVENT_OVERRIDE_IMAGE    = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwallpapercave.com%2Fwp%2Fwp7718219.png&f=1&nofb=1&ipt=369d6dbc585ab026ce4885cd98e2a6d23ab659d1ce3c28ee0fe08028b88d814b";
-var FEATURED_EVENT_OVERRIDE_START    = "2026-04-09";
+var FEATURED_EVENT_OVERRIDE_URL      = "";
+var FEATURED_EVENT_OVERRIDE_IMAGE    = "";
+var FEATURED_EVENT_OVERRIDE_START    = "";
 /* ============================================================
    END OF FEATURED EVENT CONFIG — do not edit below this line
    ============================================================ */
