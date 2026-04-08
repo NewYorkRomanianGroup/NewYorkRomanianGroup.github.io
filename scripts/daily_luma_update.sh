@@ -5,7 +5,7 @@ set -euo pipefail
 # NYRG: Daily Luma JSON updater
 #
 # What this script does:
-# 1) Runs the Selenium scraper to refresh data/luma.json
+# 1) Runs the scraper to refresh data/luma.json
 # 2) Commits the change if (and only if) the JSON changed
 # 3) Pushes to origin/main
 #
@@ -19,7 +19,7 @@ REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_DIR"
 
 JSON_PATH="data/luma.json"
-SCRAPER_PATH="scripts/selenium_luma_scrape.py"
+SCRAPER_PATH="scripts/luma_scrape.py"
 
 PY="$REPO_DIR/.venv/bin/python"
 if [[ -x "$PY" ]]; then
