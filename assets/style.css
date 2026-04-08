@@ -942,3 +942,58 @@ iframe {
 #featured-row .photo-rotator {
   margin: 0;
 }
+
+/* =========================================================
+   Featured row layout variants
+   Applied by site.js based on event state.
+
+   Default (no class):      featured card 2/3, right slot 1/3
+   .featured-row--half:     featured card 1/2, right slot 1/2
+   ========================================================= */
+
+@media (min-width: 700px) {
+  /* Half/half: used when calendar is in the right slot */
+  #featured-row.featured-row--half #featured-event-card {
+    flex: 1;
+  }
+  #featured-row.featured-row--half #featured-photos-card,
+  #featured-row.featured-row--half #luma-calendar-slot {
+    flex: 1;
+  }
+}
+
+/* =========================================================
+   Secondary row (below featured row)
+   Shown when there are Other Events or photos need to move down.
+   ========================================================= */
+
+#secondary-row {
+  display: none;
+  gap: 16px;
+  margin: 0 0 16px 0;
+}
+
+@media (min-width: 700px) {
+  #secondary-row {
+    display: none; /* JS sets to flex when needed */
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Other Events: 1/3 */
+  #other-events-slot {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Secondary photos: 2/3 */
+  #secondary-photos-slot {
+    flex: 2;
+    min-width: 0;
+  }
+
+  /* When only photos (no other events), full width */
+  #secondary-row.secondary-row--photos-only #secondary-photos-slot {
+    flex: 1;
+  }
+}

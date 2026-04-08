@@ -7,15 +7,13 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
 <!--
   PAGE: Home (index.md)
 
-  This file is mostly HTML inside a Jekyll markdown wrapper.
-
   Safe edits for non-technical collaborators:
   - Text inside <h1>, <h2>, <p>, <a> tags
   - Links (href values) that point to NYRG resources
   - The Spotify playlist embed URL (src) if we ever change playlists
 
   Please avoid:
-  - Removing element IDs (like id="insta-latest") because assets/site.js looks them up
+  - Removing element IDs because assets/site.js looks them up
   - Removing the Liquid filter | relative_url on internal assets
   - Changing the layout front matter unless you know Jekyll
 
@@ -23,102 +21,89 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
 -->
 
 <section class="hero banner-hero">
-  <!-- Homepage banner image shown above welcome text -->
-  <img src="{{ '/assets/nyrg.banner.png' | relative_url }}" 
-     alt="New York Romanian Group community banner for the Romania GitHub project" 
+  <img src="{{ '/assets/nyrg.banner.png' | relative_url }}"
+     alt="New York Romanian Group community banner for the Romania GitHub project"
      class="hero-banner-image">
 
   <div class="hero-banner-copy">
     <h1>New York Romanian Group</h1>
     <p>
-      NYRG is a premier community for Romanians in New York. We host meetups, 
+      NYRG is a premier community for Romanians in New York. We host meetups,
       share New York Romania GitHub resources, and connect people through mentorship.
     </p>
   </div>
 </section>
 
 <!--
-  Rotating photos section (Featured Photos) — wrapped in a row with the event card above.
-  NOTE for collaborators:
-  - The rotator is populated by assets/site.js using data/gallery.json.
-  - If the rotator looks empty, confirm data/gallery.json is present on the site.
-  - If you want to switch back to hard-coded slides, uncomment the example block below.
-  - Replace image URLs in data-image-url with your event photos.
-  - Keep at least 2 slides for visible rotation.
+  #featured-row
+  Top row: featured event card (left) + right slot (photos OR calendar).
+  JS controls layout class and what appears in the right slot.
+  Do not remove any of the IDs.
 -->
-
-<!-- Outer wrapper: on desktop, event card (left) + photos (right) sit side-by-side -->
 <div id="featured-row">
 
-  <!-- Featured Event card — injected & shown/hidden by site.js -->
+  <!-- Left slot: Featured Event card — populated by site.js -->
   <div id="featured-event-card" class="card featured-event-card" style="display:none;" aria-label="Featured upcoming event">
   </div>
 
-<section class="photo-rotator card" id="featured-photos-card" aria-label="Featured community photos">
-  <h2>Featured Photos</h2>
+  <!-- Right slot A: Featured Photos (default) -->
+  <section class="photo-rotator card" id="featured-photos-card" aria-label="Featured community photos">
+    <h2>Featured Photos</h2>
 
-  <div class="rotator-frame">
-    <img
-      id="hero-rotator-image"
-      src="{{ '/assets/image.png' | relative_url }}"
-      alt="NYRG featured community photo"
-      class="rotator-image"
-      loading="lazy"
-    >
+    <div class="rotator-frame">
+      <img
+        id="hero-rotator-image"
+        src="{{ '/assets/image.png' | relative_url }}"
+        alt="NYRG featured community photo"
+        class="rotator-image"
+        loading="lazy"
+      >
+    </div>
+
+    <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true"></div>
+
+    <div class="rotator-controls">
+      <button class="btn" id="hero-rotator-prev" type="button" aria-label="Show previous photo">Previous</button>
+      <div class="small" id="hero-rotator-caption">Skyline meetup moments</div>
+      <button class="btn" id="hero-rotator-next" type="button" aria-label="Show next photo">Next</button>
+    </div>
+  </section>
+
+  <!-- Right slot B: Luma calendar — shown by site.js when needed, replaces photos in top row -->
+  <div id="luma-calendar-slot" style="display:none; flex:1; min-width:0;">
+    <iframe
+      src="https://lu.ma/embed/calendar/cal-qOrYkgFc93AqbB1/events"
+      width="100%"
+      height="100%"
+      style="min-height: 420px; border-radius: var(--radius-lg); border: 1px solid var(--border);"
+      frameborder="0"
+      allow="fullscreen; payment"
+      aria-label="Luma upcoming events calendar"
+      tabindex="0"
+    ></iframe>
   </div>
-
-  <!--
-    Slide definitions for collaborators.
-    Edit only data-image-url and data-caption.
-  -->
-  <!-- <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true">
-    <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Skyline meetup moments"></div>
-    <div data-image-url="{{ '/assets/icon.png' | relative_url }}" data-caption="Romanian community in New York"></div>
-    <div data-image-url="{{ '/assets/image.png' | relative_url }}" data-caption="Events and connections across the city"></div>
-  </div> -->
-  <div id="hero-rotator-slides" class="hidden-slides" aria-hidden="true"></div>
-
-  <div class="rotator-controls">
-    <button class="btn" id="hero-rotator-prev" type="button" aria-label="Show previous photo">Previous</button>
-    <div class="small" id="hero-rotator-caption">Skyline meetup moments</div>
-    <button class="btn" id="hero-rotator-next" type="button" aria-label="Show next photo">Next</button>
-  </div>
-</section>
 
 </div><!-- /featured-row -->
 
 <!--
-  Events sections — shown/hidden by site.js based on data/luma.json
-  and FEATURED_EVENT_OVERRIDE_* vars at the top of assets/site.js.
-  Do not rename the IDs.
+  #secondary-row
+  Bottom row — shown by site.js when needed.
+  Holds Other Events and/or Featured Photos depending on layout case.
+  Do not remove any of the IDs.
 -->
-<section id="luma-calendar-section" class="container" style="display:none; padding-bottom: 14px;">
-  <div class="card">
-    <h2 style="margin-top: 0;">Luma Events</h2>
-    <iframe
-      src="https://lu.ma/embed/calendar/cal-qOrYkgFc93AqbB1/events"
-      width="100%"
-      height="450"
-      frameborder="0"
-      style="border: 1px solid #bfcbda88; border-radius: 4px;"
-      allow="fullscreen; payment"
-      aria-hidden="false"
-      tabindex="0"
-    ></iframe>
+<div id="secondary-row" style="display:none;">
+  <div id="other-events-slot" style="display:none;">
+    <div class="card">
+      <h2 style="margin-top:0;">Other Events</h2>
+      <div id="other-events-container"></div>
+    </div>
   </div>
-</section>
-
-<section id="other-events-section" class="container" style="display:none; padding-bottom: 14px;">
-  <div class="card">
-    <h2 style="margin-top: 0;">Other Events</h2>
-    <div id="other-events-container"></div>
+  <div id="secondary-photos-slot" style="display:none;">
+    <!-- Photos card is moved here by JS when needed -->
   </div>
-</section>
+</div>
 
 <section class="grid" id="home-social-grid">
-  <!-- =========================
-       LEFT CARD: INSTAGRAM
-       ========================= -->
   <div class="card" id="instagram-card">
     <h2>Latest from Instagram</h2>
     <p>
@@ -133,18 +118,10 @@ description: The official New York Romanian Group (NYRG). Connecting the Romania
       <a class="btn-ig" href="https://www.instagram.com/newyorkromaniangroup/" target="_blank" rel="noopener">
         Follow on Instagram
       </a>
-
-      <!-- <div class="small" id="insta-updated-at" style="margin-top: 8px;"></div> -->
     </div>
 
     <div class="embed-wrap" style="padding: 12px;">
-      <!-- <div class="small" style="margin-bottom: 10px;">
-        Latest 3 posts (auto-updated). If embeds are blocked,
-        use the links below.
-      </div> -->
-
       <div id="insta-latest" class="insta-grid"></div>
-
       <div class="small" style="margin-top: 12px;">
         <div id="insta-fallback-links"></div>
       </div>

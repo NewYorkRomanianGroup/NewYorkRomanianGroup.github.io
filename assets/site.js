@@ -1316,18 +1316,46 @@ function _formatLumaDate(isoStr) {
 }
 
 /* =========================================================
-   Featured Event Card + Luma Calendar
-   Both read from data/luma.json and FEATURED_EVENT_OVERRIDE_*
+   Featured Event Card + Layout Manager
+   Reads data/luma.json and FEATURED_EVENT_OVERRIDE_* vars.
+
+   Layout cases:
+   1) 1 Luma, no override:
+      featured card (2/3) | photos (1/3)
+
+   2) 1 Luma, override losing:
+      featured card (2/3) | other events (1/3)
+      photos full width below
+
+   3) 1 Luma, override winning:
+      featured card (1/2) | calendar (1/2) — no label
+      photos full width below
+
+   4) 2+ Luma, no override:
+      featured card (1/2) | calendar (1/2) — no label
+      photos full width below
+
+   5) 2+ Luma, override losing:
+      featured card (1/2) | calendar (1/2) — no label
+      other events (1/3) | photos (2/3)
+
+   6) 2+ Luma, override winning:
+      featured card (1/2) | calendar (1/2) — no label
+      photos full width below
    ========================================================= */
 (async function initEventsSection() {
-  const featuredCard = document.getElementById("featured-event-card");
-  const lumaSection  = document.getElementById("luma-calendar-section");
-  const otherSection = document.getElementById("other-events-section");
+  const featuredCard     = document.getElementById("featured-event-card");
+  const featuredRow      = document.getElementById("featured-row");
+  const photosCard       = document.getElementById("featured-photos-card");
+  const calendarSlot     = document.getElementById("luma-calendar-slot");
+  const secondaryRow     = document.getElementById("secondary-row");
+  const otherEventsSlot  = document.getElementById("other-events-slot");
+  const secondaryPhotos  = document.getElementById("secondary-photos-slot");
+  const otherContainer   = document.getElementById("other-events-container");
 
-  // Neither element exists — not on the home page
-  if (!featuredCard && !lumaSection) return;
+  if (!featuredCard && !featuredRow) return;
 
-  // Fetch luma.json
+  // ---- Fetch luma.json ----
   let lumaEvents = [];
   try {
     const jsonUrl = new URL("data/luma.json", document.baseURI);
@@ -1341,37 +1369,47 @@ function _formatLumaDate(isoStr) {
     console.error("[NYRG] Failed to load luma.json:", e);
   }
 
-  const firstLuma = lumaEvents[0] || null;
+  const firstLuma  = lumaEvents[0] || null;
+  const lumaCount  = lumaEvents.length;
 
-  // Override set?
+  // ---- Override state ----
   const hasOverride = !!(
     FEATURED_EVENT_OVERRIDE_TITLE &&
     FEATURED_EVENT_OVERRIDE_URL &&
     FEATURED_EVENT_OVERRIDE_START
   );
 
-  // Days until each
-  const lumaDay  = firstLuma ? _parseISOasEastern(firstLuma.start_at) : Infinity;
-  const overDay  = hasOverride ? _daysUntilEastern(FEATURED_EVENT_OVERRIDE_START) : Infinity;
+  const lumaDay = firstLuma ? _parseISOasEastern(firstLuma.start_at) : Infinity;
+  const overDay = hasOverride ? _daysUntilEastern(FEATURED_EVENT_OVERRIDE_START) : Infinity;
 
-  // Priority logic
-  // true = show Luma event in featured card, false = show override
+  // true = Luma event is featured, false = override is featured
   let featuredIsLuma;
-
   if (!hasOverride) {
     featuredIsLuma = true;
   } else if (lumaDay <= 3 && overDay > 3) {
-    // Luma is urgent, override is not
     featuredIsLuma = true;
   } else if (overDay > 14 && lumaDay > 3) {
-    // Override is too far out and Luma isn't urgent
     featuredIsLuma = true;
   } else {
-    // Override wins
     featuredIsLuma = false;
   }
 
-  // ---- Featured Card ----
+  // override is "losing" = set but not winning
+  const overrideLosing = hasOverride && featuredIsLuma;
+
+  // Show calendar when: 2+ Luma events, OR override winning with 1 Luma event
+  const showCalendar = lumaCount >= 2 || (hasOverride && !featuredIsLuma && lumaCount >= 1);
+
+  // Show other events when: override is losing (set but Luma won)
+  const showOther = overrideLosing;
+
+  // Photos go to secondary row when: calendar is showing AND (other events OR 2+ Luma no override OR 2+ Luma override losing)
+  // Simpler: photos go secondary when calendar is showing AND it's not the "full width below" cases
+  // Full width below cases: case 3, 4, 6 → showCalendar && !showOther
+  // Secondary photos with other events: case 2, 5 → showOther
+  const photosGoSecondary = showCalendar || showOther;
+
+  // ---- Populate Featured Card ----
   if (featuredCard) {
     let title, date, location, url, image;
 
@@ -1403,49 +1441,86 @@ function _formatLumaDate(isoStr) {
             (date     ? '<span>📅 ' + date     + '</span>' : '') +
             (location ? '<span>📍 ' + location + '</span>' : '') +
           '</div>' +
-          '<a class="fe-cta" href="' + url + '" target="_blank" rel="noopener">' +
-            'RSVP →' +
-          '</a>' +
+          '<a class="fe-cta" href="' + url + '" target="_blank" rel="noopener">RSVP →</a>' +
         '</div>';
       featuredCard.style.display = "flex";
     }
   }
 
-  // ---- Luma Calendar Section ----
-  if (lumaSection) {
-    const lumaCount = lumaEvents.length;
+  // ---- Apply Layout ----
 
-    // Show if: 2+ luma events, OR 1 luma event that isn't featured
-    const showLuma = lumaCount >= 2 || (lumaCount === 1 && !featuredIsLuma);
-    lumaSection.style.display = showLuma ? "block" : "none";
+  // Top row proportions
+  if (featuredRow) {
+    if (showCalendar) {
+      featuredRow.classList.add("featured-row--half");
+    } else {
+      featuredRow.classList.remove("featured-row--half");
+    }
   }
 
-  // ---- Other Events Section ----
-  if (otherSection) {
-    // Show if override is set AND Luma is currently featured (override isn't)
-    const showOther = hasOverride && featuredIsLuma;
+  // Calendar slot in top row
+  if (calendarSlot) {
+    if (showCalendar) {
+      calendarSlot.style.display = "flex";
+      // Hide photos from top row
+      if (photosCard) photosCard.style.display = "none";
+    } else {
+      calendarSlot.style.display = "none";
+      if (photosCard) photosCard.style.display = "";
+    }
+  }
 
+  // Other Events slot
+  if (otherEventsSlot && otherContainer) {
     if (showOther) {
-      const d = FEATURED_EVENT_OVERRIDE_DATE;
-      const t = FEATURED_EVENT_OVERRIDE_TITLE;
-      const l = FEATURED_EVENT_OVERRIDE_LOCATION;
-      const u = FEATURED_EVENT_OVERRIDE_URL;
+      const t   = FEATURED_EVENT_OVERRIDE_TITLE;
+      const d   = FEATURED_EVENT_OVERRIDE_DATE;
+      const l   = FEATURED_EVENT_OVERRIDE_LOCATION;
+      const u   = FEATURED_EVENT_OVERRIDE_URL;
       const img = FEATURED_EVENT_OVERRIDE_IMAGE;
 
-      otherSection.querySelector("#other-events-container").innerHTML =
-        '<div class="gallery-card" style="max-width: 400px;">' +
+      otherContainer.innerHTML =
+        '<div class="gallery-card">' +
           (img ? '<img class="gallery-thumb" src="' + img + '" alt="' + t + '" loading="lazy">' : '') +
           '<div class="gallery-card-body">' +
             '<div class="gallery-title">' + t + '</div>' +
-            (d ? '<div class="small" style="margin-top:6px;color:var(--muted)">📅 ' + d + '</div>' : '') +
-            (l ? '<div class="small" style="margin-top:4px;color:var(--muted)">📍 ' + l + '</div>' : '') +
+            (d ? '<div class="small" style="margin-top:6px;">📅 ' + d + '</div>' : '') +
+            (l ? '<div class="small" style="margin-top:4px;">📍 ' + l + '</div>' : '') +
             '<a href="' + u + '" target="_blank" rel="noopener" class="fe-cta" style="margin-top:12px;display:inline-block;">RSVP →</a>' +
           '</div>' +
         '</div>';
 
-      otherSection.style.display = "block";
+      otherEventsSlot.style.display = "block";
     } else {
-      otherSection.style.display = "none";
+      otherEventsSlot.style.display = "none";
     }
   }
+
+  // Secondary row + photos
+  if (secondaryRow) {
+    if (photosGoSecondary) {
+      // Move photos card into secondary slot
+      if (secondaryPhotos && photosCard) {
+        secondaryPhotos.appendChild(photosCard);
+        photosCard.style.display = "";
+        photosCard.style.margin  = "0";
+        secondaryPhotos.style.display = "block";
+      }
+
+      if (showOther) {
+        // Cases 2, 5: other events (1/3) + photos (2/3)
+        secondaryRow.classList.remove("secondary-row--photos-only");
+      } else {
+        // Cases 3, 4, 6: photos full width
+        secondaryRow.classList.add("secondary-row--photos-only");
+        if (otherEventsSlot) otherEventsSlot.style.display = "none";
+      }
+
+      secondaryRow.style.display = "flex";
+    } else {
+      // Case 1: photos stay in top row, secondary row hidden
+      secondaryRow.style.display = "none";
+    }
+  }
+
 })();
