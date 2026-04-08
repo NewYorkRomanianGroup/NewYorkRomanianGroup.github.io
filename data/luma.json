@@ -1,8 +1,8 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.",
   "source": "https://lu.ma/nyrg",
-  "updated_at": "2026-04-08T03:16:05+00:00",
-  "count": 2,
+  "updated_at": "2026-04-08T04:05:00+00:00",
+  "count": 1,
   "events": [
     {
       "title": "NY Romanian Group Anniversary Party",
@@ -14,18 +14,6 @@
         "short_address": "50 Bowery 21st Floor, New York",
         "full_address": "The Crown, 50 Bowery 21st Floor, New York, NY 10013, USA",
         "city": "New York"
-      }
-    },
-    {
-      "title": "*test*",
-      "url": "https://lu.ma/no1n42fj",
-      "start_at": "2026-08-02T03:30:00.000Z",
-      "cover_url": "https://images.lumacdn.com/gallery-images/ua/c2f85aab-5bf5-4576-96f4-66994e7d1c87",
-      "geo_address_info": {
-        "address": "",
-        "short_address": "",
-        "full_address": "",
-        "city": ""
       }
     }
   ]
