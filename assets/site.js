@@ -20,7 +20,7 @@ var FEATURED_EVENT_TITLE          = "NY Romanian Group Anniversary Party";
 var FEATURED_EVENT_DATE           = "Saturday, 25 April · 21:00";
 var FEATURED_EVENT_LOCATION       = "The Crown Rooftop, 50 Bowery, New York";
 var FEATURED_EVENT_URL            = "https://luma.com/embed/event/evt-j41j1B6DzKdL5Zw/simple";
-var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=280,height=280/event-covers/8b/3a052896-1d9f-4c64-8927-5df5102186f6.jpg";
+var FEATURED_EVENT_IMAGE          = "https://images.lumacdn.com/event-covers/8b/3a052896-1d9f-4c64-8927-5df5102186f6.jpg";
 /* ============================================================
    END OF FEATURED EVENT CONFIG — do not edit below this line
    ============================================================ */
@@ -1268,4 +1268,47 @@ async function loadJobsPage() {
     '</div>';
 
   card.style.display = "flex";
+})();
+
+/* =========================================================
+   Luma Calendar Embed
+   Reads data/luma.json and shows/hides the calendar section
+   based on how many upcoming events there are and whether
+   the featured event card is already showing the only event.
+   ========================================================= */
+(async function initLumaCalendar() {
+  const section = document.getElementById("luma-calendar-section");
+  if (!section) return;  // not on the home page
+
+  try {
+    const jsonUrl = new URL("data/luma.json", document.baseURI);
+    jsonUrl.searchParams.set("_ts", String(Date.now()));
+    const res = await fetch(jsonUrl.toString(), { cache: "no-store" });
+    if (!res.ok) { section.style.display = "none"; return; }
+
+    const data = await res.json();
+    const events = Array.isArray(data.events) ? data.events : [];
+    const count = events.length;
+
+    // 0 events — hide
+    if (count === 0) { section.style.display = "none"; return; }
+
+    // Check if featured card is currently visible
+    const featuredCard = document.getElementById("featured-event-card");
+    const featuredVisible = featuredCard && featuredCard.style.display !== "none";
+
+    // 1 event — hide if it's already shown in the featured card
+    if (count === 1 && featuredVisible) {
+      const lumaUrl = (events[0].url || "").trim().replace(/\/$/, "");
+      const featuredUrl = (FEATURED_EVENT_URL || "").trim().replace(/\/$/, "");
+      if (lumaUrl === featuredUrl) { section.style.display = "none"; return; }
+    }
+
+    // Show the calendar
+    section.style.display = "block";
+
+  } catch (e) {
+    console.error("[NYRG] Luma calendar error:", e);
+    section.style.display = "none";
+  }
 })();
