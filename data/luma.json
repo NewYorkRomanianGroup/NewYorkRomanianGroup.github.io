@@ -1,7 +1,20 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.",
   "source": "https://lu.ma/nyrg",
-  "updated_at": "2026-04-27T10:00:55+00:00",
-  "count": 0,
-  "events": []
+  "updated_at": "2026-05-02T05:45:31+00:00",
+  "count": 1,
+  "events": [
+    {
+      "title": "Dinner --> Comedy Show",
+      "url": "https://lu.ma/nyrg.dragos",
+      "start_at": "2026-05-07T22:00:00.000Z",
+      "cover_url": "https://images.lumacdn.com/uploads/ft/6824d55e-47c8-4b01-a9ff-0cea30874f07.jpg",
+      "geo_address_info": {
+        "address": "Vida Verde - Tequila Bar",
+        "short_address": "248 W 55th St, New York",
+        "full_address": "Vida Verde - Tequila Bar, 248 W 55th St, New York, NY 10019, USA",
+        "city": "New York"
+      }
+    }
+  ]
 }
