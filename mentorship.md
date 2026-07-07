@@ -52,9 +52,9 @@ description: NYRG Mentorship Program. Sign up to mentor or be mentored, and we w
   </div>
 
   <div class="card">
-    <h2>What to expect</h2>
+    <h2> The Mentorship Kick-Off Event will be held on 26 Aug. 2026. </h2>
     <p>
-      We are aiming to kickoff this program by mid March, hosting an in-person event where all mentors and mentees will have a chance to connect. Keep an eye on the email you shared with us for more details.
+      Please see more details and register at: https://luma.com/xhpqgbl3
     </p>
   </div>
 </section>
