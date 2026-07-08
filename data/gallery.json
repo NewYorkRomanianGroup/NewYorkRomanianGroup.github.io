@@ -1,12 +1,12 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
-  "updated_at": "2026-07-06T07:00:42Z",
+  "updated_at": "2026-07-08T03:01:04Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
     "url": "https://drive.google.com/drive/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u"
   },
-  "count": 426,
+  "count": 422,
   "images": [
     {
       "id": "1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW",
@@ -660,13 +660,6 @@
       "webViewLink": "https://drive.google.com/file/d/1_qqDuSRnTUet_VLdux5lR84VcS0wFTAK/view?usp=drivesdk"
     },
     {
-      "id": "1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY",
-      "name": "20260426_024856.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY/view?usp=drivesdk"
-    },
-    {
       "id": "1JFzMd2VEgUBPJG1VZJO_1uALDnnHSpTf",
       "name": "20260624_184522.jpg",
       "mimeType": "image/jpeg",
@@ -854,13 +847,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1e0pCKWMTc3wIPejCqpQby3nFpjCta33L&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1e0pCKWMTc3wIPejCqpQby3nFpjCta33L/view?usp=drivesdk"
-    },
-    {
-      "id": "1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI",
-      "name": "20260624_201923.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI/view?usp=drivesdk"
     },
     {
       "id": "1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G",
@@ -1071,13 +1057,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD/view?usp=drivesdk"
-    },
-    {
-      "id": "1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX",
-      "name": "20260624_220849.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX/view?usp=drivesdk"
     },
     {
       "id": "16uBeVuso97PbIu1AJBxqovIHg2455Slf",
@@ -2620,13 +2599,6 @@
       "webViewLink": "https://drive.google.com/file/d/1-9193k0Mcyosk2o-K7nRiJECSHudZ039/view?usp=drivesdk"
     },
     {
-      "id": "11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO",
-      "name": "IMG-20260426-WA0004.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO/view?usp=drivesdk"
-    },
-    {
       "id": "1qBidlXIvYgfo3UfnHsmKDhUYsv0o_c5J",
       "name": "IMG-20260520-WA0035.jpg",
       "mimeType": "image/jpeg",
@@ -3191,13 +3163,6 @@
           "webViewLink": "https://drive.google.com/file/d/1e0pCKWMTc3wIPejCqpQby3nFpjCta33L/view?usp=drivesdk"
         },
         {
-          "id": "1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI",
-          "name": "20260624_201923.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1RgYdAQYZy2Yj5hZRqoUBlYxEbxHV2zdI/view?usp=drivesdk"
-        },
-        {
           "id": "1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G",
           "name": "20260624_201927.jpg",
           "mimeType": "image/jpeg",
@@ -3406,13 +3371,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD/view?usp=drivesdk"
-        },
-        {
-          "id": "1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX",
-          "name": "20260624_220849.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1n1kHU2W_g82kMsxPCvXIVyUod4dLJlqX/view?usp=drivesdk"
         },
         {
           "id": "16uBeVuso97PbIu1AJBxqovIHg2455Slf",
@@ -6056,31 +6014,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1Dfv13QWuYDy-POka7fZ34GgJhMhxsHmh/view?usp=drivesdk"
-        }
-      ]
-    },
-    {
-      "type": "drive",
-      "id": "1Pqf8D_1HVTYhtAgC_14LYpWdjEeYnJ4T",
-      "month": "0000-00",
-      "title": "1-Yr Ann | COMMUNITY ALBUM",
-      "folder_url": "https://drive.google.com/drive/folders/1Pqf8D_1HVTYhtAgC_14LYpWdjEeYnJ4T",
-      "photographer": "",
-      "note": "",
-      "images": [
-        {
-          "id": "1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY",
-          "name": "20260426_024856.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1w4dmUx6h7JuTrfUakrRk-0DhO4XEtDGY/view?usp=drivesdk"
-        },
-        {
-          "id": "11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO",
-          "name": "IMG-20260426-WA0004.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/11Ni0GGPEu9BRIg3PTDQOuJGU7enl8prO/view?usp=drivesdk"
         }
       ]
     }
