@@ -1,6 +1,6 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
-  "updated_at": "2026-07-18T07:00:47Z",
+  "updated_at": "2026-07-19T07:00:30Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
@@ -1073,6 +1073,13 @@
       "webViewLink": "https://drive.google.com/file/d/1jS7aILXpGBm2Dvp9KjDhJvmHzmzhrejP/view?usp=drivesdk"
     },
     {
+      "id": "1xmiRod31boeeATa6jWzSER6v5Y__uXCu",
+      "name": "BC6A1047.jpg",
+      "mimeType": "image/jpeg",
+      "url": "https://drive.google.com/thumbnail?id=1xmiRod31boeeATa6jWzSER6v5Y__uXCu&sz=w2000",
+      "webViewLink": "https://drive.google.com/file/d/1xmiRod31boeeATa6jWzSER6v5Y__uXCu/view?usp=drivesdk"
+    },
+    {
       "id": "18M9gqGWSkBH6Y1qpBun4rXnr8WNfl2pR",
       "name": "BC6A1050.jpg",
       "mimeType": "image/jpeg",
@@ -1519,13 +1526,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1f9ReA2eomRNxR45dpCxKzuN1aphNZFpd&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1f9ReA2eomRNxR45dpCxKzuN1aphNZFpd/view?usp=drivesdk"
-    },
-    {
-      "id": "1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU",
-      "name": "BC6A1219.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU/view?usp=drivesdk"
     },
     {
       "id": "1JtagYKpPPMy0LgeVBZn_9cx1IICd8TrC",
@@ -4050,6 +4050,13 @@
       "note": "Source is https://www.johnnyneacsu.com/nyrg---happy-hour-feb-2026",
       "images": [
         {
+          "id": "1xmiRod31boeeATa6jWzSER6v5Y__uXCu",
+          "name": "BC6A1047.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1xmiRod31boeeATa6jWzSER6v5Y__uXCu&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1xmiRod31boeeATa6jWzSER6v5Y__uXCu/view?usp=drivesdk"
+        },
+        {
           "id": "18M9gqGWSkBH6Y1qpBun4rXnr8WNfl2pR",
           "name": "BC6A1050.jpg",
           "mimeType": "image/jpeg",
@@ -4496,13 +4503,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1f9ReA2eomRNxR45dpCxKzuN1aphNZFpd&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1f9ReA2eomRNxR45dpCxKzuN1aphNZFpd/view?usp=drivesdk"
-        },
-        {
-          "id": "1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU",
-          "name": "BC6A1219.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1LJ-vx7T7GtAMA5GzjcjOtjfjboCzERSU/view?usp=drivesdk"
         },
         {
           "id": "1JtagYKpPPMy0LgeVBZn_9cx1IICd8TrC",
