@@ -1,12 +1,12 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
-  "updated_at": "2026-07-19T07:00:30Z",
+  "updated_at": "2026-07-20T07:00:59Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
     "url": "https://drive.google.com/drive/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u"
   },
-  "count": 422,
+  "count": 402,
   "images": [
     {
       "id": "1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW",
@@ -681,13 +681,6 @@
       "webViewLink": "https://drive.google.com/file/d/1QATaOMDv37nk6QG4-cfZhyfKhF3xinMC/view?usp=drivesdk"
     },
     {
-      "id": "1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA",
-      "name": "20260624_190828.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA/view?usp=drivesdk"
-    },
-    {
       "id": "1xNREOn1tZ7ni1CgGfJV27DC7OVYgWp51",
       "name": "20260624_190830.jpg",
       "mimeType": "image/jpeg",
@@ -709,32 +702,11 @@
       "webViewLink": "https://drive.google.com/file/d/1PrQI7Hl9C8Kpt016r5GncxrhZ6yagSrq/view?usp=drivesdk"
     },
     {
-      "id": "1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU",
-      "name": "20260624_192050.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU/view?usp=drivesdk"
-    },
-    {
       "id": "1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY",
       "name": "20260624_192051.jpg",
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY/view?usp=drivesdk"
-    },
-    {
-      "id": "1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh",
-      "name": "20260624_192107.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh/view?usp=drivesdk"
-    },
-    {
-      "id": "1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0",
-      "name": "20260624_192108.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0/view?usp=drivesdk"
     },
     {
       "id": "1PArcjhcqMkuYfa6iuB8uJ6eDLNOlqVNT",
@@ -744,25 +716,11 @@
       "webViewLink": "https://drive.google.com/file/d/1PArcjhcqMkuYfa6iuB8uJ6eDLNOlqVNT/view?usp=drivesdk"
     },
     {
-      "id": "1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH",
-      "name": "20260624_192135.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH/view?usp=drivesdk"
-    },
-    {
       "id": "1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8",
       "name": "20260624_192136.jpg",
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8/view?usp=drivesdk"
-    },
-    {
-      "id": "1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_",
-      "name": "20260624_192226.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_/view?usp=drivesdk"
     },
     {
       "id": "1N2PEwPe2ekYteLMxS_FZdqMqF4psQ3MY",
@@ -772,25 +730,11 @@
       "webViewLink": "https://drive.google.com/file/d/1N2PEwPe2ekYteLMxS_FZdqMqF4psQ3MY/view?usp=drivesdk"
     },
     {
-      "id": "1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L",
-      "name": "20260624_192935.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L/view?usp=drivesdk"
-    },
-    {
       "id": "1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6",
       "name": "20260624_192937.jpg",
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6/view?usp=drivesdk"
-    },
-    {
-      "id": "1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z",
-      "name": "20260624_194804.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z/view?usp=drivesdk"
     },
     {
       "id": "1bNrTvnfb7XsS7ZDCqP6sN1Kgpxu0rmGh",
@@ -805,13 +749,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1xVJ1WMZJtDouZXLXgFqSUcKNM6CMmdGR&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1xVJ1WMZJtDouZXLXgFqSUcKNM6CMmdGR/view?usp=drivesdk"
-    },
-    {
-      "id": "1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz",
-      "name": "20260624_195108.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz/view?usp=drivesdk"
     },
     {
       "id": "1Q5UZkgpGV1GX9HIb3HrhLarDHntKfPHg",
@@ -835,13 +772,6 @@
       "webViewLink": "https://drive.google.com/file/d/1qTF7NwlLPduUilT13ud9u3dfYPVnYisO/view?usp=drivesdk"
     },
     {
-      "id": "1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi",
-      "name": "20260624_201733.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi/view?usp=drivesdk"
-    },
-    {
       "id": "1e0pCKWMTc3wIPejCqpQby3nFpjCta33L",
       "name": "20260624_201739.jpg",
       "mimeType": "image/jpeg",
@@ -854,13 +784,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G/view?usp=drivesdk"
-    },
-    {
-      "id": "1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx",
-      "name": "20260624_201946.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx/view?usp=drivesdk"
     },
     {
       "id": "1Clu-BuDoLdEa4YJigHpdzwUVbqyeaIp2",
@@ -891,13 +814,6 @@
       "webViewLink": "https://drive.google.com/file/d/1bg99zt2w70Iyzs2featXS-12NNPL9GLu/view?usp=drivesdk"
     },
     {
-      "id": "1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj",
-      "name": "20260624_202653.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj/view?usp=drivesdk"
-    },
-    {
       "id": "12WfqgnDbBn-6N5Z8q3lNfbgUbljofL1D",
       "name": "20260624_202655.jpg",
       "mimeType": "image/jpeg",
@@ -917,27 +833,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1MEq0U7pZEU5zkKxzJYnAUy8fzcTczrVd&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1MEq0U7pZEU5zkKxzJYnAUy8fzcTczrVd/view?usp=drivesdk"
-    },
-    {
-      "id": "1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj",
-      "name": "20260624_202839.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj/view?usp=drivesdk"
-    },
-    {
-      "id": "1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-",
-      "name": "20260624_202840.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-/view?usp=drivesdk"
-    },
-    {
-      "id": "1hydaqlNSswI_w5f0jxSANECsE_1oiNvh",
-      "name": "20260624_202941.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1hydaqlNSswI_w5f0jxSANECsE_1oiNvh&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1hydaqlNSswI_w5f0jxSANECsE_1oiNvh/view?usp=drivesdk"
     },
     {
       "id": "17OpFmqIH_FXsR2BQ60NOoGvMBluLq2Nc",
@@ -973,13 +868,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=16SCrCJXhsGgmKxgQPD3UQ9bbrXW2uHR1&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/16SCrCJXhsGgmKxgQPD3UQ9bbrXW2uHR1/view?usp=drivesdk"
-    },
-    {
-      "id": "1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi",
-      "name": "20260624_220716.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi/view?usp=drivesdk"
     },
     {
       "id": "1R32OK7UkCpC1GBIrR_TiZxt4GN1k_Lk7",
@@ -1024,27 +912,6 @@
       "webViewLink": "https://drive.google.com/file/d/1Ox1IRpnsMqUhBDAcaV9aUuJBkzzMRtMK/view?usp=drivesdk"
     },
     {
-      "id": "1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p",
-      "name": "20260624_220740.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p/view?usp=drivesdk"
-    },
-    {
-      "id": "1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr",
-      "name": "20260624_220840.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr/view?usp=drivesdk"
-    },
-    {
-      "id": "15A4gTrdUtpad6986Xzb7GMUmwv2v36J3",
-      "name": "20260624_220842.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=15A4gTrdUtpad6986Xzb7GMUmwv2v36J3&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/15A4gTrdUtpad6986Xzb7GMUmwv2v36J3/view?usp=drivesdk"
-    },
-    {
       "id": "1E0IQk0cjql6dhBh9rHRvDvGnPCu82Q9r",
       "name": "20260624_220843.jpg",
       "mimeType": "image/jpeg",
@@ -1057,13 +924,6 @@
       "mimeType": "image/jpeg",
       "url": "https://drive.google.com/thumbnail?id=1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD&sz=w2000",
       "webViewLink": "https://drive.google.com/file/d/1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD/view?usp=drivesdk"
-    },
-    {
-      "id": "16uBeVuso97PbIu1AJBxqovIHg2455Slf",
-      "name": "20260624_220850.jpg",
-      "mimeType": "image/jpeg",
-      "url": "https://drive.google.com/thumbnail?id=16uBeVuso97PbIu1AJBxqovIHg2455Slf&sz=w2000",
-      "webViewLink": "https://drive.google.com/file/d/16uBeVuso97PbIu1AJBxqovIHg2455Slf/view?usp=drivesdk"
     },
     {
       "id": "1jS7aILXpGBm2Dvp9KjDhJvmHzmzhrejP",
@@ -2995,13 +2855,6 @@
           "webViewLink": "https://drive.google.com/file/d/1QATaOMDv37nk6QG4-cfZhyfKhF3xinMC/view?usp=drivesdk"
         },
         {
-          "id": "1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA",
-          "name": "20260624_190828.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1CxW5NwDxnCmv5gjV5G6gpRVyyn3UyqiA/view?usp=drivesdk"
-        },
-        {
           "id": "1xNREOn1tZ7ni1CgGfJV27DC7OVYgWp51",
           "name": "20260624_190830.jpg",
           "mimeType": "image/jpeg",
@@ -3023,32 +2876,11 @@
           "webViewLink": "https://drive.google.com/file/d/1PrQI7Hl9C8Kpt016r5GncxrhZ6yagSrq/view?usp=drivesdk"
         },
         {
-          "id": "1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU",
-          "name": "20260624_192050.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1_AqTWRmrgnqOI9PWmTBJ4zA0tShpjpyU/view?usp=drivesdk"
-        },
-        {
           "id": "1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY",
           "name": "20260624_192051.jpg",
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1bP-2mqIuOcwVkJPfPF_ufQMDofn59PpY/view?usp=drivesdk"
-        },
-        {
-          "id": "1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh",
-          "name": "20260624_192107.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1b49Iyq4QL8EsLIT_Qe6bqJ7NSYSyoZlh/view?usp=drivesdk"
-        },
-        {
-          "id": "1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0",
-          "name": "20260624_192108.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1KXQyh6koJ2OOw3g4iIcJH2wXs6DX7dY0/view?usp=drivesdk"
         },
         {
           "id": "1PArcjhcqMkuYfa6iuB8uJ6eDLNOlqVNT",
@@ -3058,25 +2890,11 @@
           "webViewLink": "https://drive.google.com/file/d/1PArcjhcqMkuYfa6iuB8uJ6eDLNOlqVNT/view?usp=drivesdk"
         },
         {
-          "id": "1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH",
-          "name": "20260624_192135.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1RGIIdXu5T4jf5iBExGhMYTIN8dt86SOH/view?usp=drivesdk"
-        },
-        {
           "id": "1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8",
           "name": "20260624_192136.jpg",
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1Yziaqt_cBNzzDKusYBXcnyFzKNXF16a8/view?usp=drivesdk"
-        },
-        {
-          "id": "1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_",
-          "name": "20260624_192226.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1u1P-T1kRAiUEnol5lORp1HJegYAvJWG_/view?usp=drivesdk"
         },
         {
           "id": "1N2PEwPe2ekYteLMxS_FZdqMqF4psQ3MY",
@@ -3086,25 +2904,11 @@
           "webViewLink": "https://drive.google.com/file/d/1N2PEwPe2ekYteLMxS_FZdqMqF4psQ3MY/view?usp=drivesdk"
         },
         {
-          "id": "1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L",
-          "name": "20260624_192935.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1_aONJOqLe_KgNZAFdHNbbFJuPYqv02-L/view?usp=drivesdk"
-        },
-        {
           "id": "1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6",
           "name": "20260624_192937.jpg",
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1yzaY6Nbq4_C178YErU1IyupXNHkUdFr6/view?usp=drivesdk"
-        },
-        {
-          "id": "1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z",
-          "name": "20260624_194804.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1dn6rqLgiA6e6T-K3eNKDi5PHqPyuVX9Z/view?usp=drivesdk"
         },
         {
           "id": "1bNrTvnfb7XsS7ZDCqP6sN1Kgpxu0rmGh",
@@ -3119,13 +2923,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1xVJ1WMZJtDouZXLXgFqSUcKNM6CMmdGR&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1xVJ1WMZJtDouZXLXgFqSUcKNM6CMmdGR/view?usp=drivesdk"
-        },
-        {
-          "id": "1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz",
-          "name": "20260624_195108.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1Foro4ZRVKBVT2ErfyGYmCZK-EK9On5Iz/view?usp=drivesdk"
         },
         {
           "id": "1Q5UZkgpGV1GX9HIb3HrhLarDHntKfPHg",
@@ -3149,13 +2946,6 @@
           "webViewLink": "https://drive.google.com/file/d/1qTF7NwlLPduUilT13ud9u3dfYPVnYisO/view?usp=drivesdk"
         },
         {
-          "id": "1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi",
-          "name": "20260624_201733.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1Dvohm_2tgGb7m1vSyV54VNsR9lBGyDGi/view?usp=drivesdk"
-        },
-        {
           "id": "1e0pCKWMTc3wIPejCqpQby3nFpjCta33L",
           "name": "20260624_201739.jpg",
           "mimeType": "image/jpeg",
@@ -3168,13 +2958,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1MHcr9ffER0ntXzRYQWLSLJrZRAv-A08G/view?usp=drivesdk"
-        },
-        {
-          "id": "1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx",
-          "name": "20260624_201946.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1KTa6kqSJUJxwppF1M9DqF108Lxllw6fx/view?usp=drivesdk"
         },
         {
           "id": "1Clu-BuDoLdEa4YJigHpdzwUVbqyeaIp2",
@@ -3205,13 +2988,6 @@
           "webViewLink": "https://drive.google.com/file/d/1bg99zt2w70Iyzs2featXS-12NNPL9GLu/view?usp=drivesdk"
         },
         {
-          "id": "1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj",
-          "name": "20260624_202653.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1Bzdgyf5lRmj2AlJnvikA3ch6bSwsr6dj/view?usp=drivesdk"
-        },
-        {
           "id": "12WfqgnDbBn-6N5Z8q3lNfbgUbljofL1D",
           "name": "20260624_202655.jpg",
           "mimeType": "image/jpeg",
@@ -3231,27 +3007,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1MEq0U7pZEU5zkKxzJYnAUy8fzcTczrVd&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1MEq0U7pZEU5zkKxzJYnAUy8fzcTczrVd/view?usp=drivesdk"
-        },
-        {
-          "id": "1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj",
-          "name": "20260624_202839.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1kAR2ZNkGcxxWK2hoP3UnJMfCDZPMV2sj/view?usp=drivesdk"
-        },
-        {
-          "id": "1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-",
-          "name": "20260624_202840.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1uhJLqeVRpZjBzomw2srNZQ_xP9gNEdt-/view?usp=drivesdk"
-        },
-        {
-          "id": "1hydaqlNSswI_w5f0jxSANECsE_1oiNvh",
-          "name": "20260624_202941.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1hydaqlNSswI_w5f0jxSANECsE_1oiNvh&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1hydaqlNSswI_w5f0jxSANECsE_1oiNvh/view?usp=drivesdk"
         },
         {
           "id": "17OpFmqIH_FXsR2BQ60NOoGvMBluLq2Nc",
@@ -3287,13 +3042,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=16SCrCJXhsGgmKxgQPD3UQ9bbrXW2uHR1&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/16SCrCJXhsGgmKxgQPD3UQ9bbrXW2uHR1/view?usp=drivesdk"
-        },
-        {
-          "id": "1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi",
-          "name": "20260624_220716.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1fr289QKOqfWEL9t9Lb5Ww1NgmoYlJcbi/view?usp=drivesdk"
         },
         {
           "id": "1R32OK7UkCpC1GBIrR_TiZxt4GN1k_Lk7",
@@ -3338,27 +3086,6 @@
           "webViewLink": "https://drive.google.com/file/d/1Ox1IRpnsMqUhBDAcaV9aUuJBkzzMRtMK/view?usp=drivesdk"
         },
         {
-          "id": "1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p",
-          "name": "20260624_220740.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1E09SrOPa8oErTJIjOMM1kKOATGKVdy2p/view?usp=drivesdk"
-        },
-        {
-          "id": "1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr",
-          "name": "20260624_220840.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/1R2QZY9DDloMJMRx-RrqOpbHACZGxIohr/view?usp=drivesdk"
-        },
-        {
-          "id": "15A4gTrdUtpad6986Xzb7GMUmwv2v36J3",
-          "name": "20260624_220842.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=15A4gTrdUtpad6986Xzb7GMUmwv2v36J3&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/15A4gTrdUtpad6986Xzb7GMUmwv2v36J3/view?usp=drivesdk"
-        },
-        {
           "id": "1E0IQk0cjql6dhBh9rHRvDvGnPCu82Q9r",
           "name": "20260624_220843.jpg",
           "mimeType": "image/jpeg",
@@ -3371,13 +3098,6 @@
           "mimeType": "image/jpeg",
           "url": "https://drive.google.com/thumbnail?id=1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD&sz=w2000",
           "webViewLink": "https://drive.google.com/file/d/1W2fy-I2iK2Ve-ehkclnPlQjKyluGDSpD/view?usp=drivesdk"
-        },
-        {
-          "id": "16uBeVuso97PbIu1AJBxqovIHg2455Slf",
-          "name": "20260624_220850.jpg",
-          "mimeType": "image/jpeg",
-          "url": "https://drive.google.com/thumbnail?id=16uBeVuso97PbIu1AJBxqovIHg2455Slf&sz=w2000",
-          "webViewLink": "https://drive.google.com/file/d/16uBeVuso97PbIu1AJBxqovIHg2455Slf/view?usp=drivesdk"
         },
         {
           "id": "1jS7aILXpGBm2Dvp9KjDhJvmHzmzhrejP",
