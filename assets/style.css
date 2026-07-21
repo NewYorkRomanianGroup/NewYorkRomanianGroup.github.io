@@ -969,8 +969,15 @@ iframe {
 
 #secondary-row {
   display: none;
+  flex-direction: column;
   gap: 16px;
   margin: 0 0 16px 0;
+}
+
+/* Mobile: both slots take full width, stacked */
+#other-events-slot,
+#secondary-photos-slot {
+  width: 100%;
 }
 
 @media (min-width: 700px) {
@@ -984,12 +991,14 @@ iframe {
   #other-events-slot {
     flex: 1;
     min-width: 0;
+    width: auto;
   }
 
   /* Secondary photos: 2/3 */
   #secondary-photos-slot {
     flex: 2;
     min-width: 0;
+    width: auto;
   }
 
   /* When only photos (no other events), full width */
