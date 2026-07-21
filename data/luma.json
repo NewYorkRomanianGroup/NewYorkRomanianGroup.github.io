@@ -1,9 +1,21 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.",
   "source": "https://lu.ma/nyrg",
-  "updated_at": "2026-07-20T10:00:34+00:00",
-  "count": 1,
+  "updated_at": "2026-07-21T07:00:53+00:00",
+  "count": 2,
   "events": [
+    {
+      "title": "NY Romanian Group July Happy Hour",
+      "url": "https://lu.ma/xrsstxyb",
+      "start_at": "2026-07-29T22:00:00.000Z",
+      "cover_url": "https://images.lumacdn.com/uploads/uu/2a65e9c1-af9b-49f7-8a69-4ec6c19650af.jpg",
+      "geo_address_info": {
+        "address": "The Consulate - Murray Hill",
+        "short_address": "Entrance via East 37th street Plaza, 160 E 38th St, New York",
+        "full_address": "The Consulate - Murray Hill, Entrance via East 37th street Plaza, 160 E 38th St, New York, NY 10016, USA",
+        "city": "New York"
+      }
+    },
     {
       "title": "NYRG Mentorship Kick-Off",
       "url": "https://lu.ma/xhpqgbl3",
