@@ -1,12 +1,12 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY. Run scripts/update_gallery_json.py instead.",
-  "updated_at": "2026-07-30T07:27:39Z",
+  "updated_at": "2026-08-06T01:20:27Z",
   "folder_id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
   "root_folder": {
     "id": "1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u",
     "url": "https://drive.google.com/drive/folders/1qHFOROkuAI5sICLSSxj0Bg_b5QxqTp4u"
   },
-  "count": 541,
+  "count": 544,
   "images": [
     {
       "id": "1ddcSSZHPnosZBTrQyM9K6qX3UZWt8FGW",
@@ -3789,6 +3789,27 @@
       "webViewLink": "https://drive.google.com/file/d/1vJtYn7iNaO3l3y1udCcpxUXL3RQiDGJg/view?usp=drivesdk"
     },
     {
+      "id": "1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL",
+      "name": "PXL_20260729_225142537.jpg",
+      "mimeType": "image/jpeg",
+      "url": "https://drive.google.com/thumbnail?id=1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL&sz=w2000",
+      "webViewLink": "https://drive.google.com/file/d/1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL/view?usp=drivesdk"
+    },
+    {
+      "id": "1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0",
+      "name": "PXL_20260729_225154955.jpg",
+      "mimeType": "image/jpeg",
+      "url": "https://drive.google.com/thumbnail?id=1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0&sz=w2000",
+      "webViewLink": "https://drive.google.com/file/d/1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0/view?usp=drivesdk"
+    },
+    {
+      "id": "1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq",
+      "name": "PXL_20260729_225158809.jpg",
+      "mimeType": "image/jpeg",
+      "url": "https://drive.google.com/thumbnail?id=1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq&sz=w2000",
+      "webViewLink": "https://drive.google.com/file/d/1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq/view?usp=drivesdk"
+    },
+    {
       "id": "1VbbUh-Q3L7rqGmxuNeGN3mWbtwUWFe6l",
       "name": "WhatsApp Image 2025-12-17 at 12.14.05 PM.jpeg",
       "mimeType": "image/jpeg",
@@ -3797,6 +3818,38 @@
     }
   ],
   "events": [
+    {
+      "type": "drive",
+      "id": "1nMA23Kj91AhOQUbdnlcE5k6SnJq-N6sk",
+      "month": "2026-07",
+      "title": "July 2026 by Francesca Dumitrescu",
+      "folder_url": "https://drive.google.com/drive/folders/1nMA23Kj91AhOQUbdnlcE5k6SnJq-N6sk",
+      "photographer": "",
+      "note": "",
+      "images": [
+        {
+          "id": "1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL",
+          "name": "PXL_20260729_225142537.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1TGDyM1Qxe3ZgWZse_vg4HHtlhhvFZAKL/view?usp=drivesdk"
+        },
+        {
+          "id": "1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0",
+          "name": "PXL_20260729_225154955.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1yxV_p6XO_rB_sd1qVJOd7vRejVOQl_F0/view?usp=drivesdk"
+        },
+        {
+          "id": "1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq",
+          "name": "PXL_20260729_225158809.jpg",
+          "mimeType": "image/jpeg",
+          "url": "https://drive.google.com/thumbnail?id=1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq&sz=w2000",
+          "webViewLink": "https://drive.google.com/file/d/1OpPgsLGiJOuRZBb-pLG51i3D9yeTQOpq/view?usp=drivesdk"
+        }
+      ]
+    },
     {
       "type": "drive",
       "id": "1JEQwuKblaM63RT2HvWK4t_soMLw7p59i",
