@@ -1,0 +1,9 @@
+[Unit]
+Description=NYRG daily Gallery update (Google Drive + auto-commit)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io
+EnvironmentFile=%h/.config/nyrg/nyrg.env
+ExecStart=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io/scripts/update_gallery_daily.sh
+

@@ -1,0 +1,8 @@
+[Unit]
+Description=NYRG daily Instagram update (Selenium headless + auto-commit)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io
+ExecStart=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io/scripts/daily_instagram_update.sh
+

@@ -1,0 +1,7 @@
+[Unit]
+Description=NYRG daily Luma update (requests + auto-commit)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io
+ExecStart=/home/ggrrcc/Documents/GitHub/NewYorkRomanianGroup.github.io/scripts/daily_luma_update.sh

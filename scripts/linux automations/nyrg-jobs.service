@@ -1,0 +1,11 @@
+[Unit]
+Description=NYRG Jobs Sheet → jobs.json updater
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Documents/GitHub/NewYorkRomanianGroup.github.io
+EnvironmentFile=%h/.config/nyrg/nyrg.env
+
+# Use the wrapper script so git logic lives in one place.
+# Do NOT put "|| true" directly in ExecStartPost (systemd won't interpret it as shell).
+ExecStart=/usr/bin/env bash scripts/update_jobs_daily.sh

@@ -1,0 +1,8 @@
+[Unit]
+Description=NYRG: Update all JSONs (instagram + gallery + jobs)
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Documents/GitHub/NewYorkRomanianGroup.github.io
+EnvironmentFile=%h/.config/nyrg/nyrg.env
+ExecStart=%h/Documents/GitHub/NewYorkRomanianGroup.github.io/scripts/_update_all_jsons.sh

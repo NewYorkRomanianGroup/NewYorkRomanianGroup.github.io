@@ -1,0 +1,10 @@
+[Unit]
+Description=NYRG daily Gallery update timer
+
+[Timer]
+OnCalendar=*-*-* 23:27:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

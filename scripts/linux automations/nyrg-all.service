@@ -1,0 +1,23 @@
+[Unit]
+Description=NYRG: Update ALL JSONs (jobs + gallery + instagram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+
+# Run from repo root so relative paths like ./scripts/... work
+WorkingDirectory=%h/Documents/GitHub/NewYorkRomanianGroup.github.io
+
+# Your standard env file
+EnvironmentFile=%h/.config/nyrg/nyrg.env
+
+# Run the all-in-one script
+ExecStart=/usr/bin/env bash -lc './scripts/_update_all_jsons.sh'
+
+# Helpful logging
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
