@@ -1,7 +1,7 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.",
   "source": "https://lu.ma/nyrg",
-  "updated_at": "2026-08-16T21:03:39+00:00",
+  "updated_at": "2026-08-19T22:48:43+00:00",
   "count": 2,
   "events": [
     {
@@ -17,15 +17,15 @@
       }
     },
     {
-      "title": "NYRG Mentorship Kick-Off",
-      "url": "https://lu.ma/xhpqgbl3",
+      "title": "August Happy Hour",
+      "url": "https://lu.ma/weuukgzv",
       "start_at": "2026-08-26T22:00:00.000Z",
-      "cover_url": "https://images.lumacdn.com/uploads/5s/87cd7ddb-fc7a-49a9-b930-4369a6d950fa.png",
+      "cover_url": "https://images.lumacdn.com/uploads/6b/466456b8-0572-45df-994b-a73068d676e9.jpg",
       "geo_address_info": {
-        "address": "",
-        "short_address": "",
-        "full_address": "",
-        "city": ""
+        "address": "The Wilson",
+        "short_address": "INNSIDE New York, 132 W 27th St, New York",
+        "full_address": "The Wilson, 132 W 27th St, New York, NY 10001, USA",
+        "city": "New York"
       }
     }
   ]
