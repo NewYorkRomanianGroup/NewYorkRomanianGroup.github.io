@@ -1,7 +1,20 @@
 {
   "_comment": "THIS FILE IS AUTO-GENERATED. DO NOT EDIT MANUALLY.",
   "source": "https://lu.ma/nyrg",
-  "updated_at": "2026-09-10T10:00:42+00:00",
-  "count": 0,
-  "events": []
+  "updated_at": "2026-09-11T07:01:04+00:00",
+  "count": 1,
+  "events": [
+    {
+      "title": "NYRG September Happy Hour",
+      "url": "https://lu.ma/9e5xee4z",
+      "start_at": "2026-09-30T22:00:00.000Z",
+      "cover_url": "https://images.lumacdn.com/uploads/2k/8399335e-a133-42d5-a115-928118baa27c.jpg",
+      "geo_address_info": {
+        "address": "Moxy NYC Times Square",
+        "short_address": "485 7th Ave, New York",
+        "full_address": "Moxy NYC Times Square, 485 7th Ave, New York, NY 10018, USA",
+        "city": "New York"
+      }
+    }
+  ]
 }
